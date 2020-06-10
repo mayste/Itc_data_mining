@@ -18,17 +18,13 @@ def collecting_data(num_of_jobs):
             browser.find_element_by_class_name("selected").click()
         except ElementClickInterceptedException:
             pass
-        time.sleep(40)
+        time.sleep(5)
 
-        # try:
-        #     browser.find_element_by_class_name("SVGInline-svg modal_closeIcon-svg").click()  # clicking to the X.
-        # except NoSuchElementException:
-        #     pass
-
-        # try:
-        #     browser.find_element_by_class_name("modal_main jaCreateAccountModalWrapper").click()  # clicking to the X.
-        # except NoSuchElementException:
-        #     pass
+        try:
+            browser.find_element_by_xpath("//div[@class='modal_main jaCreateAccountModalWrapper']//span["
+                                          "@class='SVGInline modal_closeIcon']").click()  # clicking to the X.
+        except NoSuchElementException:
+            pass
 
         job_click_button = browser.find_elements_by_class_name("jl")  # Button on each job we want to click on
         # #job_click_button = browser.find_elements_by_class_name("jl react-job-listing gdGrid ")
@@ -40,22 +36,26 @@ def collecting_data(num_of_jobs):
             time.sleep(3)
 
             # collect Data for one job
-            employer_name = browser.find_element_by_xpath(
+            company_name = browser.find_element_by_xpath(
                 './/div[@class="employerName"]').text  # browser.find_elements_by_class_name("employerName")
             job_title = browser.find_element_by_xpath('.//div[@class="title"]').text
             job_location = browser.find_element_by_xpath('.//div[@class="location"]').text
 
-            jobs_list.append({"employer name": employer_name, "job title": job_title, "job location": job_location})
+            jobs_list.append({"employer name": company_name, "job title": job_title, "job location": job_location})
 
-            # Clicking on the "next page" button
+        # Clicking on the "next page" button
+        # TODO: Check why it's jumping over jobs and continue to next page.he do next anyway
         try:
             browser.find_element_by_xpath('.//li[@class="next"]//a').click()
         except NoSuchElementException:
-            print("Scraping terminated before reaching target number of jobs. Needed {}, got {}.".format(num_of_jobs,len(jobs_list)))
+            print("Scraping terminated before reaching target number of jobs. Needed {}, got {}.".format(num_of_jobs,
+                                                                                                         len(
+                                                                                                             jobs_list)))
             break
 
-    #print(jobs_list)
-    #print(len(jobs_list))
-    print(pd.DataFrame(jobs_list))
+    print(jobs_list)
+    # print(len(jobs_list))
+    # print(pd.DataFrame(jobs_list))
+
 
 collecting_data(50)
