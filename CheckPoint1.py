@@ -41,7 +41,17 @@ def collecting_data(num_of_jobs):
             job_title = browser.find_element_by_xpath('.//div[@class="title"]').text
             job_location = browser.find_element_by_xpath('.//div[@class="location"]').text
 
-            jobs_list.append({"employer name": company_name, "job title": job_title, "job location": job_location})
+            # click on company in the hyper details
+            browser.find_element_by_xpath('.//div[@class="tab" and @data-tab-type="overview"]').click()
+            #browser.find_element_by_xpath(".//div[@class=‘scrollableTabs’]//div[@class=‘tab’]").click()
+            try:
+                company_size = browser.find_element_by_xpath(
+                    './/div[@class="infoEntity"]//label[text()="Size"]//following-sibling::*').text
+            except NoSuchElementException:
+                company_size = None
+
+            jobs_list.append({"company name": company_name, "job title": job_title, "job location": job_location,
+                              "company size": company_size})
 
         # Clicking on the "next page" button
         # TODO: Check why it's jumping over jobs and continue to next page.he do next anyway
