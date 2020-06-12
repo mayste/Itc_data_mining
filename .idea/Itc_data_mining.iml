@@ -5,7 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/Data_Mining- Venv" />
       <excludeFolder url="file://$MODULE_DIR$/data_mining" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.6" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6 (Itc_data_mining)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
