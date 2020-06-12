@@ -109,8 +109,8 @@ def collecting_data(num_of_jobs):
     print(jobs_list)
     # print(len(jobs_list))
     # print(pd.DataFrame(jobs_list))
-    dataset = pd.DataFrame(jobs_list)
-    dataset.to_csv(r'\dataset_glassdoor.csv')  # save this to csv file
+    #dataset = pd.DataFrame(jobs_list)
+    #dataset.to_csv(r'\dataset_glassdoor.csv')  # save this to csv file
 
 
 time.sleep(3)  # Wait until the page load
