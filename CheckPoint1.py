@@ -16,7 +16,7 @@ def collecting_data(num_of_jobs):
         time.sleep(3)  # Wait until the page load
 
         try:
-        # TODO: Check the item selected what is it
+            # TODO: Check the item selected what is it
             browser.find_element_by_class_name("selected").click()
         except ElementClickInterceptedException:
             pass
@@ -28,7 +28,7 @@ def collecting_data(num_of_jobs):
         except NoSuchElementException:
             pass
 
-        #TODO: Check class name
+        # TODO: Check class name
         job_click_button = browser.find_elements_by_class_name("jl")  # Button on each job we want to click on
         # #job_click_button = browser.find_elements_by_class_name("jl react-job-listing gdGrid ")
 
@@ -74,7 +74,7 @@ def collecting_data(num_of_jobs):
             except NoSuchElementException:
                 company_industry = None
             try:
-                #TODO: not working- don't catch the sector
+                # TODO: not working- don't catch the sector
                 company_sector = browser.find_element_by_xpath(
                     '//div[@class="infoEntity"]//label[text()="Sector]//following-sibling::*').text
                 print("Sheryl")
@@ -101,16 +101,17 @@ def collecting_data(num_of_jobs):
             try:
                 browser.find_element_by_xpath('.//li[@class="next"]//a').click()
             except NoSuchElementException:
-                print("Scraping terminated before reaching target number of jobs. Needed {}, got {}.".format(num_of_jobs,
-                                                                                                         len(
-                                                                                                             jobs_list)))
+                print(
+                    "Scraping terminated before reaching target number of jobs. Needed {}, got {}.".format(num_of_jobs,
+                                                                                                           len(
+                                                                                                               jobs_list)))
                 break
 
     print(jobs_list)
     # print(len(jobs_list))
     # print(pd.DataFrame(jobs_list))
-    #dataset = pd.DataFrame(jobs_list)
-    #dataset.to_csv(r'\dataset_glassdoor.csv')  # save this to csv file
+    # dataset = pd.DataFrame(jobs_list)
+    # dataset.to_csv(r'\dataset_glassdoor.csv')  # save this to csv file
 
 
 time.sleep(3)  # Wait until the page load
@@ -119,7 +120,7 @@ try:
     # take the number of all open positions over the site in Israel
     num_of_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
     num_of_jobs = int(num_of_jobs.split(' ')[0])
-    num_of_jobs = 10 # TODO: Delete this
+    num_of_jobs = 10  # TODO: Delete this
     print(num_of_jobs)
 
 # TODO: Check all of our exceptions name
