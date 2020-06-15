@@ -74,21 +74,15 @@ def collecting_data(num_of_jobs):
             except NoSuchElementException:
                 company_industry = None
             try:
-                # TODO: not working- don't catch the sector
                 company_sector = browser.find_element_by_xpath(
-                    '//div[@class="infoEntity"]//label[text()="Sector]//following-sibling::*').text
-                print("Sheryl")
+                    '//div[@class="infoEntity"]//label[text()="Sector"]//following-sibling::*').text
             except NoSuchElementException:
                 company_sector = None
-                print("Error")
             try:
-                # TODO: not working- don't catch the type
-                company_type = browser.find_element_by_xpath(
-                    '//div[@class="infoEntity"]//label[text()="Type]//following-sibling::*').text
-                print("may")
+                company_type = browser.find_element_by_xpath('//div[@class="infoEntity"]//label[text('
+                                                             ')="Type"]//following-sibling::*').text
             except NoSuchElementException:
                 company_type = None
-                print("Error")
 
             # add to the list of jobs
             jobs_list.append({"company name": company_name, "job title": job_title, "job location": job_location,
@@ -108,10 +102,8 @@ def collecting_data(num_of_jobs):
                 break
 
     print(jobs_list)
-    # print(len(jobs_list))
-    # print(pd.DataFrame(jobs_list))
-    # dataset = pd.DataFrame(jobs_list)
-    # dataset.to_csv(r'\dataset_glassdoor.csv')  # save this to csv file
+    dataset = pd.DataFrame(jobs_list)
+    dataset.to_csv('\dataset_glassdoor.csv')  # save this to csv file
 
 
 time.sleep(3)  # Wait until the page load
