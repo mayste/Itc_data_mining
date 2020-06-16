@@ -31,7 +31,7 @@ def get_number_of_jobs():
         # take the number of all open positions in Israel over the site
         num_of_available_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
         num_of_available_jobs = int(num_of_available_jobs.split(' ')[0])
-        num_of_available_jobs = 10
+        num_of_available_jobs = 10 #TODO: Delete this
     except ElementClickInterceptedException:
         num_of_available_jobs = 1000
         print(f'Their is a problem trying to get the number of available jobs post, by default the number of '
