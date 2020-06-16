@@ -31,7 +31,7 @@ def get_number_of_jobs():
         # take the number of all open positions in Israel over the site
         num_of_available_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
         num_of_available_jobs = int(num_of_available_jobs.split(' ')[0])
-        num_of_available_jobs = 400 #TODO: Delete this
+        num_of_available_jobs = 100  # TODO: Delete this
     except ElementClickInterceptedException:
         num_of_available_jobs = 1000
         print(f'Their is a problem trying to get the number of available jobs post, by default the number of '
@@ -102,7 +102,7 @@ def collecting_data(num_of_jobs):
             # Collect Job Location from a post
             job_location = browser.find_element_by_xpath('//div[@class="location"]').text
 
-            #Collect Job Description
+            # Collect Job Description
             job_description = browser.find_element_by_xpath('//div[@class="jobDescriptionContent desc"]').text
 
             # Collect optional information
@@ -183,11 +183,13 @@ def collecting_data(num_of_jobs):
                 company_headquarters = None
 
             # Add all information in a dictionary to the list of jobs
-            jobs_list.append({"company name": company_name, "job title": job_title,"job description":job_description, "job location": job_location,
+            jobs_list.append({"company name": company_name, "job title": job_title, "job description": job_description,
+                              "job location": job_location,
                               "company size": company_size, "founded": company_founded, "industry": company_industry,
                               "sector": company_sector, "type": company_type, "rating": rating,
                               "competitors": company_competitors, "revenue": company_revenue,
                               "Headquarters": company_headquarters})
+        # save each page to the csv file in case glassdoor block us
         create_csv_file(jobs_list)
         # Clicking on the "next page" button if finished collected all jobs post from current page
         # TODO: Check why it's jumping over jobs and continue to next page.he do next anyway
@@ -198,10 +200,7 @@ def collecting_data(num_of_jobs):
                 print(f"Finished, no more jobs than{len(jobs_list)} in the website")
                 break
 
-    return jobs_list
-
 
 if __name__ == "__main__":
     num_of_jobs = get_number_of_jobs()
-    dict_list = collecting_data(num_of_jobs)
-    create_csv_file(dict_list)
+    collecting_data(num_of_jobs)
