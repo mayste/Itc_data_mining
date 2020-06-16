@@ -1,4 +1,6 @@
 import time
+from dateutil.relativedelta import relativedelta
+from datetime import date
 import pandas as pd
 from selenium import webdriver  # allows us to open a browser and do the navigation
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
@@ -31,7 +33,7 @@ def get_number_of_jobs():
         # take the number of all open positions in Israel over the site
         num_of_available_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
         num_of_available_jobs = int(num_of_available_jobs.split(' ')[0])
-        num_of_available_jobs = 100  # TODO: Delete this
+        num_of_available_jobs = 10  # TODO: Delete this
     except ElementClickInterceptedException:
         num_of_available_jobs = 1000
         print(f'Their is a problem trying to get the number of available jobs post, by default the number of '
@@ -78,6 +80,22 @@ def collecting_data(num_of_jobs):
                 break
 
             button_job.click()
+
+            # Catch the publication date
+            job_age = browser.find_element_by_xpath("//li[contains(@class,'selected')]//div["
+                                                     "@class='jobContainer']//div[@data-test='job-age']").text
+            # if the job has been published this day print the day of today
+            if 'h' in job_age and '24' not in job_age:
+                job_age = date.today().strftime("%Y-%m-%d")
+            elif 'h' in job_age and '24' in job_age:
+                job_age = (date.today() - relativedelta(days=1)).strftime("%Y-%m-%d")
+            elif 'd' in job_age:
+                job_age = (date.today() - relativedelta(days=int(job_age.split('d')[0]))).strftime("%Y-%m-%d")
+            elif 'm' in job_age:
+                job_age = (date.today() - relativedelta(months=int(job_age.split('m')[0]))).strftime("%Y-%m-%d")
+            else:
+                job_age = None
+
             time.sleep(4)
 
             # TODO : browser.find_elements_by_class_name("employerName")
@@ -184,7 +202,7 @@ def collecting_data(num_of_jobs):
 
             # Add all information in a dictionary to the list of jobs
             jobs_list.append({"company name": company_name, "job title": job_title, "job description": job_description,
-                              "job location": job_location,
+                              "job location": job_location, "publication date": job_age,
                               "company size": company_size, "founded": company_founded, "industry": company_industry,
                               "sector": company_sector, "type": company_type, "rating": rating,
                               "competitors": company_competitors, "revenue": company_revenue,
