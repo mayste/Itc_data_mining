@@ -31,7 +31,7 @@ def get_number_of_jobs():
         # take the number of all open positions in Israel over the site
         num_of_available_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
         num_of_available_jobs = int(num_of_available_jobs.split(' ')[0])
-        num_of_available_jobs = 10 #TODO: Delete this
+        num_of_available_jobs = 400 #TODO: Delete this
     except ElementClickInterceptedException:
         num_of_available_jobs = 1000
         print(f'Their is a problem trying to get the number of available jobs post, by default the number of '
@@ -188,7 +188,7 @@ def collecting_data(num_of_jobs):
                               "sector": company_sector, "type": company_type, "rating": rating,
                               "competitors": company_competitors, "revenue": company_revenue,
                               "Headquarters": company_headquarters})
-
+        create_csv_file(jobs_list)
         # Clicking on the "next page" button if finished collected all jobs post from current page
         # TODO: Check why it's jumping over jobs and continue to next page.he do next anyway
         if len(jobs_list) < num_of_jobs:
