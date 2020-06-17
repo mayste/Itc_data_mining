@@ -26,7 +26,7 @@ def create_csv_file(dict_list):
     :return: .csv file
     """
     dataset = pd.DataFrame(jobs_list)
-    dataset.to_csv('\dataset_glassdoor.csv', index=False)  # save this to csv file
+    dataset.to_csv('\dataset_glassdoor.csv', index = False)  # save this to csv file
 
 
 def get_number_of_jobs():
