@@ -12,7 +12,7 @@ browser = webdriver.Chrome()
 browser.get(URL)
 jobs_list = []
 
-
+# TODO: READ ME FILE
 def create_csv_file(dict_list):
     """
     This function create a .csv file with a list of dictionaries as an input
