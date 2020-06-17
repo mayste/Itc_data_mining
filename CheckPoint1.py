@@ -1,3 +1,8 @@
+"""
+This program is part of our learning in ITC Campus for Data Mining Project
+Authors: May Steinfeld & Sheryl Sitruk
+"""
+
 import time
 from dateutil.relativedelta import relativedelta
 from datetime import date
@@ -6,17 +11,18 @@ from selenium import webdriver  # allows us to open a browser and do the navigat
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 
 # Global variables
+SLEEP_TIME = 5  # Constant for time sleep, depends on computers
 URL = 'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword' \
       '=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0 '
 browser = webdriver.Chrome()
 browser.get(URL)
 jobs_list = []
 
-# TODO: READ ME FILE
+
 def create_csv_file(dict_list):
     """
     This function create a .csv file with a list of dictionaries as an input
-    :param dict: list of dictionaries
+    :param dict_list: list of dictionaries
     :return: .csv file
     """
     dataset = pd.DataFrame(jobs_list)
@@ -28,12 +34,12 @@ def get_number_of_jobs():
     This function catch the number of job post in Israel
     :return: integer
     """
-    time.sleep(3)  # Wait until the page load
+    time.sleep(SLEEP_TIME)  # Wait until the page load
     try:
         # take the number of all open positions in Israel over the site
         num_of_available_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
         num_of_available_jobs = int(num_of_available_jobs.split(' ')[0])
-        num_of_available_jobs = 10  # TODO: Delete this
+        num_of_available_jobs = 10
     except ElementClickInterceptedException:
         num_of_available_jobs = 1000
         print(f'Their is a problem trying to get the number of available jobs post, by default the number of '
@@ -51,15 +57,14 @@ def collecting_data(num_of_jobs):
 
     while len(jobs_list) < num_of_jobs:
 
-        time.sleep(5)  # Wait until the page load
+        time.sleep(SLEEP_TIME)  # Wait until the page load
 
         try:
-            # TODO: Check the item selected what is it
-            browser.find_element_by_class_name("selected").click()
+            browser.find_element_by_xpath("//li[contains(@class, 'selected')]").click()
         except ElementClickInterceptedException:
             pass
 
-        time.sleep(2)
+        time.sleep(SLEEP_TIME)
 
         # Click to the X to close popups
         try:
@@ -68,10 +73,8 @@ def collecting_data(num_of_jobs):
         except NoSuchElementException:
             pass
 
-        # TODO: Check class name  #job_click_button = browser.find_elements_by_class_name("jl react-job-listing gdGrid ")
-
         # Take all the buttons of each job we want to click on
-        job_click_button = browser.find_elements_by_class_name("jl")
+        job_click_button = browser.find_elements_by_xpath("//li[contains(@class, 'job-listing')]")
 
         for button_job in job_click_button:
 
@@ -83,7 +86,7 @@ def collecting_data(num_of_jobs):
 
             # Catch the publication date
             job_age = browser.find_element_by_xpath("//li[contains(@class,'selected')]//div["
-                                                     "@class='jobContainer']//div[@data-test='job-age']").text
+                                                    "@class='jobContainer']//div[@data-test='job-age']").text
             # if the job has been published this day print the day of today
             if 'h' in job_age and '24' not in job_age:
                 job_age = date.today().strftime("%Y-%m-%d")
@@ -96,17 +99,15 @@ def collecting_data(num_of_jobs):
             else:
                 job_age = None
 
-            time.sleep(4)
-
-            # TODO : browser.find_elements_by_class_name("employerName")
-            # TODO : see if we need try and catch for this part
+            time.sleep(SLEEP_TIME)
 
             # Collect mandatory information
 
             # Collect Company Name from a post
             company_name = browser.find_element_by_xpath('//div[@class="employerName"]').text
 
-            # Sometimes, company name and rating are join, we need to split them into Company Name and Rating informations.
+            # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
+            # information.
 
             if '\n' in company_name:  # We have a rating
                 rating = company_name.split('\n')[1]
@@ -128,13 +129,11 @@ def collecting_data(num_of_jobs):
             try:
                 # Click on company in the hyper details
                 browser.find_element_by_xpath('//div[@class="tab" and @data-tab-type="overview"]').click()
-                # TODO: browser.find_element_by_xpath(".//div[@class=‘scrollableTabs’]//div[@class=‘tab’]").click()
 
-                time.sleep(3)
+                time.sleep(SLEEP_TIME)
 
                 # Catch company size information
                 try:
-                    # TODO: Check following-sibling::*
                     company_size = browser.find_element_by_xpath(
                         '//div[@class="infoEntity"]//label[text()="Size"]//following-sibling::*').text
                 except NoSuchElementException:
@@ -210,7 +209,6 @@ def collecting_data(num_of_jobs):
         # save each page to the csv file in case glassdoor block us
         create_csv_file(jobs_list)
         # Clicking on the "next page" button if finished collected all jobs post from current page
-        # TODO: Check why it's jumping over jobs and continue to next page.he do next anyway
         if len(jobs_list) < num_of_jobs:
             try:
                 browser.find_element_by_xpath('.//li[@class="next"]//a').click()
