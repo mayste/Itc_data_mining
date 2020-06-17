@@ -27,6 +27,9 @@ Before our main loop, we catch the number of open positions in the website and t
 Our main goal at this stage was to catch all the data we need. 
 We choose to focus on job posts in order to find intersting information about what are the most demanding jobs right now after the Covid-19 virus in Israel, and make comparaison between small companies and large one. etc.
 
+## Example from csv file:
+<img width="1118" alt="Screen Shot 2020-06-17 at 19 36 42" src="https://user-images.githubusercontent.com/34678172/84925444-90f7c880-b0d2-11ea-9e0a-782175e7c15d.png">
+
 ## Requirements:
 
 In order to run Selenium, we need to install first a WebDriver (we choose to run over Chrome browser).
