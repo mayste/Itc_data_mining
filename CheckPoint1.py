@@ -100,8 +100,6 @@ def collecting_data(num_of_jobs):
 
             time.sleep(SLEEP_TIME)
 
-            # Collect mandatory information
-
             # Collect Company Name from a post
             company_name = browser.find_element_by_xpath('//div[@class="employerName"]').text
 
@@ -114,16 +112,20 @@ def collecting_data(num_of_jobs):
             else:  # No rating
                 rating = None
 
+            # Collect mandatory information (title + location)
             # Collect Job Title from a post
             job_title = browser.find_element_by_xpath('//div[@class="title"]').text
 
             # Collect Job Location from a post
             job_location = browser.find_element_by_xpath('//div[@class="location"]').text
 
-            # Collect Job Description
-            job_description = browser.find_element_by_xpath('//div[@class="jobDescriptionContent desc"]').text
-
             # Collect optional information
+
+            try:
+                # Collect Job Description
+                job_description = browser.find_element_by_xpath('//div[@class="jobDescriptionContent desc"]').text
+            except NoSuchElementException:
+                job_description = None
 
             try:
                 # Click on company in the hyper details
