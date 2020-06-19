@@ -7,14 +7,24 @@ import time
 from dateutil.relativedelta import relativedelta
 from datetime import date
 import pandas as pd
+import random
 from selenium import webdriver  # allows us to open a browser and do the navigation
+
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 
 # Global variables
-SLEEP_TIME = 5  # Constant for time sleep, depends on computers
+SLEEP_TIME = random.randint(5,10)  # Random number for time sleep, depends on computers- in our we meed minimum 5
 URL = 'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword' \
       '=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0 '
-browser = webdriver.Chrome()
+
+options = webdriver.ChromeOptions()
+#options.add_argument('headless')  # scrape without a new Chrome window every time
+options.add_argument('enable-features=NetworkServiceInProcess')
+options.add_argument("disable-features=NetworkService")
+#options.add_argument('start-maximized')
+
+browser = webdriver.Chrome(chrome_options=options)
+browser.maximize_window()
 browser.get(URL)
 jobs_list = []
 
@@ -25,8 +35,8 @@ def create_csv_file(dict_list):
     :param dict_list: list of dictionaries
     :return: .csv file
     """
-    dataset = pd.DataFrame(jobs_list)
-    dataset.to_csv('\dataset_glassdoor.csv', index = False)  # save this to csv file
+    dataset = pd.DataFrame(jobs_list).drop_duplicates()  # remove duplicates
+    dataset.to_csv('\dataset_glassdoor.csv', index=False)  # save this to csv file
 
 
 def get_number_of_jobs():
