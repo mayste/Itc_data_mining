@@ -25,7 +25,7 @@ def create_csv_file(dict_list):
     :param dict_list: list of dictionaries
     :return: .csv file
     """
-    dataset = pd.DataFrame(jobs_list)
+    dataset = pd.DataFrame(jobs_list).drop_duplicates() #remove duplicates lines
     dataset.to_csv('\dataset_glassdoor.csv', index = False)  # save this to csv file
 
 
