@@ -14,19 +14,21 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 
 # Global variables
-SLEEP_TIME = 10  # Random number for time sleep, depends on computers- in our we meed minimum 5
+SLEEP_TIME = 5  # Random number for time sleep, depends on computers- in our we meed minimum 5
 URL = 'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword' \
       '=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0 '
 
+EXE_PATH = r'/Users/maylev/PycharmProjects/Itc_data_mining/geckodriver'
 # TODO: put all webdriver part inside a function
-options = webdriver.ChromeOptions()
+#options = webdriver.ChromeOptions()
 #options.add_argument('headless')  # scrape without a new Chrome window every time
 #options.add_argument('enable-features=NetworkServiceInProcess')
 #options.add_argument("disable-features=NetworkService")
 #options.add_argument('start-maximized')
 #options.add_argument("--lang=en-US") #forces the English interface
 
-browser = webdriver.Chrome(chrome_options=options)
+#browser = webdriver.Chrome(chrome_options=options, executable_path=EXE_PATH)
+browser = webdriver.Firefox(executable_path=EXE_PATH)
 browser.maximize_window()
 browser.get(URL)
 jobs_list = []
@@ -242,7 +244,7 @@ def collecting_data(num_of_jobs):
 
         # wait until catch the job posts in the next page
         #WebDriverWait(browser, 15).until(lambda browser: browser.find_elements_by_xpath("//li[contains(""@class, ""'job-listing')]"))
-
+    browser.quit()
 
 if __name__ == "__main__":
     num_of_jobs = get_number_of_jobs()
