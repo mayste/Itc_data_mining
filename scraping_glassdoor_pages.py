@@ -7,16 +7,11 @@ import time
 from dateutil.relativedelta import relativedelta
 from datetime import date
 import pandas as pd
-import random
 from selenium import webdriver  # allows us to open a browser and do the navigation
-from selenium.webdriver.support.ui import WebDriverWait
-
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 
 # Global variables
 SLEEP_TIME = 5  # Random number for time sleep, depends on computers- in our we meed minimum 5
-PAGE_NUMBER = 1
-URL = f'https://www.glassdoor.com/Job/israel-jobs-SRCH_IL.0,6_IN119_IP{PAGE_NUMBER}.htm'
 EXE_PATH = r'/Users/maylev/PycharmProjects/Itc_data_mining/geckodriver'
 jobs_list = []
 
@@ -31,50 +26,55 @@ def create_csv_file(dict_list):
     dataset.to_csv('\dataset_glassdoor.csv', index=False)  # save this to csv file
 
 
-def get_number_of_jobs(browser):
-    """
-    This function catch the number of job post in Israel
-    :return: integer
-    """
-    time.sleep(SLEEP_TIME)  # Wait until the page load
-    try:
-        # take the number of all open positions in Israel over the site
-        num_of_available_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
-        num_of_available_jobs = int(num_of_available_jobs.split(' ')[0])
-    except ElementClickInterceptedException:
-        num_of_available_jobs = 1000
-        print(f'Their is a problem trying to get the number of available jobs post, by default the number of '
-              f'available jobs post to scrap will be {num_of_available_jobs}')
-    print(num_of_available_jobs)
-    return num_of_available_jobs
+# def get_number_of_jobs(browser):
+#     """
+#     This function catch the number of job post in Israel
+#     :return: integer
+#     """
+#     time.sleep(SLEEP_TIME)  # Wait until the page load
+#     try:
+#         # take the number of all open positions in Israel over the site
+#         num_of_available_jobs = browser.find_element_by_xpath("//div[@class='hideHH css-19rczgc ez6uq160']").text
+#         num_of_available_jobs = int(num_of_available_jobs.split(' ')[0])
+#     except ElementClickInterceptedException:
+#         num_of_available_jobs = 1000
+#         print(f'Their is a problem trying to get the number of available jobs post, by default the number of '
+#               f'available jobs post to scrap will be {num_of_available_jobs}')
+#     print(num_of_available_jobs)
+#     return num_of_available_jobs
 
 
-def get_number_of_pages(browser):
+def get_number_of_pages():
     """
     This function catch the number of pages for job posts in Israel
     :return: integer
     """
+    # collecting number of pages & posts
+    browser = webdriver.Firefox(executable_path=EXE_PATH)
+    browser.maximize_window()
+    url = f'https://www.glassdoor.com/Job/israel-jobs-SRCH_IL.0,6_IN119.htm'
+    browser.get(url)
     time.sleep(SLEEP_TIME)  # Wait until the page load
     try:
         # take the number of all open positions in Israel over the site
-        #num_of_available_pages = browser.find_element_by_xpath("div//[@class='cell middle hidMob padVertSm']").text
-        #num_of_available_pages = int(num_of_available_pages.split(' ')[-1])
-        num_of_available_pages = 30
+        num_of_available_pages = browser.find_element_by_xpath("//div[@class='cell middle hideMob padVertSm']").text
+        num_of_available_pages = int(num_of_available_pages.split(' ')[-1])
     except ElementClickInterceptedException:
-        num_of_available_pages = 30
+        num_of_available_pages = 30  # default value, most of the time there are 30 pages
         print(f'Their is a problem trying to get the number of available pages of jobs post, by default the number of '
               f'available pages of jobs post to scrap will be {num_of_available_pages}')
-    print(num_of_available_pages)
+    browser.quit()
     return num_of_available_pages
 
 
-def collecting_data(PAGE_NUMBER):
+def collecting_data(current_page_num):
     options = webdriver.FirefoxOptions()
     options.add_argument('headless')  # scrape without a new Firefox window every time
     browser = webdriver.Firefox(firefox_options=options, executable_path=EXE_PATH)
     browser.maximize_window()
-    print(URL)
-    browser.get(URL)
+    url = f'https://www.glassdoor.com/Job/israel-jobs-SRCH_IL.0,6_IN119_IP{current_page_num}.htm'
+    print(url)
+    browser.get(url)
 
     time.sleep(SLEEP_TIME)  # Wait until the page load
 
@@ -83,21 +83,21 @@ def collecting_data(PAGE_NUMBER):
     except ElementClickInterceptedException:
         pass
 
-        # time.sleep(SLEEP_TIME)
+    time.sleep(SLEEP_TIME)
 
-        # Click to the X to close popups
+    # Click to the X to close popups
     try:
-        browser.find_element_by_xpath("//div[@class='modal_main jaCreateAccountModalWrapper']//span["
-                                          "@class='SVGInline modal_closeIcon']").click()
+        browser.find_element_by_xpath("//div[contains(@class,'modal_main')]//span["
+                                      "@class='SVGInline modal_closeIcon']").click()
     except NoSuchElementException:
         pass
 
-        # Take all the buttons of each job we want to click on
+    # Take all the buttons of each job in this page we want to click on
     job_click_button = browser.find_elements_by_xpath("//li[contains(@class, 'job-listing')]")
 
     for button_job in job_click_button:
-
         button_job.click()
+
         # start collect job data
 
         # Catch the publication date
@@ -115,7 +115,6 @@ def collecting_data(PAGE_NUMBER):
         else:
             job_age = None
 
-
         time.sleep(SLEEP_TIME)
 
         # Collect mandatory information
@@ -131,7 +130,7 @@ def collecting_data(PAGE_NUMBER):
                 # Collect Job Description
                 job_description = browser.find_element_by_xpath('//div[@class="jobDescriptionContent desc"]').text
 
-                # Sometimes, czompany name and rating are join, we need to split them into Company Name and Rating
+                # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
                 # information.
 
                 if '\n' in company_name:  # We have a rating
@@ -142,7 +141,7 @@ def collecting_data(PAGE_NUMBER):
 
                 collect_mandatory = True
             except NoSuchElementException:
-                # button_job.click()
+                # button_job.click() #TODO: check if we need this
                 time.sleep(SLEEP_TIME)
 
             # Collect optional information
@@ -233,13 +232,9 @@ def collecting_data(PAGE_NUMBER):
 
 
 if __name__ == "__main__":
-    # collecting number of pages & posts
-    browser = webdriver.Firefox(executable_path=EXE_PATH)
-    browser.maximize_window()
-    browser.get(URL)
-    num_of_jobs = get_number_of_jobs(browser)
-    num_of_pages = get_number_of_pages(browser)
-    while PAGE_NUMBER < num_of_pages:
-        collecting_data(PAGE_NUMBER)
-        PAGE_NUMBER += 1
-        print(PAGE_NUMBER)
+    current_page_num = 1
+    num_of_pages = get_number_of_pages()
+    while current_page_num < num_of_pages:
+        collecting_data(current_page_num)
+        current_page_num += 1
+        print(current_page_num)
