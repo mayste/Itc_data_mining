@@ -15,10 +15,9 @@ from selenium.common.exceptions import ElementClickInterceptedException, NoSuchE
 
 # Global variables
 SLEEP_TIME = 5  # Random number for time sleep, depends on computers- in our we meed minimum 5
-URL = 'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword' \
-      '=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0 '
+URL = 'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0 '
 
-EXE_PATH = r'/Users/maylev/PycharmProjects/Itc_data_mining/geckodriver'
+EXE_PATH = r'/Users/Sheryl/PycharmProjects/Itc_data_mining/geckodriver'
 # TODO: put all webdriver part inside a function
 #options = webdriver.ChromeOptions()
 #options.add_argument('headless')  # scrape without a new Chrome window every time

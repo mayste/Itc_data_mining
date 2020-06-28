@@ -12,7 +12,7 @@ from selenium.common.exceptions import ElementClickInterceptedException, NoSuchE
 
 # Global variables
 SLEEP_TIME = 5  # Random number for time sleep, depends on computers- in our we meed minimum 5
-EXE_PATH = r'/Users/maylev/PycharmProjects/Itc_data_mining/geckodriver'
+EXE_PATH = r'/Users/Sheryl/PycharmProjects/Itc_data_mining/geckodriver'
 jobs_list = []
 
 
@@ -67,7 +67,8 @@ def get_number_of_pages():
     return num_of_available_pages
 
 
-def collecting_data(current_page_num):
+def collecting_data(current_page_num, job_title_input, location_input):
+
     options = webdriver.FirefoxOptions()
     options.add_argument('headless')  # scrape without a new Firefox window every time
     browser = webdriver.Firefox(firefox_options=options, executable_path=EXE_PATH)
@@ -75,6 +76,14 @@ def collecting_data(current_page_num):
     url = f'https://www.glassdoor.com/Job/israel-jobs-SRCH_IL.0,6_IN119_IP{current_page_num}.htm'
     print(url)
     browser.get(url)
+
+    job_title = browser.find_element_by_id("sc.keyword")
+    job_title.send_keys(job_title_input)
+    location = browser.find_element_by_id("sc.location")
+    location.clear()
+    location.send_keys(location_input)
+    browser.find_element_by_xpath('//button[@class="gd-ui-button ml-std col-auto css-1m85qmw"]').click()
+
 
     time.sleep(SLEEP_TIME)  # Wait until the page load
 
@@ -234,7 +243,9 @@ def collecting_data(current_page_num):
 if __name__ == "__main__":
     current_page_num = 1
     num_of_pages = get_number_of_pages()
+    job_title_input = input('Enter a job title')
+    location_input = input('Enter a location')
     while current_page_num < num_of_pages:
-        collecting_data(current_page_num)
+        collecting_data(current_page_num, job_title_input, location_input)
         current_page_num += 1
         print(current_page_num)
