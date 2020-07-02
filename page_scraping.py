@@ -1,5 +1,10 @@
 from scraper import Scraper
 
+# from command_args import args
+
+# FIRST_INSTANCE_TO_SCRAP = args.first_user
+
+
 class PageScraping(Scraper):
 
     def __init__(self,page_url):
