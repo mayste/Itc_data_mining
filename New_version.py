@@ -12,7 +12,7 @@ from selenium.common.exceptions import ElementClickInterceptedException, NoSuchE
 
 # Global variables
 SLEEP_TIME = 5  # Random number for time sleep, depends on computers- in our we meed minimum 5
-EXE_PATH = r'/Users/Sheryl/PycharmProjects/Itc_data_mining/geckodriver'
+EXE_PATH = r'/Users/Sheryl/PycharmProjects/Itc_data_mining/webDrivers/geckodriver'
 jobs_list = []
 
 
