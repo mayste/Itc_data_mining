@@ -79,3 +79,7 @@ class Job:
         :return:
         """
         self.company_name = value
+
+    def __repr__(self):#TODO: temp function to print
+        print(self.job_title, self.job_description, self.job_location, self.job_publication_date, self.company_name)
+        print('\n')

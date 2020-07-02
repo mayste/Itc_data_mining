@@ -180,3 +180,9 @@ class Company:
         :return:
         """
         self.company_headquarters = value
+
+    def __repr__(self):  # TODO: temp function to print
+        print(self.company_name, self.company_size, self.company_founded, self.company_industry, self.company_sector,
+              self.company_type, self.company_rating, self.company_competitors, self.company_revenue,
+              self.company_headquarters)
+        print('\n')

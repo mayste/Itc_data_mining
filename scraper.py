@@ -26,14 +26,13 @@ class Scraper():
         self.browser.maximize_window()
 
     def set_search_keywords(self):
-
         self.browser.get(DEFAULT_URL)
         job_title = self.browser.find_element_by_id(id_job_title_kw)
-        job_title.send_keys("Data science")  # TODO: ask user to input job title
+        job_title.send_keys('Data science')  # TODO: ask user to input job title
 
         location = self.browser.find_element_by_id(id_job_title_location)
         location.clear()  # TODO: check what it does
-        location.send_keys('Israel')  # TODO: ask user to input job location
+        location.send_keys('US')  # TODO: ask user to input job location
 
         try:
             pop_up = self.browser.find_element_by_xpath(pop_up_xpath)
@@ -44,11 +43,9 @@ class Scraper():
         search_button = self.browser.find_element_by_id(id_search_button)
         search_button.click()
 
-        current_url = self.browser.current_url
-
         time.sleep(SLEEP_TIME)
 
-        return current_url
+        return self.browser.current_url
 
     def get_num_pages(self, current_url):
 
@@ -90,9 +87,10 @@ class Scraper():
 
         current_page = 1
 
-        while current_page < num_of_available_pages:
+        while current_page <= num_of_available_pages:
             page_url = new_url.split('IP')[FIRST_ELEMENT] + 'IP' + str(current_page) + '.htm'
             list_url.append(page_url)
             current_page += 1
 
+        self.browser.quit()
         return list_url
