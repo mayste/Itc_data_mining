@@ -4,13 +4,13 @@
 
 # SLEEP_FACTOR = args.sleep_factor
 
-
 from selenium import webdriver  # allows us to open a browser and do the navigation
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
-from element_id import id_job_title_kw, id_job_title_location, id_search_button
-from path import DEFAULT_URL, EXE_PATH, pop_up_xpath, num_pages_xpath, next_xpath
 import time
-from constants import SLEEP_TIME, LAST_ELEMENT, FIRST_ELEMENT, DEFAULT_NUM_PAGES
+from constants import SLEEP_TIME, LAST_ELEMENT, FIRST_ELEMENT, DEFAULT_NUM_PAGES, ERROR_NUM_PAGES, ERROR_NEXT, \
+    DEFAULT_URL, EXE_PATH, pop_up_xpath, num_pages_xpath, next_xpath, id_job_title_kw, id_job_title_location,\
+    id_search_button, SPLIT_URL, END_URL, FIRST_PAGE
+import command_args
 
 
 class Scraper():
@@ -22,17 +22,17 @@ class Scraper():
         """
         Sets up the default URL.
         """
-        self.browser = webdriver.Firefox(executable_path=EXE_PATH)
+        self.browser = webdriver.Firefox(executable_path=command_args.args.driver_path)
         self.browser.maximize_window()
 
     def set_search_keywords(self):
         self.browser.get(DEFAULT_URL)
         job_title = self.browser.find_element_by_id(id_job_title_kw)
-        job_title.send_keys('Data science')  # TODO: ask user to input job title
+        job_title.send_keys(command_args.args.job_title)  # TODO: ask user to input job title
 
         location = self.browser.find_element_by_id(id_job_title_location)
         location.clear()  # TODO: check what it does
-        location.send_keys('US')  # TODO: ask user to input job location
+        location.send_keys(command_args.args.job_location)  # TODO: ask user to input job location
 
         try:
             pop_up = self.browser.find_element_by_xpath(pop_up_xpath)
@@ -58,9 +58,7 @@ class Scraper():
 
         except ElementClickInterceptedException:
             num_of_available_pages = DEFAULT_NUM_PAGES  # default value
-            print(
-                f'Their is a problem trying to get the number of available pages of jobs post, by default the number of '
-                f'available pages of jobs post to scrap will be {num_of_available_pages}')
+            print(ERROR_NUM_PAGES)
 
         # time.sleep(SLEEP_TIME)
 
@@ -79,16 +77,16 @@ class Scraper():
             next_button = self.browser.find_element_by_xpath(next_xpath)
             next_button.click()
         except NoSuchElementException:
-            print(f"Not succeed to click on next")
+            print(ERROR_NEXT)
 
         time.sleep(SLEEP_TIME)
 
         new_url = self.browser.current_url
 
-        current_page = 1
+        current_page = FIRST_PAGE
 
         while current_page <= num_of_available_pages:
-            page_url = new_url.split('IP')[FIRST_ELEMENT] + 'IP' + str(current_page) + '.htm'
+            page_url = new_url.split(SPLIT_URL)[FIRST_ELEMENT] + SPLIT_URL + str(current_page) + END_URL
             list_url.append(page_url)
             current_page += 1
 
