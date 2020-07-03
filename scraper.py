@@ -8,7 +8,7 @@ from selenium import webdriver  # allows us to open a browser and do the navigat
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 import time
 from constants import SLEEP_TIME, LAST_ELEMENT, FIRST_ELEMENT, DEFAULT_NUM_PAGES, ERROR_NUM_PAGES, ERROR_NEXT, \
-    DEFAULT_URL, EXE_PATH, pop_up_xpath, num_pages_xpath, next_xpath, id_job_title_kw, id_job_title_location,\
+    DEFAULT_URL, pop_up_xpath, num_pages_xpath, next_xpath, id_job_title_kw, id_job_title_location,\
     id_search_button, SPLIT_URL, END_URL, FIRST_PAGE
 import command_args
 
