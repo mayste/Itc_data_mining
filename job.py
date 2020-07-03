@@ -81,5 +81,9 @@ class Job:
         self.company_name = value
 
     def __repr__(self):#TODO: temp function to print
-        print(self.job_title, self.job_description, self.job_location, self.job_publication_date, self.company_name)
-        print('\n')
+        print(f'\njob_title: {self.job_title}')
+        print(f'company_name: {self.company_name}')
+        print(f'job_location: {self.job_location}')
+        print(f'job_publication_date: {self.job_publication_date}')
+        print(f'job_description: {self.job_description}')
+        return 'yey job'

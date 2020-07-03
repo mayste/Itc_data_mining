@@ -5,31 +5,24 @@ Authors: May Steinfeld & Sheryl Sitruk
 
 
 class Company:
-    def __init__(self, company_name, company_size, company_founded, company_industry, company_sector, company_type,
-                 company_rating, company_competitors, company_revenue, company_headquarters):
+    def __init__(self, company_name, company_rating):
         """
         constructor
         :param company_name: string
-        :param company_size: string
-        :param company_founded: year
-        :param company_industry: string
-        :param company_sector: string
-        :param company_type: string
         :param company_rating: float
-        :param company_competitors: string #TODO: check maybe it list of strings
-        :param company_revenue: string
-        :param company_headquarters: string
+        #TODO: check maybe it list of strings
         """
         self.company_name = company_name
-        self.company_size = company_size
-        self.company_founded = company_founded
-        self.company_industry = company_industry
-        self.company_sector = company_sector
-        self.company_type = company_type
         self.company_rating = company_rating
-        self.company_competitors = company_competitors
-        self.company_revenue = company_revenue
-        self.company_headquarters = company_headquarters
+
+        self.company_size = None
+        self.company_founded = None
+        self.company_industry = None
+        self.company_sector = None
+        self.company_type = None
+        self.company_competitors = None
+        self.company_revenue = None
+        self.company_headquarters = None
 
     def get_name(self):
         """
@@ -182,7 +175,14 @@ class Company:
         self.company_headquarters = value
 
     def __repr__(self):  # TODO: temp function to print
-        print(self.company_name, self.company_size, self.company_founded, self.company_industry, self.company_sector,
-              self.company_type, self.company_rating, self.company_competitors, self.company_revenue,
-              self.company_headquarters)
-        print('\n')
+        print(f'\ncompany: {self.company_name}')
+        print(f'size: {self.company_size}')
+        print(f'company_founded: {self.company_founded}')
+        print(f'company_industry: {self.company_industry}')
+        print(f'company_sector: {self.company_sector}')
+        print(f'company_type: {self.company_type}')
+        print(f'company_rating: {self.company_rating}')
+        print(f'company_competitors: {self.company_competitors}')
+        print(f'company_revenue: {self.company_revenue}')
+        print(f'company_headquarters: {self.company_headquarters}')
+        return 'yey'

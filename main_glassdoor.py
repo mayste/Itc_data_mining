@@ -1,4 +1,3 @@
-import job
 from page_scraping import PageScraping
 from scraper import Scraper
 
