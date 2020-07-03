@@ -2,8 +2,11 @@ from scraper import Scraper
 from job import Job
 from company import Company
 import time
-from constants import SLEEP_TIME
-from path import pop_up_xpath
+from constants import SLEEP_TIME, pop_up_xpath, HOUR, DAY, MONTH, \
+    FIRST_ELEMENT, ALL_DAY, DATE_FORMAT, FIRST, publication_date_xpath, company_name_xpath, job_title_xpath, \
+    job_location_xpath, job_description_xpath, company_size_xpath, overview_xpath, company_founded_xpath, \
+    company_industry_xpath, company_sector_xpath, company_type_xpath, company_competitors_xpath, \
+    company_revenue_xpath, company_headquarters_xpath, ERROR_OPTIONAL_DATA, selected_xpath, job_click_button_xpath
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 from dateutil.relativedelta import relativedelta
 from datetime import date
@@ -32,14 +35,14 @@ class PageScraping(Scraper):
 
     def convert_publication_date(self, publication_date):
         # if the job has been published this day print the day of today
-        if 'h' in publication_date and '24' not in publication_date:
-            return date.today().strftime("%Y-%m-%d")
-        elif 'h' in publication_date and '24' in publication_date:
-            return (date.today() - relativedelta(days=1)).strftime("%Y-%m-%d")
-        elif 'd' in publication_date:
-            return (date.today() - relativedelta(days=int(publication_date.split('d')[0]))).strftime("%Y-%m-%d")
-        elif 'm' in publication_date:
-            return (date.today() - relativedelta(months=int(publication_date.split('m')[0]))).strftime("%Y-%m-%d")
+        if HOUR in publication_date and ALL_DAY not in publication_date:
+            return date.today().strftime(DATE_FORMAT)
+        elif HOUR in publication_date and ALL_DAY in publication_date:
+            return (date.today() - relativedelta(days=FIRST)).strftime(DATE_FORMAT)
+        elif DAY in publication_date:
+            return (date.today() - relativedelta(days=int(publication_date.split(DAY)[FIRST_ELEMENT]))).strftime(DATE_FORMAT)
+        elif MONTH in publication_date:
+            return (date.today() - relativedelta(months=int(publication_date.split(MONTH)[FIRST_ELEMENT]))).strftime(DATE_FORMAT)
         # else:
         #    return None
 
@@ -52,25 +55,28 @@ class PageScraping(Scraper):
             button_job.click()
             try:
                 # Catch the publication date
-                job_publication_date = self.browser.find_element_by_xpath(
-                    "//li[contains(@class,'selected')]//div[@class='jobContainer']//div[@data-test='job-age']").text
+                job_publication_date = self.browser.find_element_by_xpath(publication_date_xpath).text
                 time.sleep(SLEEP_TIME)
+
                 # Collect Company Name from a post
-                company_name = self.browser.find_element_by_xpath('//div[@class="employerName"]').text
+                company_name = self.browser.find_element_by_xpath(company_name_xpath).text
+
                 # Collect Job Title from a post
-                job_title = self.browser.find_element_by_xpath('//div[@class="title"]').text
+                job_title = self.browser.find_element_by_xpath(job_title_xpath).text
+
                 # Collect Job Location from a post
-                job_location = self.browser.find_element_by_xpath('//div[@class="location"]').text
+                job_location = self.browser.find_element_by_xpath(job_location_xpath).text
+
                 # Collect Job Description
-                job_description = self.browser.find_element_by_xpath('//div[@class="jobDescriptionContent desc"]').text
+                job_description = self.browser.find_element_by_xpath(job_description_xpath).text
 
                 # call function to convert publication date
                 job_publication_date = self.convert_publication_date(job_publication_date)
 
                 # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
                 if '\n' in company_name:  # We have a rating
-                    company_rating = company_name.split('\n')[1]
-                    company_name = company_name.split('\n')[0]
+                    company_rating = company_name.split('\n')[FIRST]
+                    company_name = company_name.split('\n')[FIRST_ELEMENT]
                 else:  # No rating
                     company_rating = None
 
@@ -88,38 +94,30 @@ class PageScraping(Scraper):
         # Collect optional information
         try:
             # Click on company in the hyper details
-            self.browser.find_element_by_xpath('//div[@class="tab" and @data-tab-type="overview"]').click()
+            self.browser.find_element_by_xpath(overview_xpath).click()
 
             time.sleep(SLEEP_TIME)
 
             # Catch company size information
-            company.set_company_size(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Size"]//following-sibling::*'))
+            company.set_company_size(self.catch_optional_text_value_by_xpath(company_size_xpath))
             # Catch founded year of company
-            company.set_company_founded(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Founded"]//following-sibling::*'))
+            company.set_company_founded(self.catch_optional_text_value_by_xpath(company_founded_xpath))
             # Catch company industry
-            company.set_company_industry(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Industry"]//following-sibling::*'))
+            company.set_company_industry(self.catch_optional_text_value_by_xpath(company_industry_xpath))
             # Catch company sector
-            company.set_company_sector(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Sector"]//following-sibling::*'))
+            company.set_company_sector(self.catch_optional_text_value_by_xpath(company_sector_xpath))
             # Catch company type
-            company.set_company_type(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Type"]//following-sibling::*'))
+            company.set_company_type(self.catch_optional_text_value_by_xpath(company_type_xpath))
             # Catch competitors
-            company.set_company_competitors(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Competitors"]//following-sibling::*'))
+            company.set_company_competitors(self.catch_optional_text_value_by_xpath(company_competitors_xpath))
             # Catch company revenue
-            company.set_company_revenue(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Revenue"]//following-sibling::*'))
+            company.set_company_revenue(self.catch_optional_text_value_by_xpath(company_revenue_xpath))
             # Catch company headquarters
-            company.set_company_headquarters(self.catch_optional_text_value_by_xpath(
-                '//div[@class="infoEntity"]//label[text()="Headquarters"]//following-sibling::*'))
+            company.set_company_headquarters(self.catch_optional_text_value_by_xpath(company_headquarters_xpath))
 
         # If there is no overview page(company tab)
         except NoSuchElementException:
-            print("There is no optional data for this company on this job")
+            print(ERROR_OPTIONAL_DATA)
             #company_size = None
             #company_founded = None
             #company_industry = None
@@ -142,14 +140,14 @@ class PageScraping(Scraper):
             pass
 
         try:
-            self.browser.find_element_by_xpath("//li[contains(@class, 'selected')]").click()
+            self.browser.find_element_by_xpath(selected_xpath).click()
         except ElementClickInterceptedException:  # NoSuchElementException TODO: check the error
             pass
 
         time.sleep(SLEEP_TIME)
 
         # Take all the buttons of each job in this page we want to click on
-        job_click_button = self.browser.find_elements_by_xpath("//li[contains(@class, 'job-listing')]")
+        job_click_button = self.browser.find_elements_by_xpath(job_click_button_xpath)
 
         try:
             pop_up = self.browser.find_element_by_xpath(pop_up_xpath)
