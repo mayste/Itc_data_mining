@@ -182,7 +182,7 @@ class PageScraping(Scraper):
                               company_rating, company_competitors, company_revenue, company_headquarters)
             self.jobs_page_list.append(job)
             self.companies_page_list.append(company)
-            self.browser.quit()
+        self.browser.quit()
         # this class will get a url for page and scrap the data inside then create a list of job objects and company objects
         # in the end of this class we have a list with all the jobs and company for this page that we can return to glassdor class
 
