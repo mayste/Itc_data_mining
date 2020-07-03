@@ -1,11 +1,25 @@
 from page_scraping import PageScraping
 from scraper import Scraper
+from datetime import datetime
+import logging
 
+"""
+TODO: delete after using
+logging.debug('This is a debug message')
+logging.info('This is an info message')
+logging.warning('This is a warning message')
+logging.error('This is an error message')
+logging.critical('This is a critical message')
+"""
 
 if __name__ == "__main__":
+    log_file_name = f'glassdoor_scrap_{datetime.now()}.log'
+    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode='w', format='%(asctime)s - %(process)d  - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+
     glassdoor_scraper = Scraper()
     current_url = glassdoor_scraper.set_search_keywords()
-    print(current_url)
+    logging.info(current_url)
+    #print(current_url)
 
     glassdoor_number_pages = glassdoor_scraper.get_num_pages(current_url)
     print(glassdoor_number_pages)

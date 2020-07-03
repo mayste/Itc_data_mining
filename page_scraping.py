@@ -3,7 +3,7 @@ from job import Job
 from company import Company
 import time
 from constants import SLEEP_TIME
-from path import pop_up_xpath
+from constants import pop_up_xpath
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 from dateutil.relativedelta import relativedelta
 from datetime import date
