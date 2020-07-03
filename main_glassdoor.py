@@ -1,10 +1,6 @@
 import job
 from page_scraping import PageScraping
-import path
 from scraper import Scraper
-import element_id
-import company
-import constants
 
 
 if __name__ == "__main__":

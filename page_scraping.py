@@ -20,6 +20,7 @@ class PageScraping(Scraper):
         self.jobs_page_list = []
         self.companies_page_list = []
 
+
     def collecting_data_from_page(self):
         self.browser.get(self.current_url)
         time.sleep(SLEEP_TIME)

@@ -13,7 +13,7 @@ import time
 from constants import SLEEP_TIME, LAST_ELEMENT, FIRST_ELEMENT, DEFAULT_NUM_PAGES
 
 
-class Scraper():
+class Scraper:
     """
        Contains functions related to scraping the website.
        """
