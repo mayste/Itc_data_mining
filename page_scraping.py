@@ -108,8 +108,13 @@ class PageScraping(Scraper):
             company.set_company_sector(self.catch_optional_text_value_by_xpath(company_sector_xpath))
             # Catch company type
             company.set_company_type(self.catch_optional_text_value_by_xpath(company_type_xpath))
-            # Catch competitors
-            company.set_company_competitors(self.catch_optional_text_value_by_xpath(company_competitors_xpath))
+
+            # Catch competitors and convert to list
+            competitors = self.catch_optional_text_value_by_xpath(company_competitors_xpath)
+            if competitors is not None:
+                competitors.split(',').strip()
+            print(competitors)
+            company.set_company_competitors(competitors)
             # Catch company revenue
             company.set_company_revenue(self.catch_optional_text_value_by_xpath(company_revenue_xpath))
             # Catch company headquarters

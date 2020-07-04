@@ -1,6 +1,8 @@
 import random
 
 # Constant
+HOST = 'localhost'
+CHARSET = 'utf8mb4'
 SLEEP_TIME = random.randint(5, 10)
 LAST_ELEMENT = -1
 FIRST_ELEMENT = 0

@@ -20,7 +20,7 @@ class Company:
         self.company_industry = None
         self.company_sector = None
         self.company_type = None
-        self.company_competitors = None
+        self.company_competitors = []
         self.company_revenue = None
         self.company_headquarters = None
 
@@ -142,7 +142,8 @@ class Company:
         :param value: string
         :return:
         """
-        self.company_competitors = value
+        #TODO: Check if working
+        self.company_competitors + value
 
     def get_company_revenue(self):
         """

@@ -2,7 +2,8 @@ from page_scraping import PageScraping
 from scraper import Scraper
 from datetime import datetime
 import logging
-
+import os
+from create_database import Database
 """
 TODO: delete after using
 logging.debug('This is a debug message')
@@ -13,9 +14,15 @@ logging.critical('This is a critical message')
 """
 
 if __name__ == "__main__":
-    log_file_name = f'glassdoor_scrap_{datetime.now()}.log'
-    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode='w', format='%(asctime)s - %(process)d  - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
-
+    if not os.path.exists('./logging'):  # we don't have this directory
+        os.mkdir('./logging')  # create directory
+    log_file_name = f'./logging/glassdoor_scrap_{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log'
+    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode='w', format='%(asctime)s - %(process)d  '
+                                                                                         '- %(name)s - %(levelname)s '
+                                                                                         '- %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    database = Database()
+    database.create_db()
     glassdoor_scraper = Scraper()
     current_url = glassdoor_scraper.set_search_keywords()
     logging.info(current_url)
