@@ -1,13 +1,13 @@
 import pymysql
 import command_args
-from constants import HOST,CHARSET
+from constants import CONSTANT_DICT
 
 
 # Connect to the database
 class Database:
     def __init__(self):
-        self.connection = pymysql.connect(host= HOST, user=command_args.args.database_user,
-                                          password=command_args.args.database_password, charset=CHARSET,
+        self.connection = pymysql.connect(host=CONSTANT_DICT['HOST'], user=command_args.args.database_user,
+                                          password=command_args.args.database_password, charset=CONSTANT_DICT['CHARSET'],
                                           cursorclass=pymysql.cursors.DictCursor)
 
     def create_db(self):

@@ -8,7 +8,7 @@ from selenium import webdriver  # allows us to open a browser and do the navigat
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 import time
 from constants import SLEEP_TIME, LAST_ELEMENT, FIRST_ELEMENT, DEFAULT_NUM_PAGES, ERROR_NUM_PAGES, ERROR_NEXT, \
-    DEFAULT_URL, pop_up_xpath, num_pages_xpath, next_xpath, id_job_title_kw, id_job_title_location,\
+    DEFAULT_URL, POP_UP_XPATH, NUM_PAGES_XPATH, NEXT_XPATH, id_job_title_kw, id_job_title_location,\
     id_search_button, SPLIT_URL, END_URL, FIRST_PAGE
 import command_args
 
@@ -35,7 +35,7 @@ class Scraper:
         location.send_keys(command_args.args.job_location)  # TODO: ask user to input job location
 
         try:
-            pop_up = self.browser.find_element_by_xpath(pop_up_xpath)
+            pop_up = self.browser.find_element_by_xpath(POP_UP_XPATH)
             pop_up.click()
         except NoSuchElementException:
             pass
@@ -53,7 +53,7 @@ class Scraper:
 
         try:
             # take the number of all open positions in Israel over the site
-            num_of_available_pages = self.browser.find_element_by_xpath(num_pages_xpath).text
+            num_of_available_pages = self.browser.find_element_by_xpath(NUM_PAGES_XPATH).text
             num_of_available_pages = int(num_of_available_pages.split(' ')[LAST_ELEMENT])
 
         except ElementClickInterceptedException:
@@ -74,7 +74,7 @@ class Scraper:
         list_url = []
 
         try:
-            next_button = self.browser.find_element_by_xpath(next_xpath)
+            next_button = self.browser.find_element_by_xpath(NEXT_XPATH)
             next_button.click()
         except NoSuchElementException:
             print(ERROR_NEXT)

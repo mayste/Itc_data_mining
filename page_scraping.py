@@ -2,7 +2,7 @@ from scraper import Scraper
 from job import Job
 from company import Company
 import time
-from constants import SLEEP_TIME, pop_up_xpath, HOUR, DAY, MONTH, \
+from constants import SLEEP_TIME, POP_UP_XPATH, HOUR, DAY, MONTH, \
     FIRST_ELEMENT, ALL_DAY, DATE_FORMAT, FIRST, publication_date_xpath, company_name_xpath, job_title_xpath, \
     job_location_xpath, job_description_xpath, company_size_xpath, overview_xpath, company_founded_xpath, \
     company_industry_xpath, company_sector_xpath, company_type_xpath, company_competitors_xpath, \
@@ -113,7 +113,8 @@ class PageScraping(Scraper):
             competitors = self.catch_optional_text_value_by_xpath(company_competitors_xpath)
             if competitors is not None:
                 competitors.split(',').strip()
-            print(competitors)
+
+            print(f'competitors: {competitors}')
             company.set_company_competitors(competitors)
             # Catch company revenue
             company.set_company_revenue(self.catch_optional_text_value_by_xpath(company_revenue_xpath))
@@ -139,7 +140,7 @@ class PageScraping(Scraper):
         print(self.current_url)
         time.sleep(SLEEP_TIME)
         try:
-            pop_up = self.browser.find_element_by_xpath(pop_up_xpath)
+            pop_up = self.browser.find_element_by_xpath(POP_UP_XPATH)
             pop_up.click()
         except NoSuchElementException:
             pass
@@ -155,7 +156,7 @@ class PageScraping(Scraper):
         job_click_button = self.browser.find_elements_by_xpath(job_click_button_xpath)
 
         try:
-            pop_up = self.browser.find_element_by_xpath(pop_up_xpath)
+            pop_up = self.browser.find_element_by_xpath(POP_UP_XPATH)
             pop_up.click()
         except NoSuchElementException:
             pass
