@@ -17,7 +17,7 @@ if __name__ == "__main__":
     if not os.path.exists('./logging'):  # we don't have this directory
         os.mkdir('./logging')  # create directory
     log_file_name = f'./logging/glassdoor_scrap_{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log'
-    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode='w', format='%(asctime)s - %(process)d  '
+    logging.basicConfig(level=logging.DEBUG, filename=log_file_name, filemode='w', format='%(asctime)s - %(process)d  '
                                                                                          '- %(name)s - %(levelname)s '
                                                                                          '- %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')

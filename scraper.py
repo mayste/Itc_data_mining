@@ -28,6 +28,7 @@ class Scraper:
     def set_search_keywords(self):
         self.browser.get(DEFAULT_URL)
         job_title = self.browser.find_element_by_id(id_job_title_kw)
+        job_title.clear()
         job_title.send_keys(command_args.args.job_title)  # TODO: ask user to input job title
 
         location = self.browser.find_element_by_id(id_job_title_location)

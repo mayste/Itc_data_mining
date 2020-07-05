@@ -1,6 +1,7 @@
 import pymysql
 import command_args
 from constants import CONSTANT_DICT
+import logging
 
 
 # Connect to the database
@@ -18,12 +19,12 @@ class Database:
             sql_query = "SHOW DATABASES"
             cur.execute(sql_query)
             result = cur.fetchall()
-            print(result)
+            logging.debug(result)
         except RuntimeError as e:
-            print(e)
+            logging.exception(e)
 
-        # finally:
-        cur.close()
+        finally:
+            cur.close()
 
     def create_job_table(self):
         with self.connection.cursor() as cur:

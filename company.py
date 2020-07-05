@@ -176,14 +176,8 @@ class Company:
         self.company_headquarters = value
 
     def __repr__(self):  # TODO: temp function to print
-        print(f'\ncompany: {self.company_name}')
-        print(f'size: {self.company_size}')
-        print(f'company_founded: {self.company_founded}')
-        print(f'company_industry: {self.company_industry}')
-        print(f'company_sector: {self.company_sector}')
-        print(f'company_type: {self.company_type}')
-        print(f'company_rating: {self.company_rating}')
-        print(f'company_competitors: {self.company_competitors}')
-        print(f'company_revenue: {self.company_revenue}')
-        print(f'company_headquarters: {self.company_headquarters}')
-        return 'yey'
+        return ''.join(f'\ncompany: {self.company_name}\nsize: {self.company_size}\ncompany_founded: '
+                       f'{self.company_founded}\ncompany_industry: {self.company_industry}\ncompany_sector: '
+                       f'{self.company_sector}\ncompany_type: {self.company_type}\ncompany_rating: '
+                       f'{self.company_rating}\ncompany_competitors: {self.company_competitors}\ncompany_revenue: '
+                       f'{self.company_revenue}\ncompany_headquarters: {self.company_headquarters}')
