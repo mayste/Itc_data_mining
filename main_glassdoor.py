@@ -37,6 +37,6 @@ if __name__ == "__main__":
 
     for url in list_urls:
         page = PageScraping(url)
-        page.collecting_data_from_page()
+        page.collecting_data_from_page(database)
         print(page.get_companies_page_list())
         print(page.get_jobs_page_list())

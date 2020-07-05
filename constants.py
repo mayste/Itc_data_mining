@@ -15,7 +15,7 @@ DAY = 'd'
 MONTH = 'm'
 ALL_DAY = '24'
 DATE_FORMAT = "%Y-%m-%d"
-FIRST = 1
+SECOND_ELEMENT = 1
 
 # Path
 DEFAULT_URL = f'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0'

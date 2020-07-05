@@ -3,7 +3,7 @@ from job import Job
 from company import Company
 import time
 from constants import SLEEP_TIME, POP_UP_XPATH, HOUR, DAY, MONTH, \
-    FIRST_ELEMENT, ALL_DAY, DATE_FORMAT, FIRST, publication_date_xpath, company_name_xpath, job_title_xpath, \
+    FIRST_ELEMENT, ALL_DAY, DATE_FORMAT, SECOND_ELEMENT, publication_date_xpath, company_name_xpath, job_title_xpath, \
     job_location_xpath, job_description_xpath, company_size_xpath, overview_xpath, company_founded_xpath, \
     company_industry_xpath, company_sector_xpath, company_type_xpath, company_competitors_xpath, \
     company_revenue_xpath, company_headquarters_xpath, ERROR_OPTIONAL_DATA, selected_xpath, job_click_button_xpath
@@ -11,8 +11,6 @@ from selenium.common.exceptions import ElementClickInterceptedException, NoSuchE
 from dateutil.relativedelta import relativedelta
 from datetime import date
 
-
-# from command_args import args
 
 # FIRST_INSTANCE_TO_SCRAP = args.first_user
 
@@ -38,7 +36,7 @@ class PageScraping(Scraper):
         if HOUR in publication_date and ALL_DAY not in publication_date:
             return date.today().strftime(DATE_FORMAT)
         elif HOUR in publication_date and ALL_DAY in publication_date:
-            return (date.today() - relativedelta(days=FIRST)).strftime(DATE_FORMAT)
+            return (date.today() - relativedelta(days=1)).strftime(DATE_FORMAT)
         elif DAY in publication_date:
             return (date.today() - relativedelta(days=int(publication_date.split(DAY)[FIRST_ELEMENT]))).strftime(DATE_FORMAT)
         elif MONTH in publication_date:
@@ -75,7 +73,8 @@ class PageScraping(Scraper):
 
                 # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
                 if '\n' in company_name:  # We have a rating
-                    company_rating = company_name.split('\n')[FIRST]
+                    #TODO: Cheack its float
+                    company_rating = float(company_name.split('\n')[SECOND_ELEMENT])
                     company_name = company_name.split('\n')[FIRST_ELEMENT]
                 else:  # No rating
                     company_rating = None
@@ -101,7 +100,8 @@ class PageScraping(Scraper):
             # Catch company size information
             company.set_company_size(self.catch_optional_text_value_by_xpath(company_size_xpath))
             # Catch founded year of company
-            company.set_company_founded(self.catch_optional_text_value_by_xpath(company_founded_xpath))
+            # TODO: check that it a number
+            company.set_company_founded(int(self.catch_optional_text_value_by_xpath(company_founded_xpath)))
             # Catch company industry
             company.set_company_industry(self.catch_optional_text_value_by_xpath(company_industry_xpath))
             # Catch company sector
@@ -135,9 +135,9 @@ class PageScraping(Scraper):
         finally:
             return company
 
-    def collecting_data_from_page(self):
-        self.browser.get(self.current_url)
+    def collecting_data_from_page(self, database):
         print(self.current_url)
+        self.browser.get(self.current_url)
         time.sleep(SLEEP_TIME)
         try:
             pop_up = self.browser.find_element_by_xpath(POP_UP_XPATH)
@@ -166,7 +166,9 @@ class PageScraping(Scraper):
             job, company = self.catch_mandatory_data_and_rating(button_job)
             self.jobs_page_list.append(job)
             company = self.catch_optional_data(company)
+            database.insert_company(company)
             self.companies_page_list.append(company)
+        database.insert_company(flag_finish_page=True)
         self.browser.quit()
 
     def get_jobs_page_list(self):
