@@ -8,34 +8,64 @@ import logging
 class Database:
     def __init__(self):
         self.connection = pymysql.connect(host=CONSTANT_DICT['HOST'], user=command_args.args.database_user,
-                                          password=command_args.args.database_password, charset=CONSTANT_DICT['CHARSET'],
+                                          password=command_args.args.database_password,
+                                          charset=CONSTANT_DICT['CHARSET'],
                                           cursorclass=pymysql.cursors.DictCursor)
 
     def create_db(self):
-        try:
-            cur = self.connection.cursor()
-            sql_query = "CREATE DATABASE IF NOT EXISTS glassdoor"
-            cur.execute(sql_query)
-            sql_query = "SHOW DATABASES"
-            cur.execute(sql_query)
-            result = cur.fetchall()
-            logging.debug(result)
-        except RuntimeError as e:
-            logging.exception(e)
+        # TODO: think maybe drop table if exist
+        cur = self.connection.cursor()
+        sql_query = "CREATE DATABASE IF NOT EXISTS glassdoor;"
+        cur.execute(sql_query)
+        logging.info("Database was created successfully")
+        sql_query = "USE glassdoor;"
+        cur.execute(sql_query)
+        self.create_job_table(cur)
+        self.create_company_table(cur)
+        logging.info("Tables were created successfully")
 
-        finally:
-            cur.close()
+        # sql_query = "SHOW DATABASES"
+        # cur.execute(sql_query)
+        # result = cur.fetchall()
+        # logging.debug(result)
 
-    def create_job_table(self):
-        with self.connection.cursor() as cur:
-            sql_create_job_table = """SELECT MAX(nb_points) AS max_trip, MIN(nb_points) AS min_trip, AVG(nb_points) AS avg_trip 
-                        FROM trips"""
-            cur.execute(sql_create_job_table)
-            result = cur.fetchall()
-            print(result)
+        # cur.close()
 
-    def create_company_table(self):
-        pass
+    def create_job_table(self, cur):
+        sql_create_job_table = """
+            CREATE TABLE IF NOT EXISTS Job (
+            job_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            job_title varchar(255) NOT NULL,
+            job_description text NOT NULL,
+            job_location varchar(255) NOT NULL,
+            job_publication_date datetime NOT NULL,
+            company_id int NOT NULL
+            );
+            """
+        # TODO: check how to deal description
+        cur.execute(sql_create_job_table)
+
+    def create_company_table(self, cur):
+        sql_create_company_table = """
+            CREATE TABLE IF NOT EXISTS Company (
+            company_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            company_name varchar(255) UNIQUE NOT NULL,
+            company_size varchar(255),
+            company_rating int,
+            company_founded year,
+            company_industry varchar(255),
+            company_sector varchar(255),
+            company_type varchar(255),
+            company_revenue varchar(255),
+            company_headquarters varchar(255)
+            );
+            """
+        cur.execute(sql_create_company_table)
+        sql_alter_company_table = "ALTER TABLE Job ADD FOREIGN KEY (company_id) REFERENCES Company (company_id);"
+        cur.execute(sql_alter_company_table)
+
+        logging.info("MySQL connection is closed.")
+        cur.close()
 
     def create_job_location_table(self):
         pass
@@ -48,5 +78,3 @@ class Database:
 
     def save_page_jobs(self):
         pass
-
-

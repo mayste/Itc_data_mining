@@ -1,7 +1,7 @@
 import random
 
 # Constant
-CONSTANT_DICT = {'HOST':'localhost','CHARSET':'utf8mb4'}
+CONSTANT_DICT = {'HOST': 'localhost', 'CHARSET': 'utf8mb4'}
 
 SLEEP_TIME = random.randint(5, 10)
 LAST_ELEMENT = -1
@@ -16,7 +16,6 @@ MONTH = 'm'
 ALL_DAY = '24'
 DATE_FORMAT = "%Y-%m-%d"
 FIRST = 1
-
 
 # Path
 DEFAULT_URL = f'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0'
