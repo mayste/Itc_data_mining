@@ -5,6 +5,7 @@ import logging
 from company import Company
 
 
+#TODO: put in constant SQL queries
 # Connect to the database
 class Database:
     def __init__(self):
@@ -36,7 +37,7 @@ class Database:
     def create_job_table(self, cur):
         # TODO: think maybe drop table if exist
         sql_create_job_table = """
-        CREATE TABLE IF NOT EXISTS Job (
+        CREATE TABLE IF NOT EXISTS job (
         job_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
         job_title varchar(255) NOT NULL,
         job_description text NOT NULL,
@@ -45,13 +46,13 @@ class Database:
         company_id int NOT NULL
         );
         """
-        # TODO: check how to deal description
+        # TODO: check how to deal description and also find unique to title+company
         cur.execute(sql_create_job_table)
 
     def create_company_table(self, cur):
         # TODO: think maybe drop table if exist
         sql_create_company_table = """
-        CREATE TABLE IF NOT EXISTS Company (
+        CREATE TABLE IF NOT EXISTS company (
         company_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
         company_name varchar(255) UNIQUE NOT NULL,
         company_size varchar(255),
@@ -64,8 +65,9 @@ class Database:
         company_headquarters varchar(255)
         );
         """
+        #TODO: how to do competitors and location
         cur.execute(sql_create_company_table)
-        sql_alter_company_table = "ALTER TABLE Job ADD FOREIGN KEY (company_id) REFERENCES Company (company_id);"
+        sql_alter_company_table = "ALTER TABLE job ADD FOREIGN KEY (company_id) REFERENCES company (company_id);"
         cur.execute(sql_alter_company_table)
 
         logging.info("MySQL connection is closed.")
@@ -77,6 +79,7 @@ class Database:
                 sql_create_company_table = """INSERT INTO company (company_name, company_size, company_rating, 
                 company_founded, company_industry, company_sector, company_type, company_revenue, 
                 company_headquarters) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                print(company)
                 cur.execute(sql_create_company_table, [company.get_name(),
                                                        company.get_company_size(), company.get_company_rating(),
                                                        company.get_company_founded(),
@@ -87,12 +90,13 @@ class Database:
             else:
                 cur.commit()
             cur.close()
+            # TODO: critical you would do sys.exit next
 
     def create_job_location_table(self):
         pass
 
     def create_company_competitors_table(self):
-        pass
+        pass #TODO: insert to companies id not there else just update
 
     def save_page_jobs(self):
         pass

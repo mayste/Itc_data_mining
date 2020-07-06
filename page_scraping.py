@@ -74,7 +74,7 @@ class PageScraping(Scraper):
                 # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
                 if '\n' in company_name:  # We have a rating
                     #TODO: Cheack its float
-                    company_rating = float(company_name.split('\n')[SECOND_ELEMENT])
+                    company_rating = company_name.split('\n')[SECOND_ELEMENT]
                     company_name = company_name.split('\n')[FIRST_ELEMENT]
                 else:  # No rating
                     company_rating = None
@@ -101,7 +101,7 @@ class PageScraping(Scraper):
             company.set_company_size(self.catch_optional_text_value_by_xpath(company_size_xpath))
             # Catch founded year of company
             # TODO: check that it a number
-            company.set_company_founded(int(self.catch_optional_text_value_by_xpath(company_founded_xpath)))
+            company.set_company_founded(self.catch_optional_text_value_by_xpath(company_founded_xpath))
             # Catch company industry
             company.set_company_industry(self.catch_optional_text_value_by_xpath(company_industry_xpath))
             # Catch company sector

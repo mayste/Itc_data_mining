@@ -11,16 +11,17 @@ logging.info('This is an info message')
 logging.warning('This is a warning message')
 logging.error('This is an error message')
 logging.critical('This is a critical message')
+logging.exception('This is a critical message')
 """
 
 if __name__ == "__main__":
+    #TODO: change the path / logging to fit linux and windows
     if not os.path.exists('./logging'):  # we don't have this directory
         os.mkdir('./logging')  # create directory
     log_file_name = f'./logging/glassdoor_scrap_{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log'
-    logging.basicConfig(level=logging.DEBUG, filename=log_file_name, filemode='w', format='%(asctime)s - %(process)d  '
-                                                                                         '- %(name)s - %(levelname)s '
-                                                                                         '- %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
+    logging.basicConfig(level=logging.DEBUG, filename=log_file_name, filemode='w', format='%(asctime)s - %(name)s - '
+                                                                                          '%(levelname)s - %(message)s'
+                        ,datefmt='%Y-%m-%d %H:%M:%S')
     database = Database()
     database.create_db()
 

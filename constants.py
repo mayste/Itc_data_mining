@@ -1,5 +1,6 @@
 import random
 
+# TODO: Change to dict of dict
 # Constant
 CONSTANT_DICT = {'HOST': 'localhost', 'CHARSET': 'utf8mb4'}
 
