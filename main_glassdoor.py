@@ -4,8 +4,10 @@ from datetime import datetime
 import logging
 import os
 from create_database import Database
+
+
+#TODO: delete after using
 """
-TODO: delete after using
 logging.debug('This is a debug message')
 logging.info('This is an info message')
 logging.warning('This is a warning message')
@@ -14,6 +16,7 @@ logging.critical('This is a critical message')
 logging.exception('This is a critical message')
 """
 
+# TODO: Try catch for all db and also all the project
 if __name__ == "__main__":
     #TODO: change the path / logging to fit linux and windows
     if not os.path.exists('./logging'):  # we don't have this directory

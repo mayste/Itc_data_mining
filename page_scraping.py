@@ -2,6 +2,7 @@ from scraper import Scraper
 from job import Job
 from company import Company
 import time
+import constants
 from constants import SLEEP_TIME, POP_UP_XPATH, HOUR, DAY, MONTH, \
     FIRST_ELEMENT, ALL_DAY, DATE_FORMAT, SECOND_ELEMENT, publication_date_xpath, company_name_xpath, job_title_xpath, \
     job_location_xpath, job_description_xpath, company_size_xpath, overview_xpath, company_founded_xpath, \
@@ -11,8 +12,6 @@ from selenium.common.exceptions import ElementClickInterceptedException, NoSuchE
 from dateutil.relativedelta import relativedelta
 from datetime import date
 
-
-# FIRST_INSTANCE_TO_SCRAP = args.first_user
 
 class PageScraping(Scraper):
     # this class will get a url for page and scrap the data inside then create a list of job objects and company objects
@@ -38,9 +37,11 @@ class PageScraping(Scraper):
         elif HOUR in publication_date and ALL_DAY in publication_date:
             return (date.today() - relativedelta(days=1)).strftime(DATE_FORMAT)
         elif DAY in publication_date:
-            return (date.today() - relativedelta(days=int(publication_date.split(DAY)[FIRST_ELEMENT]))).strftime(DATE_FORMAT)
+            return (date.today() - relativedelta(days=int(publication_date.split(DAY)[FIRST_ELEMENT]))).strftime(
+                DATE_FORMAT)
         elif MONTH in publication_date:
-            return (date.today() - relativedelta(months=int(publication_date.split(MONTH)[FIRST_ELEMENT]))).strftime(DATE_FORMAT)
+            return (date.today() - relativedelta(months=int(publication_date.split(MONTH)[FIRST_ELEMENT]))).strftime(
+                DATE_FORMAT)
         # else:
         #    return None
 
@@ -73,7 +74,7 @@ class PageScraping(Scraper):
 
                 # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
                 if '\n' in company_name:  # We have a rating
-                    #TODO: Cheack its float
+                    # TODO: Cheack its float
                     company_rating = company_name.split('\n')[SECOND_ELEMENT]
                     company_name = company_name.split('\n')[FIRST_ELEMENT]
                 else:  # No rating
@@ -86,10 +87,11 @@ class PageScraping(Scraper):
                 return job, company
 
             except NoSuchElementException:
-                #button_job.click() #TODO: check if its not succeed to load we need to click again
+                # button_job.click() #TODO: check if its not succeed to load we need to click again
                 time.sleep(SLEEP_TIME)
 
     def catch_optional_data(self, company):
+        # TODO: Check if value = Unknown put None
         # Collect optional information
         try:
             # Click on company in the hyper details
@@ -107,7 +109,12 @@ class PageScraping(Scraper):
             # Catch company sector
             company.set_company_sector(self.catch_optional_text_value_by_xpath(company_sector_xpath))
             # Catch company type
-            company.set_company_type(self.catch_optional_text_value_by_xpath(company_type_xpath))
+            type = self.catch_optional_text_value_by_xpath(company_type_xpath)
+
+            # TODO: check if work
+            if type is not None:
+                type.split('-').strip()
+            company.set_company_type(type[constants.SECOND_ELEMENT])
 
             # Catch competitors and convert to list
             competitors = self.catch_optional_text_value_by_xpath(company_competitors_xpath)
@@ -115,6 +122,7 @@ class PageScraping(Scraper):
                 competitors.split(',').strip()
 
             print(f'competitors: {competitors}')
+            # TODO: Check if it put list and append to previous one
             company.set_company_competitors(competitors)
             # Catch company revenue
             company.set_company_revenue(self.catch_optional_text_value_by_xpath(company_revenue_xpath))
@@ -124,14 +132,14 @@ class PageScraping(Scraper):
         # If there is no overview page(company tab)
         except NoSuchElementException:
             print(ERROR_OPTIONAL_DATA)
-            #company_size = None
-            #company_founded = None
-            #company_industry = None
-            #company_sector = None
-            #company_type = None
-            #company_competitors = None
-            #company_revenue = None
-            #company_headquarters = None
+            # company_size = None
+            # company_founded = None
+            # company_industry = None
+            # company_sector = None
+            # company_type = None
+            # company_competitors = None
+            # company_revenue = None
+            # company_headquarters = None
         finally:
             return company
 

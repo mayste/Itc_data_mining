@@ -3,6 +3,7 @@ This class create an instance of comapny with all the information.
 Authors: May Steinfeld & Sheryl Sitruk
 """
 
+import constants
 
 class Company:
     def __init__(self, company_name, company_rating):
@@ -134,6 +135,8 @@ class Company:
         get company competitors
         :return: string
         """
+        if len(self.company_competitors) == constants.ZERO_VALUE:
+            return None
         return self.company_competitors
 
     def set_company_competitors(self, value):
