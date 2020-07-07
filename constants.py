@@ -26,27 +26,27 @@ DEFAULT_URL = f'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestCho
 POP_UP_XPATH = "//div[contains(@class,'modal_main')]//span[@class='SVGInline modal_closeIcon']"
 NUM_PAGES_XPATH = "//div[@class='cell middle hideMob padVertSm']"
 NEXT_XPATH = '//li[@class="next"]//a[@data-test="pagination-next"]'
-publication_date_xpath = "//li[contains(@class,'selected')]//div[@class='jobContainer']//div[@data-test='job-age']"
-company_name_xpath = '//div[@class="employerName"]'
-job_title_xpath = '//div[@class="title"]'
-job_location_xpath = '//div[@class="location"]'
-job_description_xpath = '//div[@class="jobDescriptionContent desc"]'
-overview_xpath = '//div[@class="tab" and @data-tab-type="overview"]'
-company_size_xpath = '//div[@class="infoEntity"]//label[text()="Size"]//following-sibling::*'
-company_founded_xpath = '//div[@class="infoEntity"]//label[text()="Founded"]//following-sibling::*'
-company_industry_xpath = '//div[@class="infoEntity"]//label[text()="Industry"]//following-sibling::*'
-company_sector_xpath = '//div[@class="infoEntity"]//label[text()="Sector"]//following-sibling::*'
-company_type_xpath = '//div[@class="infoEntity"]//label[text()="Type"]//following-sibling::*'
-company_competitors_xpath = '//div[@class="infoEntity"]//label[text()="Competitors"]//following-sibling::*'
-company_revenue_xpath = '//div[@class="infoEntity"]//label[text()="Revenue"]//following-sibling::*'
-company_headquarters_xpath = '//div[@class="infoEntity"]//label[text()="Headquarters"]//following-sibling::*'
-selected_xpath = "//li[contains(@class, 'selected')]"
-job_click_button_xpath = "//li[contains(@class, 'job-listing')]"
+PUBLICATION_DATE_XPATH = "//li[contains(@class,'selected')]//div[@class='jobContainer']//div[@data-test='job-age']"
+COMPANY_NAME_XPATH = '//div[@class="employerName"]'
+JOB_TITLE_XPATH = '//div[@class="title"]'
+JOB_LOCATION_XPATH = '//div[@class="location"]'
+JOB_DESCRIPTION_XPATH = '//div[@class="jobDescriptionContent desc"]'
+OVERVIEW_XPATH = '//div[@class="tab" and @data-tab-type="overview"]'
+COMPANY_SIZE_XPATH = '//div[@class="infoEntity"]//label[text()="Size"]//following-sibling::*'
+COMPANY_FOUNDED_XPATH = '//div[@class="infoEntity"]//label[text()="Founded"]//following-sibling::*'
+COMPANY_INDUSTRY_XPATH = '//div[@class="infoEntity"]//label[text()="Industry"]//following-sibling::*'
+COMPANY_SECTOR_XPATH = '//div[@class="infoEntity"]//label[text()="Sector"]//following-sibling::*'
+COMPANY_TYPE_XPATH = '//div[@class="infoEntity"]//label[text()="Type"]//following-sibling::*'
+COMPANY_COMPETITORS_XPATH = '//div[@class="infoEntity"]//label[text()="Competitors"]//following-sibling::*'
+COMPANY_REVENUE_XPATH = '//div[@class="infoEntity"]//label[text()="Revenue"]//following-sibling::*'
+COMPANY_HEADQUARTER_XPATH = '//div[@class="infoEntity"]//label[text()="Headquarters"]//following-sibling::*'
+SELECTED_XPATH = "//li[contains(@class, 'selected')]"
+JOB_CLICK_BUTTON_XPATH = "//li[contains(@class, 'job-listing')]"
 
 # element id
-id_job_title_kw = "sc.keyword"
-id_job_title_location = "sc.location"
-id_search_button = "HeroSearchButton"
+ID_JOB_TITLE_KW = "sc.keyword"
+ID_JOB_LOCATION_KW = "sc.location"
+ID_SEARCH_BUTTON = "HeroSearchButton"
 
 # Error message
 ERROR_NUM_PAGES = """f'Their is a problem trying to get the number of available pages of jobs post, by default the number of '

@@ -1,6 +1,6 @@
 import pymysql
 import command_args
-import constants
+import constants as cst
 import logging
 from company import Company
 
@@ -11,9 +11,9 @@ from company import Company
 class Database:
     def __init__(self):
         # Connect to the database
-        self.connection = pymysql.connect(host=constants.HOST, user=command_args.args.database_user,
+        self.connection = pymysql.connect(host=cst.HOST, user=command_args.args.database_user,
                                           password=command_args.args.database_password,
-                                          charset=constants.CHARSET,
+                                          charset=cst.CHARSET,
                                           cursorclass=pymysql.cursors.DictCursor)
 
     def create_db(self):
