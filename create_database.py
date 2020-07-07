@@ -10,14 +10,18 @@ from company import Company
 
 class Database:
     def __init__(self):
-        # Connect to the database
+        """
+        This function connect to the MYSQL database
+        """
         self.connection = pymysql.connect(host=cst.HOST, user=command_args.args.database_user,
                                           password=command_args.args.database_password,
                                           charset=cst.CHARSET,
                                           cursorclass=pymysql.cursors.DictCursor)
 
     def create_db(self):
-
+        """
+        This function runs the queries to create the database
+        """
         # TODO: think maybe drop table if exist
         cur = self.connection.cursor()
         sql_query = "CREATE DATABASE IF NOT EXISTS glassdoor;"
@@ -35,6 +39,10 @@ class Database:
         # logging.debug(result)
 
     def create_job_table(self, cur):
+        """
+        Create the job table
+        :param cur: connection cursor
+        """
         # TODO: think maybe drop table if exist
         sql_create_job_table = """
         CREATE TABLE IF NOT EXISTS job (
@@ -50,6 +58,10 @@ class Database:
         cur.execute(sql_create_job_table)
 
     def create_company_table(self, cur):
+        """
+        Create the company table
+        :param cur: connection cursor
+        """
         # TODO: think maybe drop table if exist
         # TODO: compare all fields type to be the same in DB/Class/DB Design
         sql_create_company_table = """
@@ -69,10 +81,11 @@ class Database:
 
         # TODO: how to do competitors and location
         cur.execute(sql_create_company_table)
-        sql_alter_company_table = "ALTER TABLE job ADD FOREIGN KEY (company_id) REFERENCES company (company_id);"
-        cur.execute(sql_alter_company_table)
 
     def insert_company(self, company=None, flag_finish_page=False):
+        """
+        Insert information into company table
+        """
         with self.connection.cursor() as cur:
             if not flag_finish_page:
                 #TODO: if key already in the database just update mysql ON DUPLICATE KEY UPDATE

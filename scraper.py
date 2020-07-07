@@ -24,21 +24,27 @@ class Scraper:
         self.browser.maximize_window()
 
     def set_search_keywords(self):
+        """
+        This function allows to search a specific job title and location according to the
+        input of the user on the command line
+        """
         self.browser.get(cst.DEFAULT_URL)
         job_title = self.browser.find_element_by_id(cst.ID_JOB_TITLE_KW)
-        job_title.clear()
-        job_title.send_keys(command_args.args.job_title)  # TODO: ask user to input job title
+        job_title.clear()  # clear if something is already written
+        job_title.send_keys(command_args.args.job_title)
 
         location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
-        location.clear()  # TODO: check what it does
-        location.send_keys(command_args.args.job_location)  # TODO: ask user to input job location
+        location.clear()  # clear if something is already written
+        location.send_keys(command_args.args.job_location)
 
         try:
+            # Close pop up
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
             pop_up.click()
         except NoSuchElementException:
             pass
 
+        # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
         search_button.click()
 
@@ -47,6 +53,11 @@ class Scraper:
         return self.browser.current_url
 
     def get_num_pages(self, current_url):
+        """
+        Get the number of pages availables for a specific job and location
+        :param current_url: string
+        :return: integer
+        """
 
         self.browser.get(current_url)
 
@@ -64,6 +75,14 @@ class Scraper:
         return num_of_available_pages
 
     def generate_pages_links(self, current_url, num_of_available_pages):
+        """
+         Call page_analysis to scrap the first page and also save first page address
+         Here implement click next and save a list with new url format from page 2 until number of pages
+         Send this list to page _analysis
+        :param current_url: String
+        :param num_of_available_pages: integer
+        :return: list of urls
+        """
         # call page_analysis to scrap the first page and also save first page address
         # here implement click next and save a list with new url format from page 2 until number of pages
         # send this list to page _analysis

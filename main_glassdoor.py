@@ -27,6 +27,9 @@ if __name__ == "__main__":
                         ,datefmt='%Y-%m-%d %H:%M:%S')
     database = Database()
     database.create_db()
+    # database.create_company_table()
+    # database.create_job_table()
+
 
     glassdoor_scraper = Scraper()
     current_url = glassdoor_scraper.set_search_keywords()

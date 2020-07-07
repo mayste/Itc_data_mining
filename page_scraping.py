@@ -9,8 +9,9 @@ from datetime import date
 
 
 class PageScraping(Scraper):
-    # this class will get a url for page and scrap the data inside then create a list of job objects and company objects
-    # in the end of this class we have a list with all the jobs and company for this page that we can return to glassdor class
+    # this class will get a url for page and scrap the data inside then create a list of job objects and company
+    # objects in the end of this class we have a list with all the jobs and company for this page that we can return
+    # to glassdoor class
 
     def __init__(self, page_url):
         Scraper.__init__(self)
@@ -19,6 +20,11 @@ class PageScraping(Scraper):
         self.companies_page_list = []
 
     def catch_optional_text_value_by_xpath(self, x_path):
+        """
+        This function take an Xpath as an argument and try to catch the text. If not succeed return none
+        :param x_path: constant
+        :return: String or None
+        """
         try:
             text_value = self.browser.find_element_by_xpath(x_path).text
             return text_value
@@ -26,6 +32,11 @@ class PageScraping(Scraper):
             return None
 
     def convert_publication_date(self, publication_date):
+        """
+        Take a publication date and convert into format Year-Month-Day
+        :param publication_date: string
+        :return: string
+        """
         # if the job has been published this day print the day of today
         if cst.HOUR in publication_date and cst.ALL_DAY not in publication_date:
             return date.today().strftime(cst.DATE_FORMAT)
@@ -41,7 +52,9 @@ class PageScraping(Scraper):
         #    return None
 
     def catch_mandatory_data_and_rating(self, button_job):  # TODO: not sure about the loop
-        # Collect mandatory information
+        """
+        Collect all the mandatory information on the website
+        """
         time.sleep(cst.SLEEP_TIME)
         collect_mandatory = False
         while not collect_mandatory:
@@ -86,6 +99,10 @@ class PageScraping(Scraper):
                 time.sleep(cst.SLEEP_TIME)
 
     def catch_optional_data(self, company):
+        """
+        Catch all the optional information of a company
+        :param company: string
+        """
         # TODO: Check if value = Unknown put None
         # Collect optional information
         try:
@@ -109,7 +126,7 @@ class PageScraping(Scraper):
             # TODO: check if work
             if type is not None:
                 type.split('-').strip()
-            company.set_company_type(type[cst..SECOND_ELEMENT])
+            company.set_company_type(type[cst.SECOND_ELEMENT])
 
             # Catch competitors and convert to list
             competitors = self.catch_optional_text_value_by_xpath(cst.COMPANY_COMPETITORS_XPATH)
@@ -139,6 +156,9 @@ class PageScraping(Scraper):
             return company
 
     def collecting_data_from_page(self, database):
+        """
+        Collect all the data on a specific page
+        """
         print(self.current_url)
         self.browser.get(self.current_url)
         time.sleep(cst.SLEEP_TIME)
@@ -175,7 +195,13 @@ class PageScraping(Scraper):
         self.browser.quit()
 
     def get_jobs_page_list(self):
+        """
+        Return a list of all jobs in a page
+        """
         return self.jobs_page_list
 
     def get_companies_page_list(self):
+        """
+        Return a list of all companies in a page
+        """
         return self.companies_page_list
