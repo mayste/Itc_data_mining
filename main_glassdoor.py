@@ -1,4 +1,3 @@
-from page_scraping import PageScraping
 from scraper import Scraper
 from datetime import datetime
 import logging
@@ -21,32 +20,25 @@ logging.exception('This is a critical message')
 
 # TODO: Try catch for all db and also all the project
 if __name__ == "__main__":
-    # TODO: change the path / logging to fit linux and windows
     if not os.path.exists(os.path.join(cst.LOGGING_DIR_NAME)):  # we don't have this directory
         os.mkdir(os.path.join(cst.LOGGING_DIR_NAME))  # create directory
-    log_file_name = f'./logging/glassdoor_scrap_{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log'
+    log_file_name = os.path.join(cst.LOGGING_DIR_NAME,f'glassdoor_scrap_{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log')
     logging.basicConfig(level=logging.DEBUG, filename=log_file_name, filemode='w', format='%(asctime)s - %(name)s - '
                                                                                           '%(levelname)s - %(message)s'
                         ,datefmt='%Y-%m-%d %H:%M:%S')
     database = Database()
     database.create_db()
-    # database.create_company_table()
-    # database.create_job_table()
-
-
     glassdoor_scraper = Scraper()
-    current_url = glassdoor_scraper.set_search_keywords()
-    logging.info(current_url)
-    #print(current_url)
+    glassdoor_scraper.set_search_keywords()
 
-    glassdoor_number_pages = glassdoor_scraper.get_num_pages(current_url)
+    #logging.info('nanan')
+
+    #TODO: click again on search if dont have job numbers
+    glassdoor_number_pages = glassdoor_scraper.get_num_pages()
     print(glassdoor_number_pages)
 
-    list_urls = glassdoor_scraper.generate_pages_links(current_url, glassdoor_number_pages)
-    print(list_urls)
-
-    for url in list_urls:
-        page = PageScraping(url)
-        page.collecting_data_from_page(database)
-        print(page.get_companies_page_list())
-        print(page.get_jobs_page_list())
+    #TODO: enter to function: collecting_data_from_page
+    i = 1
+    while i <= glassdoor_number_pages:
+        glassdoor_scraper.collecting_data_from_page(database)
+        i += 1

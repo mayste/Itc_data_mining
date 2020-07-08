@@ -22,6 +22,7 @@ class Database:
         """
         This function runs the queries to create the database
         """
+
         # TODO: think maybe drop table if exist
         cur = self.connection.cursor()
         sql_query = "CREATE DATABASE IF NOT EXISTS glassdoor;"
@@ -31,6 +32,10 @@ class Database:
         cur.execute(sql_query)
         self.create_job_table(cur)
         self.create_company_table(cur)
+        sql_alter_job_table = "ALTER TABLE job ADD FOREIGN KEY (company_id) REFERENCES company (company_id);"
+        cur.execute(sql_alter_job_table)
+        sql_alter_job_table = "ALTER TABLE job ADD UNIQUE KEY (job_title,company_id);"
+        cur.execute(sql_alter_job_table)
         logging.info("Tables were created successfully")
 
         # sql_query = "SHOW DATABASES"
@@ -50,7 +55,7 @@ class Database:
         job_title varchar(255) NOT NULL,
         job_description text NOT NULL,
         job_location varchar(255) NOT NULL,
-        job_publication_date datetime NOT NULL,
+        job_publication_date date NOT NULL,
         company_id int NOT NULL
         );
         """
@@ -78,7 +83,6 @@ class Database:
         company_headquarters varchar(255)
         );
         """
-
         # TODO: how to do competitors and location
         cur.execute(sql_create_company_table)
 
@@ -105,7 +109,7 @@ class Database:
                 self.connection.commit()
             else:
                 self.connection.commit()
-            logging.info("MySQL connection is closed.")
+            #logging.info("MySQL connection is closed.")
             # TODO: critical you would do sys.exit next
 
     def insert_job(self, job=None, flag_finish_page=False):
@@ -114,23 +118,23 @@ class Database:
                 # TODO: if key already in the database just update mysql
                 # TODO: when problem with insert or something rollback
                 #TODO: What to do with the foregin key company id
-                sql_insert_company_table = """INSERT INTO job (job_title, job_description, job_location, 
-                job_publication_date) VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE 
-                job_id=job_id"""
-                cur.execute(sql_insert_company_table, [job.get_title(), job.get_description(), job.get_location(), job.ge])
-                # TODO: have problem with insert type, revenue, headquarters
+                sql_insert_job_table = """INSERT INTO job (job_title, job_description, job_location, 
+                job_publication_date, company_id) VALUES (%s, %s, %s, %s, (SELECT company_id FROM company WHERE 
+                company_name = %s)) ON DUPLICATE KEY UPDATE job_id=job_id """
+                cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(), job.get_location(),
+                                                   job.get_publication_date(), job.get_company_name()])
                 self.connection.commit()
             else:
                 self.connection.commit()
-            logging.info("MySQL connection is closed.")
-            # TODO: critical you would do sys.exit next
 
-    # TODO: Where to close connetcion or cur             self.connection.close()
+            # TODO: critical you would do sys.exit next
+            #logging.info("MySQL connection is closed.")
+
+
+    # TODO: Where to close connetcion or cur self.connection.close()
+
     def create_job_location_table(self):
         pass
 
     def create_company_competitors_table(self):
         pass  # TODO: insert to companies id not there else just update
-
-    def save_page_jobs(self):
-        pass

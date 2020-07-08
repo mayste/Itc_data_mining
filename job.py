@@ -68,14 +68,14 @@ class Job:
     def get_publication_date(self):
         """
         get job publication date
-        :return: datetime
+        :return: string
         """
         return self.job_publication_date
 
     def set_publication_date(self, value):
         """
         set job publication date
-        :param value: datetime
+        :param value: string
         :return:
         """
         self.job_publication_date = value

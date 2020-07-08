@@ -16,6 +16,7 @@ ALL_DAY = '24'
 DATE_FORMAT = "%Y-%m-%d"
 SECOND_ELEMENT = 1
 ZERO_VALUE = 0
+UNKNOWN_INFO = 'unknown'
 HOST = 'localhost'
 CHARSET = 'utf8mb4'
 LOGGING_DIR_NAME = 'logging'
