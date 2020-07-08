@@ -11,7 +11,7 @@ class Job:
         :param job_title: string
         :param job_description: string
         :param job_location: string
-        :param job_publication_date: date
+        :param job_publication_date: datetime
         :param company_name: string
         """
         self.job_title = job_title
@@ -57,10 +57,25 @@ class Job:
         """
         return self.job_location
 
+    def set_location(self, value):
+        """
+        set job location
+        :param value: string
+        :return:
+        """
+        self.job_location = value
+
+    def get_publication_date(self):
+        """
+        get job publication date
+        :return: datetime
+        """
+        return self.job_publication_date
+
     def set_publication_date(self, value):
         """
         set job publication date
-        :param value: date
+        :param value: datetime
         :return:
         """
         self.job_publication_date = value

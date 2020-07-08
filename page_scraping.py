@@ -67,6 +67,8 @@ class PageScraping(Scraper):
                 # call function to convert publication date
                 job_publication_date = self.convert_publication_date(job_publication_date)
 
+                print(type(job_publication_date))
+
                 # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
                 if '\n' in company_name:  # We have a rating
                     # TODO: Cheack its float

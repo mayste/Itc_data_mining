@@ -58,7 +58,7 @@ class Database:
         company_name varchar(255) UNIQUE NOT NULL,
         company_size varchar(255),
         company_rating float,
-        company_founded year,
+        company_founded int,
         company_industry varchar(255),
         company_sector varchar(255),
         company_type varchar(255),
@@ -75,11 +75,12 @@ class Database:
     def insert_company(self, company=None, flag_finish_page=False):
         with self.connection.cursor() as cur:
             if not flag_finish_page:
-                # TODO: if key already in the database just update mysql ON DUPLICATE KEY UPDATE
+                # TODO: if key already in the database just update mysql
                 # TODO: when problem with insert or something rollback
                 sql_insert_company_table = """INSERT INTO company (company_name, company_size, company_rating, 
-                                company_founded, company_industry, company_sector, company_type, company_revenue, 
-                                company_headquarters) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                company_founded, company_industry, company_sector, company_type, company_revenue, 
+                company_headquarters) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE 
+                company_id=company_id """
                 cur.execute(sql_insert_company_table, [company.get_name(),
                                                        company.get_company_size(), company.get_company_rating(),
                                                        company.get_company_founded(),
@@ -87,6 +88,23 @@ class Database:
                                                        company.get_company_type(),
                                                        company.get_company_revenue(),
                                                        company.get_company_headquarters()])
+                # TODO: have problem with insert type, revenue, headquarters
+                self.connection.commit()
+            else:
+                self.connection.commit()
+            logging.info("MySQL connection is closed.")
+            # TODO: critical you would do sys.exit next
+
+    def insert_job(self, job=None, flag_finish_page=False):
+        with self.connection.cursor() as cur:
+            if not flag_finish_page:
+                # TODO: if key already in the database just update mysql
+                # TODO: when problem with insert or something rollback
+                #TODO: What to do with the foregin key company id
+                sql_insert_company_table = """INSERT INTO job (job_title, job_description, job_location, 
+                job_publication_date) VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE 
+                job_id=job_id"""
+                cur.execute(sql_insert_company_table, [job.get_title(), job.get_description(), job.get_location(), job.ge])
                 # TODO: have problem with insert type, revenue, headquarters
                 self.connection.commit()
             else:

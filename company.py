@@ -58,14 +58,14 @@ class Company:
     def get_company_founded(self):
         """
         get company founded year
-        :return: year
+        :return: int
         """
         return self.company_founded
 
     def set_company_founded(self, value):
         """
         set company founded year
-        :param value: year
+        :param value: int
         :return:
         """
         self.company_founded = value
@@ -133,7 +133,7 @@ class Company:
     def get_company_competitors(self):
         """
         get company competitors
-        :return: string
+        :return: list
         """
         if len(self.company_competitors) == cst.ZERO_VALUE:
             return None
