@@ -17,6 +17,8 @@ logging.critical('This is a critical message')
 logging.exception('This is a critical message')
 """
 
+#TODO: make sure we enter of fields to db and types
+
 # TODO: Try catch for all db and also all the project
 if __name__ == "__main__":
     # TODO: change the path / logging to fit linux and windows
