@@ -109,12 +109,12 @@ class PageScraping(Scraper):
             # Catch company sector
             company.set_company_sector(self.catch_optional_text_value_by_xpath(company_sector_xpath))
             # Catch company type
-            type = self.catch_optional_text_value_by_xpath(company_type_xpath)
+            company_type = self.catch_optional_text_value_by_xpath(company_type_xpath)
 
             # TODO: check if work
-            if type is not None:
-                type.split('-').strip()
-            company.set_company_type(type[constants.SECOND_ELEMENT])
+            if company_type is not None:
+                company_type.split('-').strip()
+            company.set_company_type(company_type[constants.SECOND_ELEMENT])
 
             # Catch competitors and convert to list
             competitors = self.catch_optional_text_value_by_xpath(company_competitors_xpath)
