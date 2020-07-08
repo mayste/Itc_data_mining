@@ -18,6 +18,7 @@ SECOND_ELEMENT = 1
 ZERO_VALUE = 0
 HOST = 'localhost'
 CHARSET = 'utf8mb4'
+LOGGING_DIR_NAME = 'logging'
 
 # Path
 DEFAULT_URL = f'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0'
