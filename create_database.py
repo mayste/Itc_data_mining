@@ -88,8 +88,8 @@ class Database:
         """
         with self.connection.cursor() as cur:
             if not flag_finish_page:
-                #TODO: if key already in the database just update mysql ON DUPLICATE KEY UPDATE
-                #TODO: when problem with insert or something rollback
+                # TODO: if key already in the database just update mysql ON DUPLICATE KEY UPDATE
+                # TODO: when problem with insert or something rollback
                 sql_insert_company_table = """INSERT INTO company (company_name, company_size, company_rating, 
                                 company_founded, company_industry, company_sector, company_type, company_revenue, 
                                 company_headquarters) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
@@ -100,13 +100,14 @@ class Database:
                                                        company.get_company_type(),
                                                        company.get_company_revenue(),
                                                        company.get_company_headquarters()])
+                # TODO: have problem with insert type, revenue, headquarters
                 self.connection.commit()
             else:
                 self.connection.commit()
             logging.info("MySQL connection is closed.")
             # TODO: critical you would do sys.exit next
 
-    #TODO: Where to close connetcion or cur             self.connection.close()
+    # TODO: Where to close connetcion or cur             self.connection.close()
     def create_job_location_table(self):
         pass
 
