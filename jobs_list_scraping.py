@@ -35,19 +35,19 @@ class JobsListScraper(Scraper):
         job_title = self.browser.find_element_by_id(cst.ID_JOB_TITLE_KW)
         job_title.clear()  # clear if something is already written
         job_title.send_keys(command_args.args.job_title)
-        logging.info(tm.SEARCH_JOB, command_args.args.job_title)
+        logging.info(tm.SEARCH_JOB)
 
         location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
         location.clear()  # clear if something is already written
         location.send_keys(command_args.args.job_location)
-        logging.info(tm.SEARCH_LOCATION, {command_args.args.job_location})
+        logging.info(tm.SEARCH_LOCATION)
         time.sleep(cst.SLEEP_TIME)
         self.close_popup()
 
         # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
         search_button.click()
-        logging.info(tm.CONNECT_NEW_URL, command_args.args.job_title, command_args.args.job_location)
+        logging.info(tm.CONNECT_NEW_URL)
         time.sleep(cst.SLEEP_TIME)
 
     def get_num_pages(self):
@@ -61,9 +61,8 @@ class JobsListScraper(Scraper):
             # take the number of all open positions in Israel over the site
             num_of_available_pages = self.browser.find_element_by_xpath(cst.NUM_PAGES_XPATH).text
             num_of_available_pages = int(num_of_available_pages.split(' ')[cst.LAST_ELEMENT])
-            logging.info(tm.AVAILABLE_PAGES, num_of_available_pages)
+            logging.info(tm.AVAILABLE_PAGES)
 
-        # TODO: click again on search if dont have job numbers
         except NoSuchElementException:
             logging.critical(tm.ERROR_NUM_PAGES)
             sys.exit(1)
@@ -99,6 +98,7 @@ class JobsListScraper(Scraper):
             try:
                 company_rating = float(company_name.split('\n')[cst.SECOND_ELEMENT])
             except ValueError:
+                logging.exception(f'There is a problem with convert the rating')
                 company_rating = None
             finally:
                 company_name = company_name.split('\n')[cst.FIRST_ELEMENT]
@@ -144,6 +144,7 @@ class JobsListScraper(Scraper):
                 return job, company
 
             except NoSuchElementException:
+                logging.exception(f'There is a problem with catch mandatory data')
                 time.sleep(cst.SLEEP_TIME)
 
     def catch_optional_data(self, company):
@@ -194,6 +195,33 @@ class JobsListScraper(Scraper):
         finally:
             return company
 
+    def click_next_button(self, current_page):
+        try:
+            next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
+            next_button.click()
+            logging.info("Succeed to click on next button for next page")
+        except NoSuchElementException:
+            logging.exception(tm.ERROR_NEXT)
+        time.sleep(cst.SLEEP_TIME)
+        current_page += cst.SECOND_ELEMENT
+        return current_page
+
+    def create_competitors_insert(self, database, company):
+        if company.get_company_competitors() is not None:
+            for competitor_name in company.get_company_competitors():
+                competitor_name = competitor_name.strip()
+                if competitor_name.lower().split(' ')[cst.LAST_ELEMENT] in ['corp', 'corporation', 'corp.']:
+                    competitor_name = ' '.join(competitor_name.lower().split(' ')[:cst.LAST_ELEMENT])
+                if not database.get_company(competitor_name):  # we don't have the competitor in DB
+                    competitor = Company(competitor_name, None)
+                    competitor_scraping = CompanyPageScraper(competitor_name)
+                    competitor_scraping.set_search_keywords()
+                    competitor = competitor_scraping.enter_company_page(competitor)
+                    competitor.set_company_sector(company.get_company_sector())
+                    database.insert_company(competitor)
+                database.insert_competitor(competitor_name, company)
+
+
     def collecting_data_from_pages(self, database):
         """
         Collect all the data on for a specific search
@@ -206,6 +234,7 @@ class JobsListScraper(Scraper):
         try:
             self.browser.find_element_by_xpath(cst.SELECTED_XPATH).click()
         except ElementClickInterceptedException:  # NoSuchElementException TODO: check the error
+            logging.exception(f'There is a problem with click on xpath: {cst.SELECTED_XPATH}')
             pass
 
         time.sleep(cst.SLEEP_TIME)
@@ -214,36 +243,15 @@ class JobsListScraper(Scraper):
         current_page = cst.FIRST_PAGE
         while current_page <= glassdoor_number_pages:
             job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
-
             self.close_popup()
-
             logging.info(f"Start to collect all data from page: {current_page}")
             for button_job in job_click_button:
                 # start collect job data
                 job, company = self.catch_mandatory_data_and_rating(button_job)
                 company = self.catch_optional_data(company)
                 database.insert_company(company)
-                if company.get_company_competitors() is not None:
-                    for competitor_name in company.get_company_competitors():
-                        competitor_name = competitor_name.strip()
-                        if competitor_name.lower().split(' ')[-1] in ['corp', 'corporation', 'corp.']:
-                            competitor_name = ''.join(competitor_name.lower().split(' ')[:-1])
-                        if not database.get_company(competitor_name): # we don't have the competitor in DB
-                            competitor = Company(competitor_name, None)
-                            competitor_scraping = CompanyPageScraper(competitor_name)
-                            competitor_scraping.set_search_keywords()
-                            competitor = competitor_scraping.enter_company_page(competitor)
-                            competitor.set_company_sector(company.get_company_sector())
-                            database.insert_company(competitor)
-                        database.insert_competitor(competitor_name, company)
+                self.create_competitors_insert(database,company)
                 database.insert_job(job)
             logging.info(f"Succeed to collect all data from page: {current_page}")
-
-            try:
-                next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
-                next_button.click()
-                logging.info("Succeed to click on next button for next page")
-            except NoSuchElementException:
-                logging.error(tm.ERROR_NEXT)
-            time.sleep(cst.SLEEP_TIME)
-            current_page += cst.SECOND_ELEMENT
+            # call to click on next button
+            current_page = self.click_next_button()

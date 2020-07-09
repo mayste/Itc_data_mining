@@ -1,4 +1,4 @@
-from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
+from selenium.common.exceptions import ElementClickInterceptedException
 import logging
 import time
 from scraper import Scraper
@@ -30,7 +30,7 @@ class CompanyPageScraper(Scraper):
 
         location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
         location.clear()  # clear if something is already written
-        logging.info(tm.COMPETITOR_PAGE, self.competitor_name)
+        logging.info(tm.COMPETITOR_PAGE)
         self.close_popup()
 
         # Click on search button
@@ -46,6 +46,7 @@ class CompanyPageScraper(Scraper):
         try:
             self.browser.find_element_by_xpath(cst.FIRST_COMPANY_XPATH).click()
         except ElementClickInterceptedException:
+            logging.exception(f'There is a problem with click on xpath: {cst.FIRST_COMPANY_XPATH}')
             pass
         finally:
             return self.catch_company_data(company)
@@ -55,32 +56,29 @@ class CompanyPageScraper(Scraper):
         This function catch all the data on a company page
         """
         time.sleep(cst.SLEEP_TIME)
-        try:
-            # Catch company size information
-            company.set_company_size(self.catch_optional_text_value_by_xpath(cst.COMPANY_SIZE_XPATH))
-            # Catch founded year of company
-            company.set_company_founded(self.convert_company_founded_year(self.catch_optional_text_value_by_xpath(
-                cst.COMPANY_FOUNDED_XPATH)))
-            # Catch company industry
-            company.set_company_industry(self.catch_optional_text_value_by_xpath(cst.COMPANY_INDUSTRY_XPATH))
-            # Catch company type
-            company_type = self.catch_optional_text_value_by_xpath(cst.COMPANY_TYPE_XPATH)
-            if company_type is not None and '-' in company_type:
-                company_type = company_type.split('-')[cst.SECOND_ELEMENT].strip()
-                company.set_company_type(company_type)
-            else:
-                company.set_company_type(company_type)
+        # Catch company size information
+        company.set_company_size(self.catch_optional_text_value_by_xpath(cst.COMPANY_SIZE_XPATH))
+        # Catch founded year of company
+        company.set_company_founded(self.convert_company_founded_year(self.catch_optional_text_value_by_xpath(
+            cst.COMPANY_FOUNDED_XPATH)))
+        # Catch company industry
+        company.set_company_industry(self.catch_optional_text_value_by_xpath(cst.COMPANY_INDUSTRY_XPATH))
+        # Catch company type
+        company_type = self.catch_optional_text_value_by_xpath(cst.COMPANY_TYPE_XPATH)
+        if company_type is not None and '-' in company_type:
+            company_type = company_type.split('-')[cst.SECOND_ELEMENT].strip()
+            company.set_company_type(company_type)
+        else:
+            company.set_company_type(company_type)
 
-            # Catch company revenue
-            company.set_company_revenue(self.catch_optional_text_value_by_xpath(cst.COMPANY_REVENUE_XPATH))
-            # Catch company headquarters
-            company.set_company_headquarters(self.catch_optional_text_value_by_xpath(cst.COMPANY_HEADQUARTER_XPATH))
-            #catch company rating
-            company.set_company_rating(self.catch_optional_text_value_by_xpath(cst.COMPANY_RATING_XPATH))
-        except NoSuchElementException:
-            logging.error(tm.ERROR_OPTIONAL_DATA)
-        finally:
-            self.browser.quit()
-            return company
+        # Catch company revenue
+        company.set_company_revenue(self.catch_optional_text_value_by_xpath(cst.COMPANY_REVENUE_XPATH))
+        # Catch company headquarters
+        company.set_company_headquarters(self.catch_optional_text_value_by_xpath(cst.COMPANY_HEADQUARTER_XPATH))
+        #catch company rating
+        company.set_company_rating(self.catch_optional_text_value_by_xpath(cst.COMPANY_RATING_XPATH))
+        self.browser.quit()
+        logging.info('close browser successfully')
+        return company
 
 

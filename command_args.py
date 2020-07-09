@@ -9,6 +9,4 @@ parser.add_argument('--job_location', help="Choose a job location to scrap", typ
                     choices=['Israel', 'USA', 'UK', 'Canada'])
 parser.add_argument('--job_title', help="Choose a job to scrap", type=str, default=' ',
                     choices={'Data Scientist', 'Data Analyst', 'Marketing', 'Product Manager', 'Finance', 'Accounting'})
-
-# parser.add_argument('--sleep_factor', help="Sleep factor in sec between requests, default=5", default=5, type=int)
 args = parser.parse_args()

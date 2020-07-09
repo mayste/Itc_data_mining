@@ -145,6 +145,7 @@ class Database:
             sql_get_company = sql.GET_COMPANY
             cur.execute(sql_get_company, company_name)
             result = cur.fetchone()
+            logging.info('get information from DB')
             if result:
                 return True
         return False
@@ -159,7 +160,8 @@ class Database:
             sys.exit(1)
 
 
-    # TODO: Where to close connetcion or cur self.connection.close()
+    # TODO: Where to self.connection.close() or self.cur.close
 
     def create_job_location_table(self):
+        #TODO: add table for all locations of jobs
         pass

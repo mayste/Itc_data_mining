@@ -41,6 +41,7 @@ class Scraper:
                 return None
             return text_value
         except NoSuchElementException:
+            logging.exception(f'There is a problem with catching text from xpath: {x_path}')
             return None
 
     def convert_company_founded_year(self, company_founded):
@@ -53,6 +54,7 @@ class Scraper:
             try:
                 company_founded = int(company_founded)
             except ValueError:
+                logging.exception('There is a problem with convert company founded year')
                 company_founded = None
             finally:
                 return company_founded

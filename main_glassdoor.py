@@ -1,4 +1,3 @@
-from jobs_list_scraping import Scraper
 from datetime import datetime
 import logging
 import os
@@ -22,10 +21,9 @@ logging.exception('This is a critical message')
 if __name__ == "__main__":
     if not os.path.exists(os.path.join(cst.LOGGING_DIR_NAME)):  # we don't have this directory
         os.mkdir(os.path.join(cst.LOGGING_DIR_NAME))  # create directory
-    log_file_name = os.path.join(cst.LOGGING_DIR_NAME,f'glassdoor_scrap_{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log')
-    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode='w', format='%(asctime)s - %(name)s - '
-                                                                                          '%(levelname)s - %(message)s'
-                        ,datefmt='%Y-%m-%d %H:%M:%S')
+    log_file_name = os.path.join(cst.LOGGING_DIR_NAME,f'glassdoor_scrap_{datetime.now().strftime(cst.DATE_FORMAT)}.log')
+    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode=cst.FILE_MODE, format=cst.LOGGING_FORMAT,
+                        datefmt=cst.DATE_FORMAT)
     database = Database()
     database.create_db()
     glassdoor_scraper = JobsListScraper()
