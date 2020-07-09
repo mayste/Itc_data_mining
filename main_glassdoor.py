@@ -1,9 +1,10 @@
-from scraper import Scraper
+from jobs_list_scraping import Scraper
 from datetime import datetime
 import logging
 import os
 import constants as cst
 from create_database import Database
+from jobs_list_scraping import JobsListScraper
 
 
 #TODO: delete after using
@@ -27,7 +28,7 @@ if __name__ == "__main__":
                         ,datefmt='%Y-%m-%d %H:%M:%S')
     database = Database()
     database.create_db()
-    glassdoor_scraper = Scraper()
+    glassdoor_scraper = JobsListScraper()
     glassdoor_scraper.set_search_keywords()
     glassdoor_scraper.collecting_data_from_pages(database)
 
