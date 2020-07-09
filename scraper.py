@@ -1,5 +1,5 @@
 from selenium import webdriver  # allows us to open a browser and do the navigation
-from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException
 import constants as cst
 import command_args
 import logging
