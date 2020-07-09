@@ -35,7 +35,6 @@ if __name__ == "__main__":
 
     #TODO: click again on search if dont have job numbers
     glassdoor_number_pages = glassdoor_scraper.get_num_pages()
-    print(glassdoor_number_pages)
 
     #TODO: enter to function: collecting_data_from_page
     i = 1
