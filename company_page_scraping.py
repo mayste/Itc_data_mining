@@ -3,6 +3,7 @@ import logging
 import time
 from scraper import Scraper
 import constants as cst
+import text_messages as tm
 
 
 class CompanyPageScraper(Scraper):
@@ -19,10 +20,9 @@ class CompanyPageScraper(Scraper):
         input of the user on the command line
         """
         self.browser.get(cst.DEFAULT_URL)
-        logging.info(f"Browser connect to URL")
+        logging.info(tm.BROWSER_CONNECTION)
 
-        self.browser.find_element_by_xpath(
-            "//div[@class='context-choice-tabs-box']//li[@class='col-3 reviews ']").click()
+        self.browser.find_element_by_xpath(cst.COMPANY_XPATH).click()
 
         company_name = self.browser.find_element_by_id(cst.ID_JOB_TITLE_KW)
         company_name.clear()  # clear if something is already written
@@ -30,31 +30,38 @@ class CompanyPageScraper(Scraper):
 
         location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
         location.clear()  # clear if something is already written
-        logging.info(f"Search for competitor's company page: {self.competitor_name}")
+        logging.info(tm.COMPETITOR_PAGE, self.competitor_name)
+
         try:
             # Close pop up
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
             pop_up.click()
+            logging.exception(tm.POP_UP_CLOSE)
         except NoSuchElementException:
+            logging.exception(tm.NO_POP_UP)
             pass
 
         # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
         search_button.click()
-        logging.info(
-            f"Browser connect to new URL of a company")
+        logging.info(tm.NEW_COMPANY_URL)
         time.sleep(cst.SLEEP_TIME)
 
     def enter_company_page(self, company):
+        """
+        This function click on a company name an take all information on the page
+        """
         try:
-            self.browser.find_element_by_xpath('//div[@class="single-company-result module "][1]//div[@class="col-9 pr-0"]//h2//a').click()
+            self.browser.find_element_by_xpath(cst.FIRST_COMPANY_XPATH).click()
         except ElementClickInterceptedException:
             pass
         finally:
             return self.catch_company_data(company)
 
     def catch_company_data(self, company):
-        # Collect optional information
+        """
+        This function catch all the data on a company page
+        """
         time.sleep(cst.SLEEP_TIME)
         try:
             # Catch company size information
@@ -77,9 +84,9 @@ class CompanyPageScraper(Scraper):
             # Catch company headquarters
             company.set_company_headquarters(self.catch_optional_text_value_by_xpath(cst.COMPANY_HEADQUARTER_XPATH))
             #catch company rating
-            company.set_company_rating(self.catch_optional_text_value_by_xpath('//div[@class="v2__EIReviewsRatingsStylesV2__ratingNum v2__EIReviewsRatingsStylesV2__large"]'))
+            company.set_company_rating(self.catch_optional_text_value_by_xpath(cst.COMPANY_RATING_XPATH))
         except NoSuchElementException:
-            logging.error(cst.ERROR_OPTIONAL_DATA)
+            logging.error(tm.ERROR_OPTIONAL_DATA)
         finally:
             self.browser.quit()
             return company

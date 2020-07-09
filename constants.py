@@ -20,6 +20,7 @@ UNKNOWN_INFO = 'unknown'
 HOST = 'localhost'
 CHARSET = 'utf8mb4'
 LOGGING_DIR_NAME = 'logging'
+CORPORATION = ['corp','corporation','corp.']
 
 # Path
 DEFAULT_URL = "https://www.glassdoor.com/Job/index.htm"
@@ -44,16 +45,12 @@ COMPANY_REVENUE_XPATH = '//div[@class="infoEntity"]//label[text()="Revenue"]//fo
 COMPANY_HEADQUARTER_XPATH = '//div[@class="infoEntity"]//label[text()="Headquarters"]//following-sibling::*'
 SELECTED_XPATH = "//li[contains(@class, 'selected')]"
 JOB_CLICK_BUTTON_XPATH = "//li[contains(@class, 'job-listing')]"
+COMPANY_XPATH ="//div[@class='context-choice-tabs-box']//li[@class='col-3 reviews ']"
+FIRST_COMPANY_XPATH = '//div[@class="single-company-result module "][1]//div[@class="col-9 pr-0"]//h2//a'
+COMPANY_RATING_XPATH = '//div[@class="v2__EIReviewsRatingsStylesV2__ratingNum v2__EIReviewsRatingsStylesV2__large"]'
 
 # element id
 ID_JOB_TITLE_KW = "KeywordSearch"
 ID_JOB_LOCATION_KW = "LocationSearch"
 ID_SEARCH_BUTTON = "HeroSearchButton"
 
-# Error message
-ERROR_NUM_PAGES = """f'Their is a problem trying to get the number of available pages of jobs post, by default the number of '
-                f'available pages of jobs post to scrap will be {DEFAULT_NUM_PAGES}'"""
-
-ERROR_NEXT = "Not succeed to click on next"
-
-ERROR_OPTIONAL_DATA = "There is no optional data for this company on this job"

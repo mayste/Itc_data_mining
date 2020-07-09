@@ -9,6 +9,7 @@ from company import Company
 import logging
 import sys
 from scraper import Scraper
+import text_messages as tm
 from company_page_scraping import CompanyPageScraper
 
 
@@ -29,32 +30,32 @@ class JobsListScraper(Scraper):
         input of the user on the command line
         """
         self.browser.get(cst.DEFAULT_URL)
-        logging.info(f"Browser connect to URL")
+        logging.info(tm.BROWSER_CONNECTION)
 
         job_title = self.browser.find_element_by_id(cst.ID_JOB_TITLE_KW)
         job_title.clear()  # clear if something is already written
         job_title.send_keys(command_args.args.job_title)
-        logging.info(f"Search for job title: {command_args.args.job_title}")
+        logging.info(tm.SEARCH_JOB, command_args.args.job_title)
 
         location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
         location.clear()  # clear if something is already written
         location.send_keys(command_args.args.job_location)
-        logging.info(f"Search for job location: {command_args.args.job_location}")
+        logging.info(tm.SEARCH_LOCATION, {command_args.args.job_location})
         time.sleep(cst.SLEEP_TIME)
 
         try:
             # Close pop up
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
             pop_up.click()
+            logging.info(tm.POP_UP_CLOSE)
         except NoSuchElementException:
-            logging.exception('No popup to close')
+            logging.exception(tm.NO_POP_UP)
             pass
 
         # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
         search_button.click()
-        logging.info(
-            f"Browser connect to new URL with : {command_args.args.job_title}, {command_args.args.job_location}")
+        logging.info(tm.CONNECT_NEW_URL, command_args.args.job_title, command_args.args.job_location)
         time.sleep(cst.SLEEP_TIME)
 
     def get_num_pages(self):
@@ -68,11 +69,11 @@ class JobsListScraper(Scraper):
             # take the number of all open positions in Israel over the site
             num_of_available_pages = self.browser.find_element_by_xpath(cst.NUM_PAGES_XPATH).text
             num_of_available_pages = int(num_of_available_pages.split(' ')[cst.LAST_ELEMENT])
-            logging.info(f'Succeed to catch number of available pages: {num_of_available_pages}')
+            logging.info(tm.AVAILABLE_PAGES, num_of_available_pages)
 
         # TODO: click again on search if dont have job numbers
         except NoSuchElementException:
-            logging.critical(cst.ERROR_NUM_PAGES)
+            logging.critical(tm.ERROR_NUM_PAGES)
             sys.exit(1)
         return num_of_available_pages
 
@@ -109,7 +110,7 @@ class JobsListScraper(Scraper):
                 company_rating = None
             finally:
                 company_name = company_name.split('\n')[cst.FIRST_ELEMENT]
-                if company_name.lower().split(' ')[-1] in ['corp','corporation','corp.'] :
+                if company_name.lower().split(' ')[-1] in cst.CORPORATION :
                     company_name = ''.join(company_name.lower().split(' ')[:-1])
         else:  # No rating
             company_rating = None
@@ -197,7 +198,7 @@ class JobsListScraper(Scraper):
 
         # If there is no overview page(company tab)
         except NoSuchElementException:
-            logging.error(cst.ERROR_OPTIONAL_DATA)
+            logging.error(tm.ERROR_OPTIONAL_DATA)
         finally:
             return company
 
@@ -261,6 +262,6 @@ class JobsListScraper(Scraper):
                 next_button.click()
                 logging.info("Succeed to click on next button for next page")
             except NoSuchElementException:
-                logging.error(cst.ERROR_NEXT)
+                logging.error(tm.ERROR_NEXT)
             time.sleep(cst.SLEEP_TIME)
             current_page += cst.SECOND_ELEMENT
