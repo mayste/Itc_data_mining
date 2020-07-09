@@ -65,6 +65,7 @@ class JobsListScraper(Scraper):
 
         except NoSuchElementException:
             logging.critical(tm.ERROR_NUM_PAGES)
+            self.browser.quit()
             sys.exit(1)
         return num_of_available_pages
 

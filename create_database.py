@@ -23,6 +23,7 @@ class Database:
             logging.info(tm.SQL_READY)
         except RuntimeError:
             logging.critical(tm.SQL_FAIL)
+            self.browser.quit()
             sys.exit(1)
 
     def create_db(self):
@@ -45,6 +46,7 @@ class Database:
             logging.critical(tm.SQL_FAIL_TABLE)
             self.connection.rollback()
             self.connection.close()
+            self.browser.quit()
             sys.exit(1)
 
     def create_job_table(self, cur):
@@ -152,6 +154,7 @@ class Database:
 
     def close_connection_database(self):
         try:
+            self.browser.quit()
             self.connection.cursor().close()
             self.connection.close()
             logging.info('Close connection to DB successfully')
