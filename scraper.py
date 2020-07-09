@@ -3,6 +3,7 @@ from selenium.common.exceptions import ElementClickInterceptedException, NoSuchE
 import constants as cst
 import command_args
 import logging
+import text_messages as tm
 
 
 class Scraper:
@@ -19,11 +20,12 @@ class Scraper:
 
     def close_popup(self):
         try:
+            # Close pop up
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
             pop_up.click()
-            logging.info("Pop up closed successfully")
+            logging.exception(tm.POP_UP_CLOSE)
         except NoSuchElementException:
-            logging.exception('No popup to close')
+            logging.exception(tm.NO_POP_UP)
             pass
 
     def catch_optional_text_value_by_xpath(self, x_path):
