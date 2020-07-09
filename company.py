@@ -3,7 +3,6 @@ This class create an instance of comapny with all the information.
 Authors: May Steinfeld & Sheryl Sitruk
 """
 
-import constants as cst
 
 class Company:
     def __init__(self, company_name, company_rating):

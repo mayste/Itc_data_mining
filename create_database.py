@@ -129,19 +129,6 @@ class Database:
 
     def insert_competitor(self, competitor, company):
         with self.connection.cursor() as cur:
-            sql_insert_company_table = """INSERT INTO company (company_name, company_size, company_rating, 
-            company_founded, company_industry, company_sector, company_type, company_revenue, 
-            company_headquarters) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE 
-            company_id=company_id """
-            cur.execute(sql_insert_company_table, [competitor,
-                                                   None, None,
-                                                   None,
-                                                   None, None,
-                                                   None,
-                                                   None,
-                                                   None])
-            self.connection.commit()
-
             sql_insert_competitors_table = """INSERT INTO company_competitors (company_id, competitor_id) 
             VALUES ((SELECT company_id FROM company WHERE
             company_name = % s), (SELECT company_id FROM company WHERE
@@ -163,6 +150,19 @@ class Database:
 
             # TODO: critical you would do sys.exit next
             # logging.info("MySQL connection is closed.")
+
+    def get_company(self, company_name):
+        with self.connection.cursor() as cur:
+            sql_insert_job_table = """(SELECT company_id FROM company WHERE company_name = %s)"""
+            cur.execute(sql_insert_job_table, company_name)
+            result = cur.fetchone()
+            if result:
+                return True
+
+            # TODO: Where to close connetcion or cur self.connection.close()
+        return False
+
+
 
     # TODO: Where to close connetcion or cur self.connection.close()
 

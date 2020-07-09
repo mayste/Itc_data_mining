@@ -1,5 +1,3 @@
-# TODO: try to find better address
-
 from selenium import webdriver  # allows us to open a browser and do the navigation
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 import time
@@ -10,6 +8,7 @@ from datetime import date
 from job import Job
 from company import Company
 import logging
+import sys
 from company_scraping import CompanyPage
 
 
@@ -42,12 +41,14 @@ class Scraper:
         location.clear()  # clear if something is already written
         location.send_keys(command_args.args.job_location)
         logging.info(f"Search for job location: {command_args.args.job_location}")
+        time.sleep(cst.SLEEP_TIME)
 
         try:
             # Close pop up
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
             pop_up.click()
         except NoSuchElementException:
+            logging.exception('No popup to close')
             pass
 
         # Click on search button
@@ -72,11 +73,8 @@ class Scraper:
 
         # TODO: click again on search if dont have job numbers
         except NoSuchElementException:
-            num_of_available_pages = cst.DEFAULT_NUM_PAGES  # default value
-            logging.error(cst.ERROR_NUM_PAGES)
-
-        # time.sleep(SLEEP_TIME)
-
+            logging.critical(cst.ERROR_NUM_PAGES)
+            sys.exit(1)
         return num_of_available_pages
 
     def catch_optional_text_value_by_xpath(self, x_path):
@@ -127,6 +125,8 @@ class Scraper:
                 company_rating = None
             finally:
                 company_name = company_name.split('\n')[cst.FIRST_ELEMENT]
+                if company_name.lower().split(' ')[-1] in ['corp','corporation','corp.'] :
+                    company_name = ''.join(company_name.lower().split(' ')[:-1])
         else:  # No rating
             company_rating = None
         return company_name, company_rating
@@ -272,13 +272,20 @@ class Scraper:
                 # start collect job data
                 job, company = self.catch_mandatory_data_and_rating(button_job)
                 company = self.catch_optional_data(company)
-                if company.get_company_competitors() is not None:
-                    for competitor in company.get_company_competitors():
-                        competitor = competitor.strip()
-                        competitor_scraping = CompanyPage(competitor)
-                        database.insert_company(competitor)
-                        database.insert_competitor(competitor, company)
                 database.insert_company(company)
+                if company.get_company_competitors() is not None:
+                    for competitor_name in company.get_company_competitors():
+                        competitor_name = competitor_name.strip()
+                        if competitor_name.lower().split(' ')[-1] in ['corp', 'corporation', 'corp.']:
+                            competitor_name = ''.join(competitor_name.lower().split(' ')[:-1])
+                        if not database.get_company(competitor_name): # we don't have the competitor in DB
+                            competitor = Company(competitor_name, None)
+                            competitor_scraping = CompanyPage(competitor_name)
+                            competitor_scraping.set_search_keywords()
+                            competitor = competitor_scraping.enter_company_page(competitor)
+                            competitor.set_company_sector(company.get_company_sector())
+                            database.insert_company(competitor)
+                        database.insert_competitor(competitor_name, company)
                 database.insert_job(job)
             logging.info(f"Succeed to collect all data from page: {current_page}")
 
