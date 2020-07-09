@@ -11,6 +11,7 @@ import constants as cst
 import command_args
 from dateutil.relativedelta import relativedelta
 from datetime import date
+from datetime import datetime
 from job import Job
 from company import Company
 
@@ -83,6 +84,7 @@ class Scraper:
         # TODO: not catching all the headquater & revenue
         try:
             text_value = self.browser.find_element_by_xpath(x_path).text
+            # if the optional data unknown put None
             if cst.UNKNOWN_INFO in text_value.lower():
                 return None
             return text_value
@@ -93,23 +95,38 @@ class Scraper:
         """
         Take a publication date and convert into format Year-Month-Day
         :param publication_date: string
-        :return: string
+        :return: date
         """
         # if the job has been published this day print the day of today
         if cst.HOUR in publication_date and cst.ALL_DAY not in publication_date:
-            return date.today().strftime(cst.DATE_FORMAT)
+            return date.today()
         elif cst.HOUR in publication_date and cst.ALL_DAY in publication_date:
-            return (date.today() - relativedelta(days=1)).strftime(cst.DATE_FORMAT)
+            return date.today() - relativedelta(days=1)
         elif cst.DAY in publication_date:
             return (date.today() - relativedelta(
-                days=int(publication_date.split(cst.DAY)[cst.FIRST_ELEMENT]))).strftime(
-                cst.DATE_FORMAT)
+                days=int(publication_date.split(cst.DAY)[cst.FIRST_ELEMENT])))
         elif cst.MONTH in publication_date:
             return (date.today() - relativedelta(
-                months=int(publication_date.split(cst.MONTH)[cst.FIRST_ELEMENT]))).strftime(
-                cst.DATE_FORMAT)
-        # else:
-        #    return None
+                months=int(publication_date.split(cst.MONTH)[cst.FIRST_ELEMENT])))
+        else:
+            return None
+
+    def convert_split_name_and_rating(self, company_name):
+        """
+        The function split the company name to name + rating if we have one
+        :param company_name: string
+        :return: tuple
+        """
+        if '\n' in company_name:  # We have a rating
+            try:
+                company_rating = float(company_name.split('\n')[cst.SECOND_ELEMENT])
+            except ValueError:
+                company_rating = None
+            finally:
+                company_name = company_name.split('\n')[cst.FIRST_ELEMENT]
+        else:  # No rating
+            company_rating = None
+        return company_name, company_rating
 
     def catch_mandatory_data_and_rating(self, button_job):  # TODO: not sure about the loop
         """
@@ -121,12 +138,15 @@ class Scraper:
             # click the job button
             button_job.click()
             try:
-                # Catch the publication date
-                job_publication_date = self.browser.find_element_by_xpath(cst.PUBLICATION_DATE_XPATH).text
+                # Catch the publication date and call function to convert publication date
+                job_publication_date = self.convert_publication_date(self.browser.find_element_by_xpath(
+                    cst.PUBLICATION_DATE_XPATH).text)
                 time.sleep(cst.SLEEP_TIME)
 
-                # Collect Company Name from a post
-                company_name = self.browser.find_element_by_xpath(cst.COMPANY_NAME_XPATH).text
+                # Collect Company Name from a post, Sometimes: company name and rating are join, we need to split
+                # them into Company Name and Rating
+                company_name, company_rating = self.convert_split_name_and_rating(self.browser.find_element_by_xpath(
+                    cst.COMPANY_NAME_XPATH).text)
 
                 # Collect Job Title from a post
                 job_title = self.browser.find_element_by_xpath(cst.JOB_TITLE_XPATH).text
@@ -137,17 +157,6 @@ class Scraper:
                 # Collect Job Description
                 job_description = self.browser.find_element_by_xpath(cst.JOB_DESCRIPTION_XPATH).text
 
-                # call function to convert publication date
-                job_publication_date = self.convert_publication_date(job_publication_date)
-
-                # Sometimes, company name and rating are join, we need to split them into Company Name and Rating
-                if '\n' in company_name:  # We have a rating
-                    # TODO: Cheack its float
-                    company_rating = company_name.split('\n')[cst.SECOND_ELEMENT]
-                    company_name = company_name.split('\n')[cst.FIRST_ELEMENT]
-                else:  # No rating
-                    company_rating = None
-
                 # finish collect mandatory fields + rating if the company has in the name
                 collect_mandatory = True
                 job = Job(job_title, job_description, job_location, job_publication_date, company_name)
@@ -155,27 +164,42 @@ class Scraper:
                 return job, company
 
             except NoSuchElementException:
-                # button_job.click() #TODO: check if its not succeed to load we need to click again
                 time.sleep(cst.SLEEP_TIME)
+
+    def convert_company_founded_year(self, company_founded):
+        """
+        The function get string and convert it to date.year
+        :param company_founded: string
+        :return: int or None
+        """
+        if company_founded is not None:
+            try:
+                company_founded = int(company_founded)
+            except ValueError:
+                company_founded = None
+            finally:
+                return company_founded
+        else:
+            return company_founded
+
 
     def catch_optional_data(self, company):
         """
         Catch all the optional information of a company
         :param company: string
         """
-        # TODO: Check if value = Unknown put None
+
         # Collect optional information
         try:
             # Click on company in the hyper details
             self.browser.find_element_by_xpath(cst.OVERVIEW_XPATH).click()
-
             time.sleep(cst.SLEEP_TIME)
 
             # Catch company size information
             company.set_company_size(self.catch_optional_text_value_by_xpath(cst.COMPANY_SIZE_XPATH))
             # Catch founded year of company
-            # TODO: check that it a number
-            company.set_company_founded(self.catch_optional_text_value_by_xpath(cst.COMPANY_FOUNDED_XPATH))
+            company.set_company_founded(self.convert_company_founded_year(self.catch_optional_text_value_by_xpath(
+                cst.COMPANY_FOUNDED_XPATH)))
             # Catch company industry
             company.set_company_industry(self.catch_optional_text_value_by_xpath(cst.COMPANY_INDUSTRY_XPATH))
             # Catch company sector

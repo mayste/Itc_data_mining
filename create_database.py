@@ -106,7 +106,6 @@ class Database:
                                                        company.get_company_revenue(),
                                                        company.get_company_headquarters()])
                 # TODO: have problem with insert type, revenue, headquarters
-                self.connection.commit()
             else:
                 self.connection.commit()
             #logging.info("MySQL connection is closed.")
@@ -123,7 +122,6 @@ class Database:
                 company_name = %s)) ON DUPLICATE KEY UPDATE job_id=job_id """
                 cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(), job.get_location(),
                                                    job.get_publication_date(), job.get_company_name()])
-                self.connection.commit()
             else:
                 self.connection.commit()
 

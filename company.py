@@ -10,8 +10,9 @@ class Company:
         """
         constructor
         :param company_name: string
-        :param company_rating: string
-        #TODO: check maybe it list of strings
+        :param company_rating: float
+
+        #TODO: check maybe it list of strings for competitors
         """
         self.company_name = company_name
         self.company_rating = company_rating
@@ -58,14 +59,14 @@ class Company:
     def get_company_founded(self):
         """
         get company founded year
-        :return: string
+        :return: int
         """
         return self.company_founded
 
     def set_company_founded(self, value):
         """
         set company founded year
-        :param value: string
+        :param value: int
         :return:
         """
         self.company_founded = value
@@ -118,14 +119,14 @@ class Company:
     def get_company_rating(self):
         """
         get company rating
-        :return: string
+        :return: float
         """
         return self.company_rating
 
     def set_company_rating(self, value):
         """
         set company rating
-        :param value: string
+        :param value: float
         :return:
         """
         self.company_rating = value
