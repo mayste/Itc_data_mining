@@ -30,13 +30,8 @@ class CompanyPageScraper(Scraper):
 
         location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
         location.clear()  # clear if something is already written
-        logging.info(f"Search for competitor's company page: {self.competitor_name}")
-        try:
-            # Close pop up
-            pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
-            pop_up.click()
-        except NoSuchElementException:
-            pass
+        logging.info(f"Search for competitor's company page")
+        self.close_popup()
 
         # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)

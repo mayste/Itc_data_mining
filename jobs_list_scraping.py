@@ -41,14 +41,7 @@ class JobsListScraper(Scraper):
         location.send_keys(command_args.args.job_location)
         logging.info(f"Search for job location: {command_args.args.job_location}")
         time.sleep(cst.SLEEP_TIME)
-
-        try:
-            # Close pop up
-            pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
-            pop_up.click()
-        except NoSuchElementException:
-            logging.exception('No popup to close')
-            pass
+        self.close_popup()
 
         # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
@@ -206,12 +199,7 @@ class JobsListScraper(Scraper):
         Collect all the data on for a specific search
         """
         time.sleep(cst.SLEEP_TIME)
-        try:
-            pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
-            pop_up.click()
-            logging.info("Pop up closed successfully")
-        except NoSuchElementException:
-            pass
+        self.close_popup()
 
         glassdoor_number_pages = self.get_num_pages()
 
@@ -227,12 +215,7 @@ class JobsListScraper(Scraper):
         while current_page <= glassdoor_number_pages:
             job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
 
-            try:
-                pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
-                pop_up.click()
-                logging.info("Pop up closed successfully")
-            except NoSuchElementException:
-                pass
+            self.close_popup()
 
             logging.info(f"Start to collect all data from page: {current_page}")
             for button_job in job_click_button:

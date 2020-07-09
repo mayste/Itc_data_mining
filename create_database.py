@@ -32,7 +32,7 @@ class Database:
         try:
             # TODO: think maybe drop table if exist
             cur = self.connection.cursor()
-            sql_query = sql.CREATE_BD
+            sql_query = sql.CREATE_DB
             cur.execute(sql_query)
             logging.info(tm.SQL_DB_CREATION)
             sql_query = sql.USE_DB
@@ -43,12 +43,9 @@ class Database:
             logging.info(tm.SQL_TABLE_CREATION)
         except pymysql.Error:
             logging.critical(tm.SQL_FAIL_TABLE)
+            self.connection.rollback()
+            self.connection.close()
             sys.exit(1)
-
-        # sql_query = "SHOW DATABASES"
-        # cur.execute(sql_query)
-        # result = cur.fetchall()
-        # logging.debug(result)
 
     def create_job_table(self, cur):
         """
@@ -67,7 +64,6 @@ class Database:
         """
         # TODO: think maybe drop table if exist
         sql_create_company_table = sql.CREATE_COMPANY_TABLE
-        # TODO: how to do competitors and location
         cur.execute(sql_create_company_table)
 
         # alter table job according to company
@@ -83,7 +79,6 @@ class Database:
         """
         # TODO: think maybe drop table if exist
         sql_create_company_competitors_table = sql.CREATE_COMPETITOR_TABLE
-        # TODO: how to do competitors and location
         cur.execute(sql_create_company_competitors_table)
 
         sql_alter_competitors_table = sql.ALTER_COMPETITOR_TABLE_1
@@ -109,10 +104,9 @@ class Database:
                                                        company.get_company_revenue(),
                                                        company.get_company_headquarters()])
                 self.connection.commit()
-        except (KeyError, IndexError, TypeError):
+                logging.info('Insert company to DB successfully')
+        except pymysql.Error:
             logging.exception(tm.COMPANY_INSERT_FAIL)
-            # logging.info("MySQL connection is closed.")
-            # TODO: critical you would do sys.exit next
 
     def insert_competitor(self, competitor, company):
         """
@@ -124,7 +118,8 @@ class Database:
                 cur.execute(sql_insert_competitors_table, [company.get_name(),
                                                            competitor])
                 self.connection.commit()
-        except (KeyError, IndexError, TypeError):
+                logging.info('Insert competitors to DB successfully')
+        except pymysql.Error:
             logging.exception(tm.COMPETITOR_INSERT_FAIL)
 
     def insert_job(self, job):
@@ -138,12 +133,9 @@ class Database:
                 cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(), job.get_location(),
                                                    job.get_publication_date(), job.get_company_name()])
                 self.connection.commit()
-        except (KeyError, IndexError, TypeError):
+                logging.info('Insert job to DB successfully')
+        except pymysql.Error:
             logging.exception(tm.JOB_INSERT_FAIL)
-
-
-            # TODO: critical you would do sys.exit next
-            # logging.info("MySQL connection is closed.")
 
     def get_company(self, company_name):
         """
@@ -156,6 +148,16 @@ class Database:
             if result:
                 return True
         return False
+
+    def close_connection_database(self):
+        try:
+            self.connection.cursor().close()
+            self.connection.close()
+            logging.info('Close connection to DB successfully')
+        except pymysql.Error:
+            logging.critical('There was a problem with closing the DB connection')
+            sys.exit(1)
+
 
     # TODO: Where to close connetcion or cur self.connection.close()
 

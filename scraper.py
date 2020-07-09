@@ -2,6 +2,7 @@ from selenium import webdriver  # allows us to open a browser and do the navigat
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 import constants as cst
 import command_args
+import logging
 
 
 class Scraper:
@@ -15,6 +16,15 @@ class Scraper:
         """
         self.browser = webdriver.Firefox(executable_path=command_args.args.driver_path)
         self.browser.maximize_window()
+
+    def close_popup(self):
+        try:
+            pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
+            pop_up.click()
+            logging.info("Pop up closed successfully")
+        except NoSuchElementException:
+            logging.exception('No popup to close')
+            pass
 
     def catch_optional_text_value_by_xpath(self, x_path):
         """

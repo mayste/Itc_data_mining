@@ -31,6 +31,7 @@ if __name__ == "__main__":
     glassdoor_scraper = JobsListScraper()
     glassdoor_scraper.set_search_keywords()
     glassdoor_scraper.collecting_data_from_pages(database)
+    database.close_connection_database()
 
 
 
