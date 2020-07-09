@@ -22,7 +22,7 @@ CHARSET = 'utf8mb4'
 LOGGING_DIR_NAME = 'logging'
 
 # Path
-DEFAULT_URL = f'https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=&locT=N&locId=119&jobType=&context=Jobs&sc.keyword=&dropdown=0'
+DEFAULT_URL = "https://www.glassdoor.com/Job/index.htm"
 # EXE_PATH = r'/Users/Sheryl/PycharmProjects/Itc_data_mining/webDrivers/geckodriver'
 # EXE_PATH = r'/Users/maylev/PycharmProjects/Itc_data_mining/webDrivers/geckodriver'
 POP_UP_XPATH = "//div[contains(@class,'modal_main')]//span[@class='SVGInline modal_closeIcon']"
@@ -46,8 +46,8 @@ SELECTED_XPATH = "//li[contains(@class, 'selected')]"
 JOB_CLICK_BUTTON_XPATH = "//li[contains(@class, 'job-listing')]"
 
 # element id
-ID_JOB_TITLE_KW = "sc.keyword"
-ID_JOB_LOCATION_KW = "sc.location"
+ID_JOB_TITLE_KW = "KeywordSearch"
+ID_JOB_LOCATION_KW = "LocationSearch"
 ID_SEARCH_BUTTON = "HeroSearchButton"
 
 # Error message
