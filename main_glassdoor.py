@@ -23,7 +23,7 @@ if __name__ == "__main__":
     if not os.path.exists(os.path.join(cst.LOGGING_DIR_NAME)):  # we don't have this directory
         os.mkdir(os.path.join(cst.LOGGING_DIR_NAME))  # create directory
     log_file_name = os.path.join(cst.LOGGING_DIR_NAME,f'glassdoor_scrap_{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log')
-    logging.basicConfig(level=logging.DEBUG, filename=log_file_name, filemode='w', format='%(asctime)s - %(name)s - '
+    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode='w', format='%(asctime)s - %(name)s - '
                                                                                           '%(levelname)s - %(message)s'
                         ,datefmt='%Y-%m-%d %H:%M:%S')
     database = Database()
@@ -37,7 +37,6 @@ if __name__ == "__main__":
     glassdoor_number_pages = glassdoor_scraper.get_num_pages()
 
     #TODO: enter to function: collecting_data_from_page
-    i = 1
-    while i <= glassdoor_number_pages:
-        glassdoor_scraper.collecting_data_from_page(database)
-        i += 1
+
+    glassdoor_scraper.collecting_data_from_page(database)
+

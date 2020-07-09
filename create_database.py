@@ -17,6 +17,7 @@ class Database:
                                           password=command_args.args.database_password,
                                           charset=cst.CHARSET,
                                           cursorclass=pymysql.cursors.DictCursor)
+        logging.info("Connection with MYSQL ready")
 
     def create_db(self):
         """

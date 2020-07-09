@@ -14,6 +14,7 @@ from datetime import date
 from datetime import datetime
 from job import Job
 from company import Company
+import logging
 
 
 class Scraper:
@@ -34,13 +35,17 @@ class Scraper:
         input of the user on the command line
         """
         self.browser.get(cst.DEFAULT_URL)
+        logging.info(f"Browser connect to URL")
+
         job_title = self.browser.find_element_by_id(cst.ID_JOB_TITLE_KW)
         job_title.clear()  # clear if something is already written
         job_title.send_keys(command_args.args.job_title)
+        logging.info(f"Search for job title: {command_args.args.job_title}")
 
         location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
         location.clear()  # clear if something is already written
         location.send_keys(command_args.args.job_location)
+        logging.info(f"Search for job location: {command_args.args.job_location}")
 
         try:
             # Close pop up
@@ -52,7 +57,7 @@ class Scraper:
         # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
         search_button.click()
-
+        logging.info(f"Browser connect to new URL with : {command_args.args.job_title}, {command_args.args.job_location}")
         time.sleep(cst.SLEEP_TIME)
 
     def get_num_pages(self):
@@ -66,10 +71,11 @@ class Scraper:
             # take the number of all open positions in Israel over the site
             num_of_available_pages = self.browser.find_element_by_xpath(cst.NUM_PAGES_XPATH).text
             num_of_available_pages = int(num_of_available_pages.split(' ')[cst.LAST_ELEMENT])
+            logging.info(f'Succeed to catch number of available pages: {num_of_available_pages}')
 
         except NoSuchElementException:
             num_of_available_pages = cst.DEFAULT_NUM_PAGES  # default value
-            print(cst.ERROR_NUM_PAGES)
+            logging.error(cst.ERROR_NUM_PAGES)
 
         # time.sleep(SLEEP_TIME)
 
@@ -229,7 +235,7 @@ class Scraper:
 
         # If there is no overview page(company tab)
         except NoSuchElementException:
-            print(cst.ERROR_OPTIONAL_DATA)
+            logging.error(cst.ERROR_OPTIONAL_DATA)
         finally:
             return company
 
@@ -241,8 +247,11 @@ class Scraper:
         try:
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
             pop_up.click()
+            logging.info("Pop up closed successfully")
         except NoSuchElementException:
             pass
+
+        glassdoor_number_pages = self.get_num_pages()
 
         try:
             self.browser.find_element_by_xpath(cst.SELECTED_XPATH).click()
@@ -252,29 +261,35 @@ class Scraper:
         time.sleep(cst.SLEEP_TIME)
 
         # Take all the buttons of each job in this page we want to click on
-        job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
+        i = 1
+        while i <= glassdoor_number_pages:
+            job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
 
-        try:
-            pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
-            pop_up.click()
-        except NoSuchElementException:
-            pass
+            try:
+                pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
+                pop_up.click()
+                logging.info("Pop up closed successfully")
+            except NoSuchElementException:
+                pass
 
-        for button_job in job_click_button:
-            # start collect job data
-            job, company = self.catch_mandatory_data_and_rating(button_job)
-            company = self.catch_optional_data(company)
-            database.insert_company(company)
-            database.insert_job(job)
-        database.insert_company(flag_finish_page=True)
-        database.insert_job(flag_finish_page=True)
-
+            logging.info(f"Start to collect all data from page: {i}")
+            for button_job in job_click_button:
+                # start collect job data
+                job, company = self.catch_mandatory_data_and_rating(button_job)
+                company = self.catch_optional_data(company)
+                database.insert_company(company)
+                database.insert_job(job)
+            database.insert_company(flag_finish_page=True)
+            database.insert_job(flag_finish_page=True)
+            logging.info(f"Succeed to collect all data from page: {i}")
         # TODO: deal next page bug
-        try:
-            next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
-            next_button.click()
-        except NoSuchElementException:
-            print(cst.ERROR_NEXT)
-        time.sleep(cst.SLEEP_TIME)
+            try:
+                next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
+                next_button.click()
+                logging.info("Succeed to click on next button for next page")
+            except NoSuchElementException:
+                logging.error(cst.ERROR_NEXT)
+            time.sleep(cst.SLEEP_TIME)
         # self.browser.quit()
+            i += 1
 
