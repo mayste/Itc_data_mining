@@ -1,8 +1,4 @@
-# from command_args import args
-
 # TODO: try to find better address
-
-# SLEEP_FACTOR = args.sleep_factor
 
 from selenium import webdriver  # allows us to open a browser and do the navigation
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
@@ -11,10 +7,10 @@ import constants as cst
 import command_args
 from dateutil.relativedelta import relativedelta
 from datetime import date
-from datetime import datetime
 from job import Job
 from company import Company
 import logging
+from company_scraping import CompanyPage
 
 
 class Scraper:
@@ -57,7 +53,8 @@ class Scraper:
         # Click on search button
         search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
         search_button.click()
-        logging.info(f"Browser connect to new URL with : {command_args.args.job_title}, {command_args.args.job_location}")
+        logging.info(
+            f"Browser connect to new URL with : {command_args.args.job_title}, {command_args.args.job_location}")
         time.sleep(cst.SLEEP_TIME)
 
     def get_num_pages(self):
@@ -73,6 +70,7 @@ class Scraper:
             num_of_available_pages = int(num_of_available_pages.split(' ')[cst.LAST_ELEMENT])
             logging.info(f'Succeed to catch number of available pages: {num_of_available_pages}')
 
+        # TODO: click again on search if dont have job numbers
         except NoSuchElementException:
             num_of_available_pages = cst.DEFAULT_NUM_PAGES  # default value
             logging.error(cst.ERROR_NUM_PAGES)
@@ -87,7 +85,6 @@ class Scraper:
         :param x_path: constant
         :return: String or None
         """
-        # TODO: not catching all the headquater & revenue
         try:
             text_value = self.browser.find_element_by_xpath(x_path).text
             # if the optional data unknown put None
@@ -134,7 +131,7 @@ class Scraper:
             company_rating = None
         return company_name, company_rating
 
-    def catch_mandatory_data_and_rating(self, button_job):  # TODO: not sure about the loop
+    def catch_mandatory_data_and_rating(self, button_job):
         """
         Collect all the mandatory information on the website
         """
@@ -188,7 +185,6 @@ class Scraper:
         else:
             return company_founded
 
-
     def catch_optional_data(self, company):
         """
         Catch all the optional information of a company
@@ -228,9 +224,8 @@ class Scraper:
             competitors = self.catch_optional_text_value_by_xpath(cst.COMPANY_COMPETITORS_XPATH)
             if competitors is not None and ',' in competitors:
                 competitors = competitors.split(',')
-
-            # print(f'competitors: {competitors}')
-            # TODO: Check if it put list and append to previous one
+            elif competitors is not None:  # single competior
+                competitors = list(competitors)
             company.set_company_competitors(competitors)
 
         # If there is no overview page(company tab)
@@ -239,9 +234,9 @@ class Scraper:
         finally:
             return company
 
-    def collecting_data_from_page(self, database):
+    def collecting_data_from_pages(self, database):
         """
-        Collect all the data on a specific page
+        Collect all the data on for a specific search
         """
         time.sleep(cst.SLEEP_TIME)
         try:
@@ -261,8 +256,8 @@ class Scraper:
         time.sleep(cst.SLEEP_TIME)
 
         # Take all the buttons of each job in this page we want to click on
-        i = 1
-        while i <= glassdoor_number_pages:
+        current_page = cst.FIRST_PAGE
+        while current_page <= glassdoor_number_pages:
             job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
 
             try:
@@ -272,17 +267,21 @@ class Scraper:
             except NoSuchElementException:
                 pass
 
-            logging.info(f"Start to collect all data from page: {i}")
+            logging.info(f"Start to collect all data from page: {current_page}")
             for button_job in job_click_button:
                 # start collect job data
                 job, company = self.catch_mandatory_data_and_rating(button_job)
                 company = self.catch_optional_data(company)
+                if company.get_company_competitors() is not None:
+                    for competitor in company.get_company_competitors():
+                        competitor = competitor.strip()
+                        competitor_scraping = CompanyPage(competitor)
+                        database.insert_company(competitor)
+                        database.insert_competitor(competitor, company)
                 database.insert_company(company)
                 database.insert_job(job)
-            database.insert_company(flag_finish_page=True)
-            database.insert_job(flag_finish_page=True)
-            logging.info(f"Succeed to collect all data from page: {i}")
-        # TODO: deal next page bug
+            logging.info(f"Succeed to collect all data from page: {current_page}")
+
             try:
                 next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
                 next_button.click()
@@ -290,6 +289,4 @@ class Scraper:
             except NoSuchElementException:
                 logging.error(cst.ERROR_NEXT)
             time.sleep(cst.SLEEP_TIME)
-        # self.browser.quit()
-            i += 1
-
+            current_page += cst.SECOND_ELEMENT

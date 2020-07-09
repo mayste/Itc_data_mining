@@ -95,7 +95,7 @@ class Job:
         """
         self.company_name = value
 
-    def __repr__(self):  # TODO: temp function to print
+    def __repr__(self):
         return ''.join(
             f"\njob_title: {self.job_title}\ncompany_name: {self.company_name}\njob_location: {self.job_location}"
             f"\njob_publication_date: {self.job_publication_date}\njob_description: {self.job_description}")

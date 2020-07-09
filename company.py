@@ -22,7 +22,7 @@ class Company:
         self.company_industry = None
         self.company_sector = None
         self.company_type = None
-        self.company_competitors = []
+        self.company_competitors = None
         self.company_revenue = None
         self.company_headquarters = None
 
@@ -136,8 +136,6 @@ class Company:
         get company competitors
         :return: list
         """
-        if len(self.company_competitors) == cst.ZERO_VALUE:
-            return None
         return self.company_competitors
 
     def set_company_competitors(self, value):
@@ -146,8 +144,7 @@ class Company:
         :param value: string
         :return:
         """
-        #TODO: Check if working
-        self.company_competitors + value
+        self.company_competitors = value
 
     def get_company_revenue(self):
         """
@@ -179,7 +176,7 @@ class Company:
         """
         self.company_headquarters = value
 
-    def __repr__(self):  # TODO: temp function to print
+    def __repr__(self):
         return ''.join(f'\ncompany: {self.company_name}\nsize: {self.company_size}\ncompany_founded: '
                        f'{self.company_founded}\ncompany_industry: {self.company_industry}\ncompany_sector: '
                        f'{self.company_sector}\ncompany_type: {self.company_type}\ncompany_rating: '

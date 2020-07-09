@@ -16,9 +16,8 @@ logging.critical('This is a critical message')
 logging.exception('This is a critical message')
 """
 
-#TODO: make sure we enter of fields to db and types
-
 # TODO: Try catch for all db and also all the project
+
 if __name__ == "__main__":
     if not os.path.exists(os.path.join(cst.LOGGING_DIR_NAME)):  # we don't have this directory
         os.mkdir(os.path.join(cst.LOGGING_DIR_NAME))  # create directory
@@ -30,13 +29,7 @@ if __name__ == "__main__":
     database.create_db()
     glassdoor_scraper = Scraper()
     glassdoor_scraper.set_search_keywords()
+    glassdoor_scraper.collecting_data_from_pages(database)
 
-    #logging.info('nanan')
 
-    #TODO: click again on search if dont have job numbers
-    glassdoor_number_pages = glassdoor_scraper.get_num_pages()
-
-    #TODO: enter to function: collecting_data_from_page
-
-    glassdoor_scraper.collecting_data_from_page(database)
 
