@@ -233,7 +233,7 @@ class JobsListScraper(Scraper):
 
         try:
             self.browser.find_element_by_xpath(cst.SELECTED_XPATH).click()
-        except ElementClickInterceptedException:  # NoSuchElementException TODO: check the error
+        except ElementClickInterceptedException:
             logging.exception(f'There is a problem with click on xpath: {cst.SELECTED_XPATH}')
             pass
 

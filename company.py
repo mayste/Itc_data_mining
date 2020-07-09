@@ -11,7 +11,6 @@ class Company:
         :param company_name: string
         :param company_rating: float
 
-        #TODO: check maybe it list of strings for competitors
         """
         self.company_name = company_name
         self.company_rating = company_rating

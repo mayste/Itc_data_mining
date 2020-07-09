@@ -1,6 +1,5 @@
 import random
 
-# TODO: Change one file of constants + xpath + etc and one file for sql queries + one file for a text_msgs
 # Constant
 SLEEP_TIME = random.randint(5, 10)
 LAST_ELEMENT = -1
