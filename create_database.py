@@ -23,8 +23,7 @@ class Database:
             logging.info(tm.SQL_READY)
         except RuntimeError:
             logging.critical(tm.SQL_FAIL)
-            self.browser.quit()
-            sys.exit(1)
+            sys.exit(cst.EXIT)
 
     def create_db(self):
         """
@@ -46,8 +45,7 @@ class Database:
             logging.critical(tm.SQL_FAIL_TABLE)
             self.connection.rollback()
             self.connection.close()
-            self.browser.quit()
-            sys.exit(1)
+            sys.exit(cst.EXIT)
 
     def create_job_table(self, cur):
         """
@@ -106,7 +104,7 @@ class Database:
                                                        company.get_company_revenue(),
                                                        company.get_company_headquarters()])
                 self.connection.commit()
-                logging.info('Insert company to DB successfully')
+                logging.info(tm.INSERT_COMPANY)
         except pymysql.Error:
             logging.exception(tm.COMPANY_INSERT_FAIL)
 
@@ -120,7 +118,7 @@ class Database:
                 cur.execute(sql_insert_competitors_table, [company.get_name(),
                                                            competitor])
                 self.connection.commit()
-                logging.info('Insert competitors to DB successfully')
+                logging.info(tm.INSERT_COMPETITOR)
         except pymysql.Error:
             logging.exception(tm.COMPETITOR_INSERT_FAIL)
 
@@ -135,7 +133,7 @@ class Database:
                 cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(), job.get_location(),
                                                    job.get_publication_date(), job.get_company_name()])
                 self.connection.commit()
-                logging.info('Insert job to DB successfully')
+                logging.info(tm.INSERT_JOB)
         except pymysql.Error:
             logging.exception(tm.JOB_INSERT_FAIL)
 
@@ -147,20 +145,19 @@ class Database:
             sql_get_company = sql.GET_COMPANY
             cur.execute(sql_get_company, company_name)
             result = cur.fetchone()
-            logging.info('get information from DB')
+            logging.info(tm.GET_INFO_DB)
             if result:
                 return True
         return False
 
     def close_connection_database(self):
         try:
-            self.browser.quit()
             self.connection.cursor().close()
             self.connection.close()
-            logging.info('Close connection to DB successfully')
+            logging.info(tm.CLOSE_CONNECTION)
         except pymysql.Error:
-            logging.critical('There was a problem with closing the DB connection')
-            sys.exit(1)
+            logging.critical(tm.CLOSE_CONNECTION_FAIL)
+            sys.exit(cst.EXIT)
 
 
     # TODO: Where to self.connection.close() or self.cur.close

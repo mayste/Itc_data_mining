@@ -12,6 +12,7 @@ HOUR = 'h'
 DAY = 'd'
 MONTH = 'm'
 ALL_DAY = '24'
+ONE_DAY = 1
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 SECOND_ELEMENT = 1
 ZERO_VALUE = 0
@@ -22,6 +23,13 @@ LOGGING_DIR_NAME = 'logging'
 CORPORATION = ['corp','corporation','corp.']
 LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 FILE_MODE = 'w'
+SPACE = ' '
+NEW_LINE = '\n'
+DASH = '-'
+COMA = ','
+EXIT = 1
+
+
 
 # Path
 DEFAULT_URL = "https://www.glassdoor.com/Job/index.htm"

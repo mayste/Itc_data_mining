@@ -46,7 +46,7 @@ class CompanyPageScraper(Scraper):
         try:
             self.browser.find_element_by_xpath(cst.FIRST_COMPANY_XPATH).click()
         except ElementClickInterceptedException:
-            logging.exception(f'There is a problem with click on xpath: {cst.FIRST_COMPANY_XPATH}')
+            logging.exception(tm.X_PATH_FAIL, cst.FIRST_COMPANY_XPATH)
             pass
         finally:
             return self.catch_company_data(company)
@@ -65,8 +65,8 @@ class CompanyPageScraper(Scraper):
         company.set_company_industry(self.catch_optional_text_value_by_xpath(cst.COMPANY_INDUSTRY_XPATH))
         # Catch company type
         company_type = self.catch_optional_text_value_by_xpath(cst.COMPANY_TYPE_XPATH)
-        if company_type is not None and '-' in company_type:
-            company_type = company_type.split('-')[cst.SECOND_ELEMENT].strip()
+        if company_type is not None and cst.DASH in company_type:
+            company_type = company_type.split(cst.DASH)[cst.SECOND_ELEMENT].strip()
             company.set_company_type(company_type)
         else:
             company.set_company_type(company_type)
@@ -78,7 +78,7 @@ class CompanyPageScraper(Scraper):
         #catch company rating
         company.set_company_rating(self.catch_optional_text_value_by_xpath(cst.COMPANY_RATING_XPATH))
         self.browser.quit()
-        logging.info('close browser successfully')
+        logging.info(tm.BROWSER_CLOSE)
         return company
 
 

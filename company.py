@@ -1,5 +1,5 @@
 """
-This class create an instance of comapny with all the information.
+This class create an instance of company with all the information.
 Authors: May Steinfeld & Sheryl Sitruk
 """
 

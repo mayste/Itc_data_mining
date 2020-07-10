@@ -66,7 +66,7 @@ class JobsListScraper(Scraper):
         except NoSuchElementException:
             logging.critical(tm.ERROR_NUM_PAGES)
             self.browser.quit()
-            sys.exit(1)
+            sys.exit(cst.EXIT)
         return num_of_available_pages
 
     def convert_publication_date(self, publication_date):
@@ -79,7 +79,7 @@ class JobsListScraper(Scraper):
         if cst.HOUR in publication_date and cst.ALL_DAY not in publication_date:
             return date.today()
         elif cst.HOUR in publication_date and cst.ALL_DAY in publication_date:
-            return date.today() - relativedelta(days=1)
+            return date.today() - relativedelta(days=cst.ONE_DAY)
         elif cst.DAY in publication_date:
             return (date.today() - relativedelta(
                 days=int(publication_date.split(cst.DAY)[cst.FIRST_ELEMENT])))
@@ -95,16 +95,16 @@ class JobsListScraper(Scraper):
         :param company_name: string
         :return: tuple
         """
-        if '\n' in company_name:  # We have a rating
+        if cst.NEW_LINE in company_name:  # We have a rating
             try:
-                company_rating = float(company_name.split('\n')[cst.SECOND_ELEMENT])
+                company_rating = float(company_name.split(cst.NEW_LINE)[cst.SECOND_ELEMENT])
             except ValueError:
-                logging.exception(f'There is a problem with convert the rating')
+                logging.exception(tm.CONVERT_RATING_FAIL)
                 company_rating = None
             finally:
-                company_name = company_name.split('\n')[cst.FIRST_ELEMENT]
-                if company_name.lower().split(' ')[-1] in cst.CORPORATION :
-                    company_name = ''.join(company_name.lower().split(' ')[:-1])
+                company_name = company_name.split(cst.NEW_LINE)[cst.FIRST_ELEMENT]
+                if company_name.lower().split(cst.SPACE)[cst.LAST_ELEMENT] in cst.CORPORATION:
+                    company_name = ''.join(company_name.lower().split(cst.SPACE)[:cst.LAST_ELEMENT])
         else:  # No rating
             company_rating = None
         return company_name, company_rating
@@ -145,7 +145,7 @@ class JobsListScraper(Scraper):
                 return job, company
 
             except NoSuchElementException:
-                logging.exception(f'There is a problem with catch mandatory data')
+                logging.exception(tm.MANDATORY_DATA_FAIL)
                 time.sleep(cst.SLEEP_TIME)
 
     def catch_optional_data(self, company):
@@ -171,8 +171,8 @@ class JobsListScraper(Scraper):
             company.set_company_sector(self.catch_optional_text_value_by_xpath(cst.COMPANY_SECTOR_XPATH))
             # Catch company type
             company_type = self.catch_optional_text_value_by_xpath(cst.COMPANY_TYPE_XPATH)
-            if company_type is not None and '-' in company_type:
-                company_type = company_type.split('-')[cst.SECOND_ELEMENT].strip()
+            if company_type is not None and cst.DASH in company_type:
+                company_type = company_type.split(cst.DASH)[cst.SECOND_ELEMENT].strip()
                 company.set_company_type(company_type)
             else:
                 company.set_company_type(company_type)
@@ -184,8 +184,8 @@ class JobsListScraper(Scraper):
 
             # Catch competitors and convert to list
             competitors = self.catch_optional_text_value_by_xpath(cst.COMPANY_COMPETITORS_XPATH)
-            if competitors is not None and ',' in competitors:
-                competitors = competitors.split(',')
+            if competitors is not None and cst.COMA in competitors:
+                competitors = competitors.split(cst.COMA)
             elif competitors is not None:  # single competitor
                 competitors = list(competitors)
             company.set_company_competitors(competitors)
@@ -200,7 +200,7 @@ class JobsListScraper(Scraper):
         try:
             next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
             next_button.click()
-            logging.info("Succeed to click on next button for next page")
+            logging.info(tm.NEXT_SUCCESS)
         except NoSuchElementException:
             logging.exception(tm.ERROR_NEXT)
         time.sleep(cst.SLEEP_TIME)
@@ -211,8 +211,8 @@ class JobsListScraper(Scraper):
         if company.get_company_competitors() is not None:
             for competitor_name in company.get_company_competitors():
                 competitor_name = competitor_name.strip()
-                if competitor_name.lower().split(' ')[cst.LAST_ELEMENT] in ['corp', 'corporation', 'corp.']:
-                    competitor_name = ' '.join(competitor_name.lower().split(' ')[:cst.LAST_ELEMENT])
+                if competitor_name.lower().split(cst.SPACE)[cst.LAST_ELEMENT] in cst.CORPORATION:
+                    competitor_name = ' '.join(competitor_name.lower().split(cst.SPACE)[:cst.LAST_ELEMENT])
                 if not database.get_company(competitor_name):  # we don't have the competitor in DB
                     competitor = Company(competitor_name, None)
                     competitor_scraping = CompanyPageScraper(competitor_name)
@@ -221,7 +221,6 @@ class JobsListScraper(Scraper):
                     competitor.set_company_sector(company.get_company_sector())
                     database.insert_company(competitor)
                 database.insert_competitor(competitor_name, company)
-
 
     def collecting_data_from_pages(self, database):
         """
@@ -235,7 +234,7 @@ class JobsListScraper(Scraper):
         try:
             self.browser.find_element_by_xpath(cst.SELECTED_XPATH).click()
         except ElementClickInterceptedException:
-            logging.exception(f'There is a problem with click on xpath: {cst.SELECTED_XPATH}')
+            logging.exception(tm.X_PATH_FAIL, cst.SELECTED_XPATH)
             pass
 
         time.sleep(cst.SLEEP_TIME)
@@ -245,14 +244,14 @@ class JobsListScraper(Scraper):
         while current_page <= glassdoor_number_pages:
             job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
             self.close_popup()
-            logging.info(f"Start to collect all data from page: {current_page}")
+            logging.info(tm.COLLECT_DATA, current_page)
             for button_job in job_click_button:
                 # start collect job data
                 job, company = self.catch_mandatory_data_and_rating(button_job)
                 company = self.catch_optional_data(company)
                 database.insert_company(company)
-                self.create_competitors_insert(database,company)
+                self.create_competitors_insert(database, company)
                 database.insert_job(job)
-            logging.info(f"Succeed to collect all data from page: {current_page}")
+            logging.info(tm.COLLECT_DATA_SUCCESS, current_page)
             # call to click on next button
             current_page = self.click_next_button()
