@@ -155,5 +155,5 @@ class Database:
             sys.exit(cst.EXIT)
 
     def create_job_location_table(self):
-        #TODO: add table for all locations of jobs
+        #TODO: add table for all locations of jobs and try to add address from maps API
         pass
