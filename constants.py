@@ -22,6 +22,8 @@ CHARSET = 'utf8mb4'
 LOGGING_DIR_NAME = 'logging'
 CORPORATION = ['corp','corporation','corp.']
 LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+LOGGING_FILE = 'glassdoor_scrap_'
+LOG = '.log'
 FILE_MODE = 'w'
 SPACE = ' '
 NEW_LINE = '\n'
@@ -31,8 +33,6 @@ EXIT = 1
 
 # Path
 DEFAULT_URL = "https://www.glassdoor.com/Job/index.htm"
-# EXE_PATH = r'/Users/Sheryl/PycharmProjects/Itc_data_mining/webDrivers/geckodriver'
-# EXE_PATH = r'/Users/maylev/PycharmProjects/Itc_data_mining/webDrivers/geckodriver'
 POP_UP_XPATH = "//div[contains(@class,'modal_main')]//span[@class='SVGInline modal_closeIcon']"
 NUM_PAGES_XPATH = "//div[@class='cell middle hideMob padVertSm']"
 NEXT_XPATH = '//li[@class="next"]//a[@data-test="pagination-next"]'

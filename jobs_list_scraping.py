@@ -235,7 +235,7 @@ class JobsListScraper(Scraper):
         try:
             self.browser.find_element_by_xpath(cst.SELECTED_XPATH).click()
         except ElementClickInterceptedException:
-            logging.exception(tm.X_PATH_FAIL, cst.SELECTED_XPATH)
+            logging.exception(tm.X_PATH_FAIL)
             pass
 
         time.sleep(cst.SLEEP_TIME)
@@ -245,7 +245,7 @@ class JobsListScraper(Scraper):
         while current_page <= glassdoor_number_pages:
             job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
             self.close_popup()
-            logging.info(tm.COLLECT_DATA, current_page)
+            logging.info(tm.COLLECT_DATA)
             for button_job in job_click_button:
                 # start collect job data
                 job, company = self.catch_mandatory_data_and_rating(button_job)
@@ -253,6 +253,6 @@ class JobsListScraper(Scraper):
                 database.insert_company(company)
                 self.create_competitors_insert(database,company)
                 database.insert_job(job)
-            logging.info(tm.COLLECT_DATA_SUCCESS, current_page)
+            logging.info(tm.COLLECT_DATA_SUCCESS)
             # call to click on next button
             current_page = self.click_next_button(current_page)

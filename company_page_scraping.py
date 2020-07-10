@@ -46,7 +46,7 @@ class CompanyPageScraper(Scraper):
         try:
             self.browser.find_element_by_xpath(cst.FIRST_COMPANY_XPATH).click()
         except ElementClickInterceptedException:
-            logging.exception(tm.X_PATH_FAIL, cst.FIRST_COMPANY_XPATH)
+            logging.exception(tm.X_PATH_FAIL)
             pass
         finally:
             return self.catch_company_data(company)

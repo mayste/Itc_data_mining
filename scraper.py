@@ -23,7 +23,7 @@ class Scraper:
             # Close pop up
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
             pop_up.click()
-            logging.exception(tm.POP_UP_CLOSE)
+            logging.info(tm.POP_UP_CLOSE)
         except NoSuchElementException:
             logging.exception(tm.NO_POP_UP)
             pass
@@ -41,7 +41,7 @@ class Scraper:
                 return None
             return text_value
         except NoSuchElementException:
-            logging.exception(tm.FAIL_TEXT_XPATH, x_path )
+            logging.exception(tm.FAIL_TEXT_XPATH)
             return None
 
     def convert_company_founded_year(self, company_founded):

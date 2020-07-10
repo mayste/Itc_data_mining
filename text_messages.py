@@ -40,20 +40,19 @@ COMPETITOR_PAGE = "Search for competitor's company page"
 
 NEW_COMPANY_URL = "Browser connect to new URL of a company"
 
-
 INSERT_COMPANY = 'Insert company to DB successfully'
 
 INSERT_COMPETITOR = 'Insert competitors to DB successfully'
 
 INSERT_JOB = 'Insert job to DB successfully'
 
-GET_INFO_DB ='get information from DB'
+GET_INFO_DB = 'get information from DB'
 
 CLOSE_CONNECTION = 'Close connection to DB successfully'
 
 CLOSE_CONNECTION_FAIL = 'There was a problem with closing the DB connection'
 
-X_PATH_FAIL = 'There is a problem with click on xpath:'
+X_PATH_FAIL = 'There is a problem with click on xpath'
 
 BROWSER_CLOSE = 'close browser successfully'
 
@@ -61,10 +60,10 @@ CONVERT_RATING_FAIL = 'There is a problem with convert the rating'
 
 MANDATORY_DATA_FAIL = 'There is a problem with catch mandatory data'
 
-COLLECT_DATA = "Start to collect all data from page:"
+COLLECT_DATA = "Start to collect all data from page"
 
-COLLECT_DATA_SUCCESS = "Succeed to collect all data from page:"
+COLLECT_DATA_SUCCESS = "Succeed to collect all data from page"
 
-FAIL_TEXT_XPATH = 'There is a problem with catching text from xpath:'
+FAIL_TEXT_XPATH = 'There is a problem with catching text from xpath'
 
 FAIL_CONVERT_YEAR = 'There is a problem with convert company founded year'

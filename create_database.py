@@ -7,9 +7,6 @@ import text_messages as tm
 import sys
 
 
-# TODO: Try catch for all db and also all the project
-# TODO: put in constant SQL queries
-
 class Database:
     def __init__(self):
         """
@@ -30,7 +27,7 @@ class Database:
         This function runs the queries to create the database
         """
         try:
-            # TODO: think maybe drop table if exist
+            # TODO: think maybe drop DB if exist
             cur = self.connection.cursor()
             sql_query = sql.CREATE_DB
             cur.execute(sql_query)
@@ -94,7 +91,6 @@ class Database:
         """
         try:
             with self.connection.cursor() as cur:
-                # TODO: when problem with insert or something rollback
                 sql_insert_company_table = sql.INSERT_COMPANY_TABLE
                 cur.execute(sql_insert_company_table, [company.get_name(),
                                                        company.get_company_size(), company.get_company_rating(),
@@ -128,7 +124,6 @@ class Database:
         """
         try:
             with self.connection.cursor() as cur:
-                # TODO: when problem with insert or something rollback
                 sql_insert_job_table = sql.INSERT_JOB_TABLE
                 cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(), job.get_location(),
                                                    job.get_publication_date(), job.get_company_name()])
@@ -158,9 +153,6 @@ class Database:
         except pymysql.Error:
             logging.critical(tm.CLOSE_CONNECTION_FAIL)
             sys.exit(cst.EXIT)
-
-
-    # TODO: Where to self.connection.close() or self.cur.close
 
     def create_job_location_table(self):
         #TODO: add table for all locations of jobs
