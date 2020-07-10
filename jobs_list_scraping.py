@@ -66,7 +66,7 @@ class JobsListScraper(Scraper):
         except NoSuchElementException:
             logging.critical(tm.ERROR_NUM_PAGES)
             self.browser.quit()
-            sys.exit(cst.EXIT)
+            sys.exit(1)
         return num_of_available_pages
 
     def convert_publication_date(self, publication_date):
@@ -95,7 +95,7 @@ class JobsListScraper(Scraper):
         :param company_name: string
         :return: tuple
         """
-        if cst.NEW_LINE in company_name:  # We have a rating
+        if '\n' in company_name:  # We have a rating
             try:
                 company_rating = float(company_name.split(cst.NEW_LINE)[cst.SECOND_ELEMENT])
             except ValueError:
@@ -103,7 +103,7 @@ class JobsListScraper(Scraper):
                 company_rating = None
             finally:
                 company_name = company_name.split(cst.NEW_LINE)[cst.FIRST_ELEMENT]
-                if company_name.lower().split(cst.SPACE)[cst.LAST_ELEMENT] in cst.CORPORATION:
+                if company_name.lower().split(cst.SPACE)[cst.LAST_ELEMENT] in cst.CORPORATION :
                     company_name = ''.join(company_name.lower().split(cst.SPACE)[:cst.LAST_ELEMENT])
         else:  # No rating
             company_rating = None
@@ -211,8 +211,8 @@ class JobsListScraper(Scraper):
         if company.get_company_competitors() is not None:
             for competitor_name in company.get_company_competitors():
                 competitor_name = competitor_name.strip()
-                if competitor_name.lower().split(cst.SPACE)[cst.LAST_ELEMENT] in cst.CORPORATION:
-                    competitor_name = ' '.join(competitor_name.lower().split(cst.SPACE)[:cst.LAST_ELEMENT])
+                if competitor_name.lower().split(' ')[cst.LAST_ELEMENT] in cst.CORPORATION:
+                    competitor_name = ' '.join(competitor_name.lower().split(' ')[:cst.LAST_ELEMENT])
                 if not database.get_company(competitor_name):  # we don't have the competitor in DB
                     competitor = Company(competitor_name, None)
                     competitor_scraping = CompanyPageScraper(competitor_name)
@@ -221,6 +221,7 @@ class JobsListScraper(Scraper):
                     competitor.set_company_sector(company.get_company_sector())
                     database.insert_company(competitor)
                 database.insert_competitor(competitor_name, company)
+
 
     def collecting_data_from_pages(self, database):
         """
@@ -250,8 +251,8 @@ class JobsListScraper(Scraper):
                 job, company = self.catch_mandatory_data_and_rating(button_job)
                 company = self.catch_optional_data(company)
                 database.insert_company(company)
-                self.create_competitors_insert(database, company)
+                self.create_competitors_insert(database,company)
                 database.insert_job(job)
             logging.info(tm.COLLECT_DATA_SUCCESS, current_page)
             # call to click on next button
-            current_page = self.click_next_button()
+            current_page = self.click_next_button(current_page)

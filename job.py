@@ -2,7 +2,7 @@
 This class create an instance of job post with all the information.
 Authors: May Steinfeld & Sheryl Sitruk
 """
-
+import constants as cst
 
 class Job:
     def __init__(self, job_title, job_description, job_location, job_publication_date, company_name):

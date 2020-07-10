@@ -29,8 +29,6 @@ DASH = '-'
 COMA = ','
 EXIT = 1
 
-
-
 # Path
 DEFAULT_URL = "https://www.glassdoor.com/Job/index.htm"
 # EXE_PATH = r'/Users/Sheryl/PycharmProjects/Itc_data_mining/webDrivers/geckodriver'
