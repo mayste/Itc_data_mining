@@ -56,5 +56,5 @@ pip3 install -r requirments.txt
 ## Run:
 Optional arguments are job title & job location, if the user don't enter them- the program will run for every job and location around the world.
 ```python
-run main_glassdoor.py <paath to geckodriver> <MySQL user name> <MySQL password> --job_title="XXX" --job_location="XXX"
+run main_glassdoor.py <path to geckodriver> <MySQL user name> <MySQL password> --job_title="XXX" --job_location="XXX"
 ```
