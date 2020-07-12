@@ -182,13 +182,11 @@ class JobsListScraper(Scraper):
             # Catch company headquarters
             company.set_company_headquarters(self.catch_optional_text_value_by_xpath(cst.COMPANY_HEADQUARTER_XPATH))
 
-            #TODO: There is a problem with competitors
-            # Catch competitors and convert to list
             competitors = self.catch_optional_text_value_by_xpath(cst.COMPANY_COMPETITORS_XPATH)
             if competitors is not None and cst.COMA in competitors:
                 competitors = competitors.split(cst.COMA)
             elif competitors is not None:  # single competitor
-                competitors = list(competitors)
+                competitors = competitors.split()
             company.set_company_competitors(competitors)
 
         # If there is no overview page(company tab)

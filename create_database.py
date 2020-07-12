@@ -27,7 +27,7 @@ class Database:
         This function runs the queries to create the database
         """
         try:
-            # TODO: think maybe drop DB if exist
+            # TODO: think maybe drop DB if exist- > maybe ask the user
             cur = self.connection.cursor()
             sql_query = sql.CREATE_DB
             cur.execute(sql_query)
