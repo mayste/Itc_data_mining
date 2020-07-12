@@ -1,3 +1,8 @@
+"""
+All sql queries as constants
+Authors: May Steinfeld & Sheryl Sitruk
+"""
+
 CREATE_DB = "CREATE DATABASE IF NOT EXISTS glassdoor;"
 USE_DB = "USE glassdoor;"
 CREATE_JOB_TABLE = """

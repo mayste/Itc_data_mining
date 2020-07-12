@@ -1,3 +1,8 @@
+"""
+All constants
+Authors: May Steinfeld & Sheryl Sitruk
+"""
+
 import random
 
 # Constant

@@ -1,3 +1,8 @@
+"""
+All the argparse options
+Authors: May Steinfeld & Sheryl Sitruk
+"""
+
 import argparse
 
 # receiving arguments from the command line terminal for the scraping process

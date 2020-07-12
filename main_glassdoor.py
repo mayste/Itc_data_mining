@@ -1,3 +1,8 @@
+"""
+Program main function to create DB & logging & init the scraper
+Authors: May Steinfeld & Sheryl Sitruk
+"""
+
 from datetime import datetime
 import logging
 import os

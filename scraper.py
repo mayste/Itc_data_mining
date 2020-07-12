@@ -8,8 +8,8 @@ import text_messages as tm
 
 class Scraper:
     """
-       Contains functions related to scraping the website.
-       """
+       This class contains functions to scrap the website.
+    """
 
     def __init__(self):
         """
@@ -19,6 +19,10 @@ class Scraper:
         self.browser.maximize_window()
 
     def close_popup(self):
+        """
+        This function use to close the popup message
+        :return:
+        """
         try:
             # Close pop up
             pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)

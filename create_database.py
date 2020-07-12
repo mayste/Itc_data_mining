@@ -8,6 +8,10 @@ import sys
 
 
 class Database:
+    """
+    This class contains specific functions related to DB.
+    Authors: May Steinfeld & Sheryl Sitruk
+    """
     def __init__(self):
         """
         This function connect to the MYSQL database
@@ -24,7 +28,7 @@ class Database:
 
     def create_db(self):
         """
-        This function runs the queries to create the database
+        This function runs the queries to create the database and tables
         """
         try:
             # TODO: think maybe drop DB if exist- > maybe ask the user
@@ -146,6 +150,10 @@ class Database:
         return False
 
     def close_connection_database(self):
+        """
+        This function close the DB connection
+        :return:
+        """
         try:
             self.connection.cursor().close()
             self.connection.close()

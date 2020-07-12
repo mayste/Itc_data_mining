@@ -175,6 +175,10 @@ class Company:
         self.company_headquarters = value
 
     def __repr__(self):
+        """
+        function to print the class
+        :return:
+        """
         return ''.join(f'\ncompany: {self.company_name}\nsize: {self.company_size}\ncompany_founded: '
                        f'{self.company_founded}\ncompany_industry: {self.company_industry}\ncompany_sector: '
                        f'{self.company_sector}\ncompany_type: {self.company_type}\ncompany_rating: '

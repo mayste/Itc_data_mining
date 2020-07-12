@@ -15,8 +15,9 @@ from company_page_scraping import CompanyPageScraper
 
 class JobsListScraper(Scraper):
     """
-       Contains functions related to scraping the website.
-       """
+       This class contains specific functions to scrape the job list part on the website.
+       Authors: May Steinfeld & Sheryl Sitruk
+    """
 
     def __init__(self):
         """
@@ -52,8 +53,7 @@ class JobsListScraper(Scraper):
 
     def get_num_pages(self):
         """
-        Get the number of pages availables for a specific job and location
-        :param current_url: string
+        Get the number of available pages for a specific job and location
         :return: integer
         """
 
@@ -112,6 +112,8 @@ class JobsListScraper(Scraper):
     def catch_mandatory_data_and_rating(self, button_job):
         """
         Collect all the mandatory information on the website
+        :param button_job:
+        :return: tuple
         """
         time.sleep(cst.SLEEP_TIME)
         collect_mandatory = False
@@ -151,7 +153,8 @@ class JobsListScraper(Scraper):
     def catch_optional_data(self, company):
         """
         Catch all the optional information of a company
-        :param company: string
+        :param company: Company
+        :return: Company
         """
 
         # Collect optional information
@@ -196,6 +199,11 @@ class JobsListScraper(Scraper):
             return company
 
     def click_next_button(self, current_page):
+        """
+        get the current page number, click on next button and update the current page
+        :param current_page: int
+        :return: int
+        """
         try:
             next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
             next_button.click()
@@ -207,6 +215,12 @@ class JobsListScraper(Scraper):
         return current_page
 
     def create_competitors_insert(self, database, company):
+        """
+        get database instance and company and insert the competitors to DB & update competitors table
+        :param database:
+        :param company:
+        :return:
+        """
         if company.get_company_competitors() is not None:
             for competitor_name in company.get_company_competitors():
                 competitor_name = competitor_name.strip()
@@ -224,7 +238,7 @@ class JobsListScraper(Scraper):
 
     def collecting_data_from_pages(self, database):
         """
-        Collect all the data on for a specific search
+        Collect all the data on a specific search
         """
         time.sleep(cst.SLEEP_TIME)
         self.close_popup()

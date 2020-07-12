@@ -1,3 +1,8 @@
+"""
+All text messages as constants
+Authors: May Steinfeld & Sheryl Sitruk
+"""
+
 SQL_READY = "Connection with MYSQL ready"
 
 SQL_DB_CREATION = "Database was created successfully"

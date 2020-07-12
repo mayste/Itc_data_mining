@@ -7,6 +7,10 @@ import text_messages as tm
 
 
 class CompanyPageScraper(Scraper):
+    """
+    This class contains specific functions to scrape the company page on the website.
+    Authors: May Steinfeld & Sheryl Sitruk
+    """
     def __init__(self, competitor_name):
         """
         Sets up the default URL.
@@ -16,8 +20,7 @@ class CompanyPageScraper(Scraper):
 
     def set_search_keywords(self):
         """
-        This function allows to search a specific job title and location according to the
-        input of the user on the command line
+        This function allows to search a specific company page (competitor)
         """
         self.browser.get(cst.DEFAULT_URL)
         logging.info(tm.BROWSER_CONNECTION)
@@ -41,7 +44,7 @@ class CompanyPageScraper(Scraper):
 
     def enter_company_page(self, company):
         """
-        This function click on a company name an take all information on the page
+        This function click on the first company name and enter the page
         """
         try:
             self.browser.find_element_by_xpath(cst.FIRST_COMPANY_XPATH).click()
@@ -54,6 +57,8 @@ class CompanyPageScraper(Scraper):
     def catch_company_data(self, company):
         """
         This function catch all the data on a company page
+        :param company: Company
+        :return: Company
         """
         time.sleep(cst.SLEEP_TIME)
         # Catch company size information
