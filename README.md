@@ -35,17 +35,17 @@ The WebDrive installation is inside our GitHub and also over this link:
 https://github.com/mozilla/geckodriver/releases/tag/v0.26.0
 
 ### Requirements.txt
-decorator==4.4.2
-numpy==1.18.5
-pandas==1.0.4
-public==2019.4.13
-PyMySQL==0.9.3
-python-dateutil==2.8.1
-pytz==2020.1
-selenium==3.141.0
-self==2019.4.13
-six==1.15.0
-urllib3==1.25.9
+* decorator==4.4.2
+* numpy==1.18.5
+* pandas==1.0.4
+* public==2019.4.13
+* PyMySQL==0.9.3
+* python-dateutil==2.8.1
+* pytz==2020.1
+* selenium==3.141.0
+* self==2019.4.13
+* six==1.15.0
+* urllib3==1.25.9
 
 ## Installation:
 ```python
