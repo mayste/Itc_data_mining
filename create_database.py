@@ -39,6 +39,7 @@ class Database:
             sql_query = sql.USE_DB
             cur.execute(sql_query)
             self.create_job_table(cur)
+            self.create_job_location_table(cur)
             self.create_company_table(cur)
             self.create_company_competitors_table(cur)
             logging.info(tm.SQL_TABLE_CREATION)
@@ -57,6 +58,19 @@ class Database:
         sql_create_job_table = sql.CREATE_JOB_TABLE
         # TODO: deal description to take just keywords
         cur.execute(sql_create_job_table)
+
+    def create_job_location_table(self, cur):
+        """
+            Create the job_location table
+            :param cur: connection cursor
+        """
+        # TODO: add table for all locations of jobs and try to add address from maps API
+        sql_create_job_table = sql.CREATE_JOB_LOCATION_TABLE
+        cur.execute(sql_create_job_table)
+        sql_alter_job_location = "ALTER TABLE job_locations ADD FOREIGN KEY (job_id) REFERENCES job (job_id);"
+        cur.execute(sql_alter_job_location)
+        sql_alter_job_location = "ALTER TABLE job_locations ADD UNIQUE KEY (job_location, job_id);"
+        cur.execute(sql_alter_job_location)
 
     def create_company_table(self, cur):
         """
@@ -161,7 +175,3 @@ class Database:
         except pymysql.Error:
             logging.critical(tm.CLOSE_CONNECTION_FAIL)
             sys.exit(cst.EXIT)
-
-    def create_job_location_table(self):
-        #TODO: add table for all locations of jobs and try to add address from maps API
-        pass

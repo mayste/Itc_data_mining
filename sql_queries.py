@@ -38,6 +38,13 @@ CREATE_COMPETITOR_TABLE = """
         );
         """
 
+CREATE_JOB_LOCATION_TABLE = """
+        CREATE TABLE IF NOT EXISTS job_locations (
+        job_location varchar(255) NOT NULL,
+        job_id int NOT NULL
+        );
+        """
+
 ALTER_JOB_TABLE_1 = "ALTER TABLE job ADD FOREIGN KEY (company_id) REFERENCES company (company_id);"
 
 ALTER_JOB_TABLE_2 = "ALTER TABLE job ADD UNIQUE KEY (job_title,company_id,job_location);"
