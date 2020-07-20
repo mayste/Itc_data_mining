@@ -1,6 +1,5 @@
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 import time
-import constants as cst
 import command_args
 from dateutil.relativedelta import relativedelta
 from datetime import date
@@ -9,8 +8,9 @@ from company import Company
 import logging
 import sys
 from scraper import Scraper
-import text_messages as tm
 from company_page_scraping import CompanyPageScraper
+import configparser
+
 
 
 class JobsListScraper(Scraper):
@@ -24,32 +24,34 @@ class JobsListScraper(Scraper):
         Sets up the default URL.
         """
         Scraper.__init__(self)
+        self.config = configparser.ConfigParser(interpolation=None)
+        self.config.read('Constants')
 
     def set_search_keywords(self):
         """
         This function allows to search a specific job title and location according to the
         input of the user on the command line
         """
-        self.browser.get(cst.DEFAULT_URL)
-        logging.info(tm.BROWSER_CONNECTION)
+        self.browser.get(self.config['Path']['DEFAULT_URL'])
+        logging.info(self.config['General']['BROWSER_CONNECTION'])
 
-        job_title = self.browser.find_element_by_id(cst.ID_JOB_TITLE_KW)
+        job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
         job_title.clear()  # clear if something is already written
         job_title.send_keys(command_args.args.job_title)
-        logging.info(tm.SEARCH_JOB)
+        logging.info(self.config['General']['SEARCH_JOB'])
 
-        location = self.browser.find_element_by_id(cst.ID_JOB_LOCATION_KW)
+        location = self.browser.find_element_by_id(self.config['ID']['ID_JOB_LOCATION_KW'])
         location.clear()  # clear if something is already written
         location.send_keys(command_args.args.job_location)
-        logging.info(tm.SEARCH_LOCATION)
-        time.sleep(cst.SLEEP_TIME)
+        logging.info(self.config['General']['SEARCH_LOCATION'])
+        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
         self.close_popup()
 
         # Click on search button
-        search_button = self.browser.find_element_by_id(cst.ID_SEARCH_BUTTON)
+        search_button = self.browser.find_element_by_id(self.config['ID']['ID_SEARCH_BUTTON'])
         search_button.click()
-        logging.info(tm.CONNECT_NEW_URL)
-        time.sleep(cst.SLEEP_TIME)
+        logging.info(self.config['General']['CONNECT_NEW_URL'])
+        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
 
     def get_num_pages(self):
         """
@@ -59,14 +61,14 @@ class JobsListScraper(Scraper):
 
         try:
             # take the number of all open positions in Israel over the site
-            num_of_available_pages = self.browser.find_element_by_xpath(cst.NUM_PAGES_XPATH).text
-            num_of_available_pages = int(num_of_available_pages.split(' ')[cst.LAST_ELEMENT])
-            logging.info(tm.AVAILABLE_PAGES)
+            num_of_available_pages = self.browser.find_element_by_xpath(self.config['Path']['NUM_PAGES_XPATH']).text
+            num_of_available_pages = int(num_of_available_pages.split(' ')[int(self.config['Constant']['LAST_ELEMENT'])])
+            logging.info(self.config['General']['AVAILABLE_PAGES'])
 
         except NoSuchElementException:
-            logging.critical(tm.ERROR_NUM_PAGES)
+            logging.critical(self.config['General']['ERROR_NUM_PAGES'])
             self.browser.quit()
-            sys.exit(cst.EXIT)
+            sys.exit(self.config['General']['EXIT'])
         return num_of_available_pages
 
     def convert_publication_date(self, publication_date):
@@ -76,16 +78,16 @@ class JobsListScraper(Scraper):
         :return: date
         """
         # if the job has been published this day print the day of today
-        if cst.HOUR in publication_date and cst.ALL_DAY not in publication_date:
+        if self.config['Constant']['HOUR'] in publication_date and int(self.config['Constant']['ALL_DAY']) not in publication_date:
             return date.today()
-        elif cst.HOUR in publication_date and cst.ALL_DAY in publication_date:
-            return date.today() - relativedelta(days=cst.ONE_DAY)
-        elif cst.DAY in publication_date:
+        elif self.config['Constant']['HOUR'] in publication_date and int(self.config['Constant']['ALL_DAY']) in publication_date:
+            return date.today() - relativedelta(days=int(self.config['Constant']['ONE_DAY']))
+        elif self.config['Constant']['DAY'] in publication_date:
             return (date.today() - relativedelta(
-                days=int(publication_date.split(cst.DAY)[cst.FIRST_ELEMENT])))
-        elif cst.MONTH in publication_date:
+                days=int(publication_date.split(self.config['Constant']['DAY'])[int(self.config['Constant']['FIRST_ELEMENT'])])))
+        elif self.config['Constant']['MONTH'] in publication_date:
             return (date.today() - relativedelta(
-                months=int(publication_date.split(cst.MONTH)[cst.FIRST_ELEMENT])))
+                months=int(publication_date.split(self.config['Constant']['MONTH'])[int(self.config['Constant']['FIRST_ELEMENT'])])))
         else:
             return None
 
@@ -95,16 +97,16 @@ class JobsListScraper(Scraper):
         :param company_name: string
         :return: tuple
         """
-        if '\n' in company_name:  # We have a rating
+        if self.config['Constant']['LINE'] in company_name:  # We have a rating
             try:
-                company_rating = float(company_name.split(cst.NEW_LINE)[cst.SECOND_ELEMENT])
+                company_rating = float(company_name.split(self.config['Constant']['NEW_LINE'])[int(self.config['Constant']['SECOND_ELEMENT'])])
             except ValueError:
-                logging.exception(tm.CONVERT_RATING_FAIL)
+                logging.exception(self.config['General']['CONVERT_RATING_FAIL'])
                 company_rating = None
             finally:
-                company_name = company_name.split(cst.NEW_LINE)[cst.FIRST_ELEMENT]
-                if company_name.lower().split(cst.SPACE)[cst.LAST_ELEMENT] in cst.CORPORATION :
-                    company_name = ''.join(company_name.lower().split(cst.SPACE)[:cst.LAST_ELEMENT])
+                company_name = company_name.split(self.config['Constant']['NEW_LINE'])[int(self.config['Constant']['FIRST_ELEMENT'])]
+                if company_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] in self.config['Constant']['CORPORATION']:
+                    company_name = ''.join(company_name.lower().split(' ')[:int(self.config['Constant']['LAST_ELEMENT'])])
         else:  # No rating
             company_rating = None
         return company_name, company_rating
@@ -115,7 +117,7 @@ class JobsListScraper(Scraper):
         :param button_job:
         :return: tuple
         """
-        time.sleep(cst.SLEEP_TIME)
+        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
         collect_mandatory = False
         while not collect_mandatory:
             # click the job button
@@ -123,22 +125,22 @@ class JobsListScraper(Scraper):
             try:
                 # Catch the publication date and call function to convert publication date
                 job_publication_date = self.convert_publication_date(self.browser.find_element_by_xpath(
-                    cst.PUBLICATION_DATE_XPATH).text)
-                time.sleep(cst.SLEEP_TIME)
+                    self.config['Path']['PUBLICATION_DATE_XPATH']).text)
+                time.sleep(int(self.config['Constant']['SLEEP_TIME']))
 
                 # Collect Company Name from a post, Sometimes: company name and rating are join, we need to split
                 # them into Company Name and Rating
                 company_name, company_rating = self.convert_split_name_and_rating(self.browser.find_element_by_xpath(
-                    cst.COMPANY_NAME_XPATH).text)
+                    self.config['Path']['COMPANY_NAME_XPATH']).text)
 
                 # Collect Job Title from a post
-                job_title = self.browser.find_element_by_xpath(cst.JOB_TITLE_XPATH).text
+                job_title = self.browser.find_element_by_xpath(self.config['Path']['JOB_TITLE_XPATH']).text
 
                 # Collect Job Location from a post
-                job_location = self.browser.find_element_by_xpath(cst.JOB_LOCATION_XPATH).text
+                job_location = self.browser.find_element_by_xpath(self.config['Path']['JOB_LOCATION_XPATH']).text
 
                 # Collect Job Description
-                job_description = self.browser.find_element_by_xpath(cst.JOB_DESCRIPTION_XPATH).text
+                job_description = self.browser.find_element_by_xpath(self.config['Path']['JOB_DESCRIPTION_XPATH']).text
 
                 # finish collect mandatory fields + rating if the company has in the name
                 collect_mandatory = True
@@ -147,8 +149,8 @@ class JobsListScraper(Scraper):
                 return job, company
 
             except NoSuchElementException:
-                logging.exception(tm.MANDATORY_DATA_FAIL)
-                time.sleep(cst.SLEEP_TIME)
+                logging.exception(self.config['General']['MANDATORY_DATA_FAIL'])
+                time.sleep(int(self.config['Constant']['SLEEP_TIME']))
 
     def catch_optional_data(self, company):
         """
@@ -160,41 +162,41 @@ class JobsListScraper(Scraper):
         # Collect optional information
         try:
             # Click on company in the hyper details
-            self.browser.find_element_by_xpath(cst.OVERVIEW_XPATH).click()
-            time.sleep(cst.SLEEP_TIME)
+            self.browser.find_element_by_xpath(self.config['Path']['OVERVIEW_XPATH']).click()
+            time.sleep(int(self.config['Constant']['SLEEP_TIME']))
 
             # Catch company size information
-            company.set_company_size(self.catch_optional_text_value_by_xpath(cst.COMPANY_SIZE_XPATH))
+            company.set_company_size(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_SIZE_XPATH']))
             # Catch founded year of company
             company.set_company_founded(self.convert_company_founded_year(self.catch_optional_text_value_by_xpath(
-                cst.COMPANY_FOUNDED_XPATH)))
+                self.config['Path']['COMPANY_FOUNDED_XPATH'])))
             # Catch company industry
-            company.set_company_industry(self.catch_optional_text_value_by_xpath(cst.COMPANY_INDUSTRY_XPATH))
+            company.set_company_industry(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_INDUSTRY_XPATH']))
             # Catch company sector
-            company.set_company_sector(self.catch_optional_text_value_by_xpath(cst.COMPANY_SECTOR_XPATH))
+            company.set_company_sector(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_SECTOR_XPATH']))
             # Catch company type
-            company_type = self.catch_optional_text_value_by_xpath(cst.COMPANY_TYPE_XPATH)
-            if company_type is not None and cst.DASH in company_type:
-                company_type = company_type.split(cst.DASH)[cst.SECOND_ELEMENT].strip()
+            company_type = self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_TYPE_XPATH'])
+            if company_type is not None and self.config['Constant']['DASH'] in company_type:
+                company_type = company_type.split(self.config['Constant']['DASH'])[int(self.config['Constant']['SECOND_ELEMENT'])].strip()
                 company.set_company_type(company_type)
             else:
                 company.set_company_type(company_type)
 
             # Catch company revenue
-            company.set_company_revenue(self.catch_optional_text_value_by_xpath(cst.COMPANY_REVENUE_XPATH))
+            company.set_company_revenue(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_REVENUE_XPATH']))
             # Catch company headquarters
-            company.set_company_headquarters(self.catch_optional_text_value_by_xpath(cst.COMPANY_HEADQUARTER_XPATH))
+            company.set_company_headquarters(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_HEADQUARTER_XPATH']))
 
-            competitors = self.catch_optional_text_value_by_xpath(cst.COMPANY_COMPETITORS_XPATH)
-            if competitors is not None and cst.COMA in competitors:
-                competitors = competitors.split(cst.COMA)
+            competitors = self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_COMPETITORS_XPATH'])
+            if competitors is not None and self.config['Constant']['COMA'] in competitors:
+                competitors = competitors.split(self.config['Constant']['COMA'])
             elif competitors is not None:  # single competitor
                 competitors = competitors.split()
             company.set_company_competitors(competitors)
 
         # If there is no overview page(company tab)
         except NoSuchElementException:
-            logging.error(tm.ERROR_OPTIONAL_DATA)
+            logging.error(self.config['General']['ERROR_OPTIONAL_DATA'])
         finally:
             return company
 
@@ -205,13 +207,13 @@ class JobsListScraper(Scraper):
         :return: int
         """
         try:
-            next_button = self.browser.find_element_by_xpath(cst.NEXT_XPATH)
+            next_button = self.browser.find_element_by_xpath(self.config['Path']['NEXT_XPATH'])
             next_button.click()
-            logging.info(tm.NEXT_SUCCESS)
+            logging.info(self.config['General']['NEXT_SUCCESS'])
         except NoSuchElementException:
-            logging.exception(tm.ERROR_NEXT)
-        time.sleep(cst.SLEEP_TIME)
-        current_page += cst.SECOND_ELEMENT
+            logging.exception(self.config['General']['ERROR_NEXT'])
+        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        current_page += int(self.config['Constant']['SECOND_ELEMENT'])
         return current_page
 
     def create_competitors_insert(self, database, company):
@@ -224,8 +226,8 @@ class JobsListScraper(Scraper):
         if company.get_company_competitors() is not None:
             for competitor_name in company.get_company_competitors():
                 competitor_name = competitor_name.strip()
-                if competitor_name.lower().split(' ')[cst.LAST_ELEMENT] in cst.CORPORATION:
-                    competitor_name = ' '.join(competitor_name.lower().split(' ')[:cst.LAST_ELEMENT])
+                if competitor_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] in self.config['Constant']['CORPORATION']:
+                    competitor_name = ' '.join(competitor_name.lower().split(' ')[:int(self.config['Constant']['LAST_ELEMENT'])])
                 if not database.get_company(competitor_name):  # we don't have the competitor in DB
                     competitor = Company(competitor_name, None)
                     competitor_scraping = CompanyPageScraper(competitor_name)
@@ -240,25 +242,25 @@ class JobsListScraper(Scraper):
         """
         Collect all the data on a specific search
         """
-        time.sleep(cst.SLEEP_TIME)
+        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
         self.close_popup()
 
         glassdoor_number_pages = self.get_num_pages()
 
         try:
-            self.browser.find_element_by_xpath(cst.SELECTED_XPATH).click()
+            self.browser.find_element_by_xpath(self.config['Path']['SELECTED_XPATH']).click()
         except ElementClickInterceptedException:
-            logging.exception(tm.X_PATH_FAIL)
+            logging.exception(self.config['General']['SELECTED_XPATH'])
             pass
 
-        time.sleep(cst.SLEEP_TIME)
+        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
 
         # Take all the buttons of each job in this page we want to click on
-        current_page = cst.FIRST_PAGE
+        current_page = int(self.config['Constant']['FIRST_PAGE'])
         while current_page <= glassdoor_number_pages:
-            job_click_button = self.browser.find_elements_by_xpath(cst.JOB_CLICK_BUTTON_XPATH)
+            job_click_button = self.browser.find_elements_by_xpath(self.config['Path']['JOB_CLICK_BUTTON_XPATH'])
             self.close_popup()
-            logging.info(tm.COLLECT_DATA)
+            logging.info(self.config['General']['COLLECT_DATA'])
             for button_job in job_click_button:
                 # start collect job data
                 job, company = self.catch_mandatory_data_and_rating(button_job)
@@ -266,6 +268,6 @@ class JobsListScraper(Scraper):
                 database.insert_company(company)
                 self.create_competitors_insert(database,company)
                 database.insert_job(job)
-            logging.info(tm.COLLECT_DATA_SUCCESS)
+            logging.info(self.config['General']['COLLECT_DATA_SUCCESS'])
             # call to click on next button
             current_page = self.click_next_button(current_page)

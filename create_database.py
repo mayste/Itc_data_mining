@@ -1,10 +1,8 @@
 import pymysql
 import command_args
-import constants as cst
 import logging
-import sql_queries as sql
-import text_messages as tm
 import sys
+import configparser
 
 
 class Database:
@@ -17,14 +15,16 @@ class Database:
         This function connect to the MYSQL database
         """
         try:
-            self.connection = pymysql.connect(host=cst.HOST, user=command_args.args.database_user,
+            self.config = configparser.ConfigParser(interpolation=None)
+            self.config.read('Constants')
+            self.connection = pymysql.connect(host=self.config['Constant']['HOST'], user=command_args.args.database_user,
                                               password=command_args.args.database_password,
-                                              charset=cst.CHARSET,
+                                              charset=self.config['Constant']['CHARSET'],
                                               cursorclass=pymysql.cursors.DictCursor)
-            logging.info(tm.SQL_READY)
+            logging.info(self.config['SQL']['SQL_READY'])
         except RuntimeError:
-            logging.critical(tm.SQL_FAIL)
-            sys.exit(cst.EXIT)
+            logging.critical(self.config['SQL']['SQL_FAIL'])
+            sys.exit(self.config['Constant']['EXIT'])
 
     def create_db(self):
         """
@@ -33,20 +33,20 @@ class Database:
         try:
             # TODO: think maybe drop DB if exist- > maybe ask the user
             cur = self.connection.cursor()
-            sql_query = sql.CREATE_DB
+            sql_query = self.config['SQL_QUERIES']['CREATE_DB']
             cur.execute(sql_query)
-            logging.info(tm.SQL_DB_CREATION)
-            sql_query = sql.USE_DB
+            logging.info(self.config['SQL']['SQL_DB_CREATION'])
+            sql_query = self.config['SQL_QUERIES']['USE_DB']
             cur.execute(sql_query)
             self.create_job_table(cur)
             self.create_company_table(cur)
             self.create_company_competitors_table(cur)
-            logging.info(tm.SQL_TABLE_CREATION)
+            logging.info(self.config['SQL']['SQL_TABLE_CREATION'])
         except pymysql.Error:
-            logging.critical(tm.SQL_FAIL_TABLE)
+            logging.critical(self.config['SQL']['SQL_FAIL_TABLE'])
             self.connection.rollback()
             self.connection.close()
-            sys.exit(cst.EXIT)
+            sys.exit(self.config['Constant']['EXIT'])
 
     def create_job_table(self, cur):
         """
@@ -54,7 +54,7 @@ class Database:
         :param cur: connection cursor
         """
         # TODO: think maybe drop table if exist
-        sql_create_job_table = sql.CREATE_JOB_TABLE
+        sql_create_job_table = self.config['SQL_QUERIES']['CREATE_JOB_TABLE']
         # TODO: deal description to take just keywords
         cur.execute(sql_create_job_table)
 
@@ -64,13 +64,13 @@ class Database:
         :param cur: connection cursor
         """
         # TODO: think maybe drop table if exist
-        sql_create_company_table = sql.CREATE_COMPANY_TABLE
+        sql_create_company_table = self.config['SQL_QUERIES']['CREATE_COMPANY_TABLE']
         cur.execute(sql_create_company_table)
 
         # alter table job according to company
-        sql_alter_job_table = sql.ALTER_JOB_TABLE_1
+        sql_alter_job_table = self.config['SQL_QUERIES']['ALTER_JOB_TABLE_1']
         cur.execute(sql_alter_job_table)
-        sql_alter_job_table = sql.ALTER_JOB_TABLE_2
+        sql_alter_job_table = self.config['SQL_QUERIES']['ALTER_JOB_TABLE_2']
         cur.execute(sql_alter_job_table)
 
     def create_company_competitors_table(self, cur):
@@ -79,14 +79,14 @@ class Database:
         :param cur: connection cursor
         """
         # TODO: think maybe drop table if exist
-        sql_create_company_competitors_table = sql.CREATE_COMPETITOR_TABLE
+        sql_create_company_competitors_table = self.config['SQL_QUERIES']['CREATE_COMPETITOR_TABLE']
         cur.execute(sql_create_company_competitors_table)
 
-        sql_alter_competitors_table = sql.ALTER_COMPETITOR_TABLE_1
+        sql_alter_competitors_table = self.config['SQL_QUERIES']['ALTER_COMPETITOR_TABLE_1']
         cur.execute(sql_alter_competitors_table)
-        sql_alter_competitors_table = sql.ALTER_COMPETITOR_TABLE_2
+        sql_alter_competitors_table = self.config['SQL_QUERIES']['ALTER_COMPETITOR_TABLE_2']
         cur.execute(sql_alter_competitors_table)
-        sql_alter_competitors_table = sql.ALTER_COMPETITOR_TABLE_3
+        sql_alter_competitors_table = self.config['SQL_QUERIES']['ALTER_COMPETITOR_TABLE_3']
         cur.execute(sql_alter_competitors_table)
 
     def insert_company(self, company):
@@ -95,7 +95,7 @@ class Database:
         """
         try:
             with self.connection.cursor() as cur:
-                sql_insert_company_table = sql.INSERT_COMPANY_TABLE
+                sql_insert_company_table = self.config['SQL_QUERIES']['INSERT_COMPANY_TABLE']
                 cur.execute(sql_insert_company_table, [company.get_name(),
                                                        company.get_company_size(), company.get_company_rating(),
                                                        company.get_company_founded(),
@@ -104,9 +104,9 @@ class Database:
                                                        company.get_company_revenue(),
                                                        company.get_company_headquarters()])
                 self.connection.commit()
-                logging.info(tm.INSERT_COMPANY)
+                logging.info(self.config['SQL']['INSERT_COMPANY'])
         except pymysql.Error:
-            logging.exception(tm.COMPANY_INSERT_FAIL)
+            logging.exception(self.config['SQL']['COMPANY_INSERT_FAIL'])
 
     def insert_competitor(self, competitor, company):
         """
@@ -114,13 +114,13 @@ class Database:
         """
         try:
             with self.connection.cursor() as cur:
-                sql_insert_competitors_table = sql.INSERT_COMPETITOR_TABLE
+                sql_insert_competitors_table = self.config['SQL_QUERIES']['INSERT_COMPETITOR_TABLE']
                 cur.execute(sql_insert_competitors_table, [company.get_name(),
                                                            competitor])
                 self.connection.commit()
-                logging.info(tm.INSERT_COMPETITOR)
+                logging.info(self.config['SQL']['INSERT_COMPETITOR'])
         except pymysql.Error:
-            logging.exception(tm.COMPETITOR_INSERT_FAIL)
+            logging.exception(self.config['SQL']['COMPETITOR_INSERT_FAIL'])
 
     def insert_job(self, job):
         """
@@ -128,23 +128,23 @@ class Database:
         """
         try:
             with self.connection.cursor() as cur:
-                sql_insert_job_table = sql.INSERT_JOB_TABLE
+                sql_insert_job_table = self.config['SQL_QUERIES']['INSERT_JOB_TABLE']
                 cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(), job.get_location(),
                                                    job.get_publication_date(), job.get_company_name()])
                 self.connection.commit()
-                logging.info(tm.INSERT_JOB)
+                logging.info(self.config['SQL']['INSERT_JOB'])
         except pymysql.Error:
-            logging.exception(tm.JOB_INSERT_FAIL)
+            logging.exception(self.config['SQL']['JOB_INSERT_FAIL'])
 
     def get_company(self, company_name):
         """
             Return True if company_name already in company table, else False
         """
         with self.connection.cursor() as cur:
-            sql_get_company = sql.GET_COMPANY
+            sql_get_company = self.config['SQL_QUERIES']['GET_COMPANY']
             cur.execute(sql_get_company, company_name)
             result = cur.fetchone()
-            logging.info(tm.GET_INFO_DB)
+            logging.info(self.config['General']['GET_INFO_DB'])
             if result:
                 return True
         return False
@@ -157,10 +157,10 @@ class Database:
         try:
             self.connection.cursor().close()
             self.connection.close()
-            logging.info(tm.CLOSE_CONNECTION)
+            logging.info(self.config['General']['CLOSE_CONNECTION'])
         except pymysql.Error:
-            logging.critical(tm.CLOSE_CONNECTION_FAIL)
-            sys.exit(cst.EXIT)
+            logging.critical(self.config['General']['CLOSE_CONNECTION_FAIL'])
+            sys.exit(self.config['Constant']['EXIT'])
 
     def create_job_location_table(self):
         #TODO: add table for all locations of jobs and try to add address from maps API
