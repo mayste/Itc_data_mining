@@ -10,6 +10,7 @@ import sys
 from scraper import Scraper
 from company_page_scraping import CompanyPageScraper
 import configparser
+import API
 
 
 
@@ -68,7 +69,7 @@ class JobsListScraper(Scraper):
         except NoSuchElementException:
             logging.critical(self.config['General']['ERROR_NUM_PAGES'])
             self.browser.quit()
-            sys.exit(self.config['General']['EXIT'])
+            sys.exit(int(self.config['General']['EXIT']))
         return num_of_available_pages
 
     def convert_publication_date(self, publication_date):
@@ -78,9 +79,9 @@ class JobsListScraper(Scraper):
         :return: date
         """
         # if the job has been published this day print the day of today
-        if self.config['Constant']['HOUR'] in publication_date and int(self.config['Constant']['ALL_DAY']) not in publication_date:
+        if self.config['Constant']['HOUR'] in publication_date and self.config['Constant']['ALL_DAY'] not in publication_date:
             return date.today()
-        elif self.config['Constant']['HOUR'] in publication_date and int(self.config['Constant']['ALL_DAY']) in publication_date:
+        elif self.config['Constant']['HOUR'] in publication_date and self.config['Constant']['ALL_DAY'] in publication_date:
             return date.today() - relativedelta(days=int(self.config['Constant']['ONE_DAY']))
         elif self.config['Constant']['DAY'] in publication_date:
             return (date.today() - relativedelta(
@@ -146,6 +147,8 @@ class JobsListScraper(Scraper):
                 collect_mandatory = True
                 job = Job(job_title, job_description, job_location, job_publication_date, company_name)
                 company = Company(company_name, company_rating)
+                result = API.genderize_api_connect(company_name, job_location)
+                print(result)
                 return job, company
 
             except NoSuchElementException:

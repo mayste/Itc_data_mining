@@ -24,7 +24,7 @@ class Database:
             logging.info(self.config['SQL']['SQL_READY'])
         except RuntimeError:
             logging.critical(self.config['SQL']['SQL_FAIL'])
-            sys.exit(self.config['Constant']['EXIT'])
+            sys.exit(int(self.config['Constant']['EXIT']))
 
     def create_db(self):
         """
@@ -46,7 +46,7 @@ class Database:
             logging.critical(self.config['SQL']['SQL_FAIL_TABLE'])
             self.connection.rollback()
             self.connection.close()
-            sys.exit(self.config['Constant']['EXIT'])
+            sys.exit(int(self.config['Constant']['EXIT']))
 
     def create_job_table(self, cur):
         """
@@ -160,7 +160,7 @@ class Database:
             logging.info(self.config['General']['CLOSE_CONNECTION'])
         except pymysql.Error:
             logging.critical(self.config['General']['CLOSE_CONNECTION_FAIL'])
-            sys.exit(self.config['Constant']['EXIT'])
+            sys.exit(int(self.config['Constant']['EXIT']))
 
     def create_job_location_table(self):
         #TODO: add table for all locations of jobs and try to add address from maps API
