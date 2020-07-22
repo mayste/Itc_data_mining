@@ -9,8 +9,10 @@ import os
 from create_database import Database
 from jobs_list_scraping import JobsListScraper
 import configparser
+import command_args
 
 if __name__ == "__main__":
+    key_api = command_args.args.Google_Key_API
     config = configparser.ConfigParser(interpolation=None)
     config.read('Constants')
     if not os.path.exists(os.path.join(config['Constant']['LOGGING_DIR_NAME'])):  # we don't have this directory
@@ -21,7 +23,7 @@ if __name__ == "__main__":
                         datefmt=config['Constant']['DATE_FORMAT'])
     database = Database()
     database.create_db()
-    glassdoor_scraper = JobsListScraper()
+    glassdoor_scraper = JobsListScraper(key_api)
     glassdoor_scraper.set_search_keywords()
     glassdoor_scraper.collecting_data_from_pages(database)
     database.close_connection_database()

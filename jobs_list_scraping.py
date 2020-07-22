@@ -20,13 +20,14 @@ class JobsListScraper(Scraper):
        Authors: May Steinfeld & Sheryl Sitruk
     """
 
-    def __init__(self):
+    def __init__(self, key_api):
         """
         Sets up the default URL.
         """
         Scraper.__init__(self)
         self.config = configparser.ConfigParser(interpolation=None)
         self.config.read('Constants')
+        self.key_api = key_api
 
     def set_search_keywords(self):
         """
@@ -98,15 +99,15 @@ class JobsListScraper(Scraper):
         :param company_name: string
         :return: tuple
         """
-        if self.config['Constant']['LINE'] in company_name:  # We have a rating
+        if '\n' in company_name:  # We have a rating
             try:
-                company_rating = float(company_name.split(self.config['Constant']['NEW_LINE'])[int(self.config['Constant']['SECOND_ELEMENT'])])
+                company_rating = float(company_name.split('\n')[int(self.config['Constant']['SECOND_ELEMENT'])])
             except ValueError:
                 logging.exception(self.config['General']['CONVERT_RATING_FAIL'])
                 company_rating = None
             finally:
-                company_name = company_name.split(self.config['Constant']['NEW_LINE'])[int(self.config['Constant']['FIRST_ELEMENT'])]
-                if company_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] in self.config['Constant']['CORPORATION']:
+                company_name = company_name.split('\n')[int(self.config['Constant']['FIRST_ELEMENT'])]
+                if company_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] in list(self.config['Constant']['CORPORATION']):
                     company_name = ''.join(company_name.lower().split(' ')[:int(self.config['Constant']['LAST_ELEMENT'])])
         else:  # No rating
             company_rating = None
@@ -147,7 +148,7 @@ class JobsListScraper(Scraper):
                 collect_mandatory = True
                 job = Job(job_title, job_description, job_location, job_publication_date, company_name)
                 company = Company(company_name, company_rating)
-                result = API.genderize_api_connect(company_name, job_location)
+                result = API.genderize_api_connect(company_name, job_location, self.key_api)
                 print(result)
                 return job, company
 
