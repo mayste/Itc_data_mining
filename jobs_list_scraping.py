@@ -148,8 +148,6 @@ class JobsListScraper(Scraper):
                 collect_mandatory = True
                 job = Job(job_title, job_description, job_location, job_publication_date, company_name)
                 company = Company(company_name, company_rating)
-                result = API.genderize_api_connect(company_name, job_location, self.key_api)
-                print(result)
                 return job, company
 
             except NoSuchElementException:
@@ -272,6 +270,10 @@ class JobsListScraper(Scraper):
                 database.insert_company(company)
                 self.create_competitors_insert(database,company)
                 database.insert_job(job)
+                google_api_info = API.create_api_connect(company.get_name(), job.get_location(), self.key_api)
+                if not google_api_info.get_address_google():
+                    google_api_info.set_address_google(job.get_location())
+                database.insert_job_location(google_api_info)
             logging.info(self.config['General']['COLLECT_DATA_SUCCESS'])
             # call to click on next button
             current_page = self.click_next_button(current_page)

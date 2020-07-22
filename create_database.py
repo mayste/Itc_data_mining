@@ -38,8 +38,9 @@ class Database:
             logging.info(self.config['SQL']['SQL_DB_CREATION'])
             sql_query = self.config['SQL_QUERIES']['USE_DB']
             cur.execute(sql_query)
-            self.create_job_table(cur)
             self.create_company_table(cur)
+            self.create_job_table(cur)
+            self.create_job_location_table(cur)
             self.create_company_competitors_table(cur)
             logging.info(self.config['SQL']['SQL_TABLE_CREATION'])
         except pymysql.Error:
@@ -53,10 +54,21 @@ class Database:
         Create the job table
         :param cur: connection cursor
         """
+        #TODO: DElete location
         # TODO: think maybe drop table if exist
         sql_create_job_table = self.config['SQL_QUERIES']['CREATE_JOB_TABLE']
         # TODO: deal description to take just keywords
         cur.execute(sql_create_job_table)
+
+    def create_job_location_table(self, cur):
+        # TODO: add table for all locations of jobs and try to add address from maps API
+        """
+        Create the job location table
+        :param cur: connection cursor
+        """
+        # TODO: think maybe drop table if exist
+        sql_create_job_location_table = self.config['SQL_QUERIES']['CREATE_JOB_LOCATION_TABLE']
+        cur.execute(sql_create_job_location_table)
 
     def create_company_table(self, cur):
         """
@@ -67,12 +79,6 @@ class Database:
         sql_create_company_table = self.config['SQL_QUERIES']['CREATE_COMPANY_TABLE']
         cur.execute(sql_create_company_table)
 
-        # alter table job according to company
-        sql_alter_job_table = self.config['SQL_QUERIES']['ALTER_JOB_TABLE_1']
-        cur.execute(sql_alter_job_table)
-        sql_alter_job_table = self.config['SQL_QUERIES']['ALTER_JOB_TABLE_2']
-        cur.execute(sql_alter_job_table)
-
     def create_company_competitors_table(self, cur):
         """
         Create the competitor table
@@ -81,13 +87,6 @@ class Database:
         # TODO: think maybe drop table if exist
         sql_create_company_competitors_table = self.config['SQL_QUERIES']['CREATE_COMPETITOR_TABLE']
         cur.execute(sql_create_company_competitors_table)
-
-        sql_alter_competitors_table = self.config['SQL_QUERIES']['ALTER_COMPETITOR_TABLE_1']
-        cur.execute(sql_alter_competitors_table)
-        sql_alter_competitors_table = self.config['SQL_QUERIES']['ALTER_COMPETITOR_TABLE_2']
-        cur.execute(sql_alter_competitors_table)
-        sql_alter_competitors_table = self.config['SQL_QUERIES']['ALTER_COMPETITOR_TABLE_3']
-        cur.execute(sql_alter_competitors_table)
 
     def insert_company(self, company):
         """
@@ -129,12 +128,27 @@ class Database:
         try:
             with self.connection.cursor() as cur:
                 sql_insert_job_table = self.config['SQL_QUERIES']['INSERT_JOB_TABLE']
-                cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(), job.get_location(),
+                cur.execute(sql_insert_job_table, [job.get_title(), job.get_description(),
                                                    job.get_publication_date(), job.get_company_name()])
                 self.connection.commit()
                 logging.info(self.config['SQL']['INSERT_JOB'])
         except pymysql.Error:
             logging.exception(self.config['SQL']['JOB_INSERT_FAIL'])
+
+    def insert_job_location(self, google_api_info):
+        """
+            Insert information into job location table
+        """
+        try:
+            with self.connection.cursor() as cur:
+                sql_insert_job_location_table = self.config['SQL_QUERIES']['INSERT_JOB_LOCATION_TABLE']
+                cur.execute(sql_insert_job_location_table, [google_api_info.get_address_google(),
+                                                            google_api_info.get_longitude_google(),
+                                                            google_api_info.get_latitude_google()])
+                self.connection.commit()
+                logging.info(self.config['SQL']['INSERT_JOB_LOCATION'])
+        except pymysql.Error:
+            logging.exception(self.config['SQL']['JOB_LOCATION_INSERT_FAIL'])
 
     def get_company(self, company_name):
         """
@@ -161,7 +175,3 @@ class Database:
         except pymysql.Error:
             logging.critical(self.config['General']['CLOSE_CONNECTION_FAIL'])
             sys.exit(int(self.config['Constant']['EXIT']))
-
-    def create_job_location_table(self):
-        #TODO: add table for all locations of jobs and try to add address from maps API
-        pass
