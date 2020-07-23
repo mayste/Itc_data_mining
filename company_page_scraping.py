@@ -3,6 +3,7 @@ import logging
 import time
 from scraper import Scraper
 import configparser
+import random
 
 class CompanyPageScraper(Scraper):
     """
@@ -41,7 +42,8 @@ class CompanyPageScraper(Scraper):
         search_button = self.browser.find_element_by_id(self.config['ID']['ID_SEARCH_BUTTON'])
         search_button.click()
         logging.info(self.config['General']['NEW_COMPANY_URL'])
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
 
     def enter_company_page(self, company):
         """
@@ -61,7 +63,8 @@ class CompanyPageScraper(Scraper):
         :param company: Company
         :return: Company
         """
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
         # Catch company size information
         company.set_company_size(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_SIZE_XPATH']))
         # Catch founded year of company

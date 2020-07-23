@@ -10,6 +10,7 @@ from scraper import Scraper
 from company_page_scraping import CompanyPageScraper
 import configparser
 import API
+import random
 
 
 
@@ -48,14 +49,16 @@ class JobsListScraper(Scraper):
         location.clear()  # clear if something is already written
         location.send_keys(self.keyword_job_location)
         logging.info(self.config['General']['SEARCH_LOCATION'])
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
         self.close_popup()
 
         # Click on search button
         search_button = self.browser.find_element_by_id(self.config['ID']['ID_SEARCH_BUTTON'])
         search_button.click()
         logging.info(self.config['General']['CONNECT_NEW_URL'])
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
 
     def get_num_pages(self):
         """
@@ -121,7 +124,8 @@ class JobsListScraper(Scraper):
         :param button_job:
         :return: tuple
         """
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
         collect_mandatory = False
         while not collect_mandatory:
             # click the job button
@@ -130,7 +134,8 @@ class JobsListScraper(Scraper):
                 # Catch the publication date and call function to convert publication date
                 job_publication_date = self.convert_publication_date(self.browser.find_element_by_xpath(
                     self.config['Path']['PUBLICATION_DATE_XPATH']).text)
-                time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+                time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                          int(self.config['Constant']['SLEEP_TIME_MAX'])))
 
                 # Collect Company Name from a post, Sometimes: company name and rating are join, we need to split
                 # them into Company Name and Rating
@@ -154,7 +159,8 @@ class JobsListScraper(Scraper):
 
             except NoSuchElementException:
                 logging.exception(self.config['General']['MANDATORY_DATA_FAIL'])
-                time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+                time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                          int(self.config['Constant']['SLEEP_TIME_MAX'])))
 
     def catch_optional_data(self, company):
         """
@@ -167,7 +173,8 @@ class JobsListScraper(Scraper):
         try:
             # Click on company in the hyper details
             self.browser.find_element_by_xpath(self.config['Path']['OVERVIEW_XPATH']).click()
-            time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+            time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                      int(self.config['Constant']['SLEEP_TIME_MAX'])))
 
             # Catch company size information
             company.set_company_size(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_SIZE_XPATH']))
@@ -216,7 +223,8 @@ class JobsListScraper(Scraper):
             logging.info(self.config['General']['NEXT_SUCCESS'])
         except NoSuchElementException:
             logging.exception(self.config['General']['ERROR_NEXT'])
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
         current_page += int(self.config['Constant']['SECOND_ELEMENT'])
         return current_page
 
@@ -246,7 +254,8 @@ class JobsListScraper(Scraper):
         """
         Collect all the data on a specific search
         """
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
         self.close_popup()
 
         glassdoor_number_pages = self.get_num_pages()
@@ -257,7 +266,8 @@ class JobsListScraper(Scraper):
             logging.exception(self.config['General']['SELECTED_XPATH'])
             pass
 
-        time.sleep(int(self.config['Constant']['SLEEP_TIME']))
+        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
+                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
 
         # Take all the buttons of each job in this page we want to click on
         current_page = int(self.config['Constant']['FIRST_PAGE'])
@@ -273,7 +283,7 @@ class JobsListScraper(Scraper):
                 self.create_competitors_insert(database,company)
                 database.insert_job(job)
                 google_api_info = API.create_api_connect(company.get_name(), job.get_location(), self.key_api)
-                if not google_api_info.get_address_google():
+                if (not google_api_info.get_address_google()) or (self.config['Constant']['UNNAMED'] in google_api_info.get_address_google()):
                     google_api_info.set_address_google(job.get_location())
                 database.insert_job_location(google_api_info)
             logging.info(self.config['General']['COLLECT_DATA_SUCCESS'])

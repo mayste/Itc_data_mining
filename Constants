@@ -1,6 +1,7 @@
 #TODO: Deal with new line
 [Constant]
-SLEEP_TIME = 8
+SLEEP_TIME_MAX = 10
+SLEEP_TIME_MIN = 5
 LAST_ELEMENT = -1
 FIRST_ELEMENT = 0
 DEFAULT_NUM_PAGES = 1
@@ -30,6 +31,7 @@ NEW_LINE = \n
 DASH = -
 COMA = ,
 EXIT = 1
+UNNAMED = Unnamed
 
 [Path]
 DEFAULT_URL = https://www.glassdoor.com/Job/index.htm
