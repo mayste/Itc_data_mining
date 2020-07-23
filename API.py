@@ -1,5 +1,6 @@
 import requests
 import re
+import configparser
 
 
 # TODO: maybe add set
@@ -59,17 +60,19 @@ class ApiInfo:
         :return:
         """
         return ''.join(
-            f"\ncomapny_name_google: {self.company_name_google}\naddress_google: {self.address_google}\nlongitude_google: {self.longitude_google}"
-            f"\nlatitude_google: {self.latitude_google}")
+            f"\ncomapny_name_google: {self.company_name_google}\naddress_google: {self.address_google}"
+            f"\nlongitude_google: {self.longitude_google}\nlatitude_google: {self.latitude_google}")
 
 
 def create_api_connect(company_name, location, key_api):
+    config = configparser.ConfigParser(interpolation=None)
+    config.read('Constants')
     location = location.split(',')[0]
     keyword = company_name + ' ' + location
     keyword = re.sub(' +', ' ', keyword).replace(' ', '%20')
-    URL = f"""https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={keyword}&inputtype=textquery&language=en&fields=name,formatted_address,geometry&key={key_api}"""
+    url_api = config['Path']['API_URL_FIRST_PART'] + keyword + config['Path']['API_URL_SECOND_PART'] + key_api
     try:
-        response = requests.get(URL)
+        response = requests.get(url_api)
         content = response.json()
         address = content['candidates'][0]['formatted_address']
         latitude = content['candidates'][0]['geometry']['location']['lat']

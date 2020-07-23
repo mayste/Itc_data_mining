@@ -23,9 +23,10 @@ if __name__ == "__main__":
     if not os.path.exists(os.path.join(config['Constant']['LOGGING_DIR_NAME'])):  # we don't have this directory
         os.mkdir(os.path.join(config['Constant']['LOGGING_DIR_NAME']))  # create directory
     log_file_name = os.path.join(config['Constant']['LOGGING_DIR_NAME'],
-                                 config['Constant']['LOGGING_FILE'] + f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}' + config['Constant']['LOG'])
-    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode=config['Constant']['FILE_MODE'], format=config['Constant']['LOGGING_FORMAT'],
-                        datefmt=config['Constant']['DATE_FORMAT'])
+                                 config['Constant']['LOGGING_FILE'] + f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+                                 + config['Constant']['LOG'])
+    logging.basicConfig(level=logging.INFO, filename=log_file_name, filemode=config['Constant']['FILE_MODE'],
+                        format=config['Constant']['LOGGING_FORMAT'], datefmt=config['Constant']['DATE_FORMAT'])
     database = Database(sql_password, sql_user)
     database.create_db()
     glassdoor_scraper = JobsListScraper(geckodriver_path, key_api, keyword_job_title, keyword_location)

@@ -69,7 +69,8 @@ class JobsListScraper(Scraper):
         try:
             # take the number of all open positions in Israel over the site
             num_of_available_pages = self.browser.find_element_by_xpath(self.config['Path']['NUM_PAGES_XPATH']).text
-            num_of_available_pages = int(num_of_available_pages.split(' ')[int(self.config['Constant']['LAST_ELEMENT'])])
+            num_of_available_pages = int(num_of_available_pages.split(' ')[int(self.config['Constant']
+                                                                               ['LAST_ELEMENT'])])
             logging.info(self.config['General']['AVAILABLE_PAGES'])
 
         except NoSuchElementException:
@@ -85,16 +86,20 @@ class JobsListScraper(Scraper):
         :return: date
         """
         # if the job has been published this day print the day of today
-        if self.config['Constant']['HOUR'] in publication_date and self.config['Constant']['ALL_DAY'] not in publication_date:
+        if self.config['Constant']['HOUR'] in publication_date and \
+                self.config['Constant']['ALL_DAY'] not in publication_date:
             return date.today()
-        elif self.config['Constant']['HOUR'] in publication_date and self.config['Constant']['ALL_DAY'] in publication_date:
+        elif self.config['Constant']['HOUR'] in publication_date and \
+                self.config['Constant']['ALL_DAY'] in publication_date:
             return date.today() - relativedelta(days=int(self.config['Constant']['ONE_DAY']))
         elif self.config['Constant']['DAY'] in publication_date:
             return (date.today() - relativedelta(
-                days=int(publication_date.split(self.config['Constant']['DAY'])[int(self.config['Constant']['FIRST_ELEMENT'])])))
+                days=int(publication_date.split(self.config['Constant']['DAY'])[int(self.config['Constant']
+                                                                                    ['FIRST_ELEMENT'])])))
         elif self.config['Constant']['MONTH'] in publication_date:
             return (date.today() - relativedelta(
-                months=int(publication_date.split(self.config['Constant']['MONTH'])[int(self.config['Constant']['FIRST_ELEMENT'])])))
+                months=int(publication_date.split(self.config['Constant']['MONTH'])[int(self.config['Constant']
+                                                                                        ['FIRST_ELEMENT'])])))
         else:
             return None
 
@@ -112,8 +117,10 @@ class JobsListScraper(Scraper):
                 company_rating = None
             finally:
                 company_name = company_name.split('\n')[int(self.config['Constant']['FIRST_ELEMENT'])]
-                if company_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] in list(self.config['Constant']['CORPORATION']):
-                    company_name = ''.join(company_name.lower().split(' ')[:int(self.config['Constant']['LAST_ELEMENT'])])
+                if company_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] \
+                        in list(self.config['Constant']['CORPORATION']):
+                    company_name = ''.join(company_name.lower().split(' ')[:int(self.config['Constant']
+                                                                                ['LAST_ELEMENT'])])
         else:  # No rating
             company_rating = None
         return company_name, company_rating
@@ -182,21 +189,26 @@ class JobsListScraper(Scraper):
             company.set_company_founded(self.convert_company_founded_year(self.catch_optional_text_value_by_xpath(
                 self.config['Path']['COMPANY_FOUNDED_XPATH'])))
             # Catch company industry
-            company.set_company_industry(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_INDUSTRY_XPATH']))
+            company.set_company_industry(self.catch_optional_text_value_by_xpath(self.config['Path']
+                                                                                 ['COMPANY_INDUSTRY_XPATH']))
             # Catch company sector
-            company.set_company_sector(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_SECTOR_XPATH']))
+            company.set_company_sector(self.catch_optional_text_value_by_xpath(self.config['Path']
+                                                                               ['COMPANY_SECTOR_XPATH']))
             # Catch company type
             company_type = self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_TYPE_XPATH'])
             if company_type is not None and self.config['Constant']['DASH'] in company_type:
-                company_type = company_type.split(self.config['Constant']['DASH'])[int(self.config['Constant']['SECOND_ELEMENT'])].strip()
+                company_type = company_type.split(self.config['Constant']['DASH'])[int(self.config['Constant']
+                                                                                       ['SECOND_ELEMENT'])].strip()
                 company.set_company_type(company_type)
             else:
                 company.set_company_type(company_type)
 
             # Catch company revenue
-            company.set_company_revenue(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_REVENUE_XPATH']))
+            company.set_company_revenue(self.catch_optional_text_value_by_xpath(self.config['Path']
+                                                                                ['COMPANY_REVENUE_XPATH']))
             # Catch company headquarters
-            company.set_company_headquarters(self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_HEADQUARTER_XPATH']))
+            company.set_company_headquarters(self.catch_optional_text_value_by_xpath(self.config['Path']
+                                                                                     ['COMPANY_HEADQUARTER_XPATH']))
 
             competitors = self.catch_optional_text_value_by_xpath(self.config['Path']['COMPANY_COMPETITORS_XPATH'])
             if competitors is not None and self.config['Constant']['COMA'] in competitors:
@@ -238,8 +250,10 @@ class JobsListScraper(Scraper):
         if company.get_company_competitors() is not None:
             for competitor_name in company.get_company_competitors():
                 competitor_name = competitor_name.strip()
-                if competitor_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] in self.config['Constant']['CORPORATION']:
-                    competitor_name = ' '.join(competitor_name.lower().split(' ')[:int(self.config['Constant']['LAST_ELEMENT'])])
+                if competitor_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] \
+                        in self.config['Constant']['CORPORATION']:
+                    competitor_name = ' '.join(competitor_name.lower().split(' ')[:int(self.config['Constant']
+                                                                                       ['LAST_ELEMENT'])])
                 if not database.get_company(competitor_name):  # we don't have the competitor in DB
                     competitor = Company(competitor_name, None)
                     competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
@@ -247,6 +261,12 @@ class JobsListScraper(Scraper):
                     competitor = competitor_scraping.enter_company_page(competitor)
                     competitor.set_company_sector(company.get_company_sector())
                     database.insert_company(competitor)
+                    if competitor.get_company_sector():
+                        database.insert_company_sector(competitor)
+                    if competitor.get_company_type():
+                        database.insert_company_type(competitor)
+                    if competitor.get_company_industry():
+                        database.insert_company_industry(competitor)
                 database.insert_competitor(competitor_name, company)
 
 
@@ -280,10 +300,17 @@ class JobsListScraper(Scraper):
                 job, company = self.catch_mandatory_data_and_rating(button_job)
                 company = self.catch_optional_data(company)
                 database.insert_company(company)
+                if company.get_company_sector():
+                    database.insert_company_sector(company)
+                if company.get_company_type():
+                    database.insert_company_type(company)
+                if company.get_company_industry():
+                    database.insert_company_industry(company)
                 self.create_competitors_insert(database,company)
                 database.insert_job(job)
                 google_api_info = API.create_api_connect(company.get_name(), job.get_location(), self.key_api)
-                if (not google_api_info.get_address_google()) or (self.config['Constant']['UNNAMED'] in google_api_info.get_address_google()):
+                if (not google_api_info.get_address_google()) or (self.config['Constant']['UNNAMED']
+                                                                  in google_api_info.get_address_google()):
                     google_api_info.set_address_google(job.get_location())
                 database.insert_job_location(google_api_info)
             logging.info(self.config['General']['COLLECT_DATA_SUCCESS'])

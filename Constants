@@ -34,6 +34,8 @@ EXIT = 1
 UNNAMED = Unnamed
 
 [Path]
+API_URL_FIRST_PART = https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=
+API_URL_SECOND_PART = &inputtype=textquery&language=en&fields=name,formatted_address,geometry&key=
 DEFAULT_URL = https://www.glassdoor.com/Job/index.htm
 POP_UP_XPATH = //div[contains(@class,'modal_main')]//span[@class='SVGInline modal_closeIcon']
 NUM_PAGES_XPATH = //div[@class='cell middle hideMob padVertSm']
@@ -70,10 +72,16 @@ SQL_TABLE_CREATION = Tables were created successfully
 SQL_FAIL = Fail to connect to MYSQL
 SQL_FAIL_TABLE = Fail to create table on MYSQL
 COMPANY_INSERT_FAIL = Insertion of one company on Company table failed
+COMPANY_SECTOR_INSERT_FAIL = Insertion of one company sector on Company sector table failed
+COMPANY_TYPE_INSERT_FAIL = Insertion of one company type on Company type table failed
+COMPANY_INDUSTRY_INSERT_FAIL = Insertion of one company industry on Company industry table failed
 COMPETITOR_INSERT_FAIL = Insertion of one competitor on Company_Competitors table failed
 JOB_INSERT_FAIL = Insertion of one job on Job table failed
 JOB_LOCATION_INSERT_FAIL = Insertion of one job location on Job location table failed
 INSERT_COMPANY = Insert company to DB successfully
+INSERT_COMPANY_SECTOR = Insert company sector to DB successfully
+INSERT_COMPANY_TYPE = Insert company type to DB successfully
+INSERT_COMPANY_INDUSTRY = Insert company industry to DB successfully
 INSERT_COMPETITOR = Insert competitors to DB successfully
 INSERT_JOB = Insert job to DB successfully
 INSERT_JOB_LOCATION = Insert job location to DB successfully
@@ -122,9 +130,6 @@ CREATE_COMPANY_TABLE = CREATE TABLE IF NOT EXISTS company (
         company_size varchar(255),
         company_rating float,
         company_founded int,
-        company_industry varchar(255),
-        company_sector varchar(255),
-        company_type varchar(255),
         company_revenue varchar(255),
         company_headquarters varchar(255)
         );
@@ -135,22 +140,47 @@ CREATE_COMPETITOR_TABLE = CREATE TABLE IF NOT EXISTS company_competitors (
         FOREIGN KEY (competitor_id) REFERENCES company (company_id),
         UNIQUE KEY (company_id,competitor_id)
         );
+CREATE_COMPANY_SECTOR_TABLE = CREATE TABLE IF NOT EXISTS company_sector (
+        company_id int NOT NULL,
+        company_sector varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
+CREATE_COMPANY_TYPE_TABLE = CREATE TABLE IF NOT EXISTS company_type (
+        company_id int NOT NULL,
+        company_type varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
+CREATE_COMPANY_INDUSTRY_TABLE = CREATE TABLE IF NOT EXISTS company_industry (
+        company_id int NOT NULL,
+        company_industry varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
 CREATE_JOB_LOCATION_TABLE = CREATE TABLE IF NOT EXISTS job_locations (
         job_id int NOT NULL,
         address varchar(255),
         longitude varchar(255),
         latitude varchar(255),
-        FOREIGN KEY (job_id) REFERENCES job (job_id)
+        FOREIGN KEY (job_id) REFERENCES job (job_id),
+        UNIQUE KEY (job_id)
         );
 
 INSERT_COMPANY_TABLE = INSERT INTO company (company_name, company_size, company_rating,
-            company_founded, company_industry, company_sector, company_type, company_revenue,
-            company_headquarters) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
+            company_founded, company_revenue,
+            company_headquarters) VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
             company_id=company_id
 INSERT_COMPETITOR_TABLE = INSERT INTO company_competitors (company_id, competitor_id)
             VALUES ((SELECT company_id FROM company WHERE
             company_name = % s), (SELECT company_id FROM company WHERE
             company_name = % s)) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_COMPANY_SECTOR_TABLE = INSERT INTO company_sector (company_id, company_sector) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_COMPANY_TYPE_TABLE = INSERT INTO company_type (company_id, company_type) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_COMPANY_INDUSTRY_TABLE = INSERT INTO company_industry (company_id, company_industry) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
             company_id=company_id
 INSERT_JOB_TABLE = INSERT INTO job (job_title, job_description,
             job_publication_date, company_id) VALUES (%s, %s, %s, (SELECT company_id FROM company WHERE
