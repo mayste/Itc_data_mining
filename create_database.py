@@ -1,5 +1,4 @@
 import pymysql
-import command_args
 import logging
 import sys
 import configparser
@@ -10,15 +9,15 @@ class Database:
     This class contains specific functions related to DB.
     Authors: May Steinfeld & Sheryl Sitruk
     """
-    def __init__(self):
+    def __init__(self, sql_password, sql_user):
         """
         This function connect to the MYSQL database
         """
         try:
             self.config = configparser.ConfigParser(interpolation=None)
             self.config.read('Constants')
-            self.connection = pymysql.connect(host=self.config['Constant']['HOST'], user=command_args.args.database_user,
-                                              password=command_args.args.database_password,
+            self.connection = pymysql.connect(host=self.config['Constant']['HOST'], user=sql_user,
+                                              password=sql_password,
                                               charset=self.config['Constant']['CHARSET'],
                                               cursorclass=pymysql.cursors.DictCursor)
             logging.info(self.config['SQL']['SQL_READY'])

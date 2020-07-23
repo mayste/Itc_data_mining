@@ -1,6 +1,5 @@
 from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
 import time
-import command_args
 from dateutil.relativedelta import relativedelta
 from datetime import date
 from job import Job
@@ -20,14 +19,17 @@ class JobsListScraper(Scraper):
        Authors: May Steinfeld & Sheryl Sitruk
     """
 
-    def __init__(self, key_api):
+    def __init__(self, geckodriver_path, key_api, keyword_job_title, keyword_job_location):
         """
         Sets up the default URL.
         """
-        Scraper.__init__(self)
+        Scraper.__init__(self, geckodriver_path)
         self.config = configparser.ConfigParser(interpolation=None)
         self.config.read('Constants')
         self.key_api = key_api
+        self.keyword_job_title = keyword_job_title
+        self.keyword_job_location = keyword_job_location
+        self.geckodriver_path = geckodriver_path
 
     def set_search_keywords(self):
         """
@@ -39,12 +41,12 @@ class JobsListScraper(Scraper):
 
         job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
         job_title.clear()  # clear if something is already written
-        job_title.send_keys(command_args.args.job_title)
+        job_title.send_keys(self.keyword_job_title)
         logging.info(self.config['General']['SEARCH_JOB'])
 
         location = self.browser.find_element_by_id(self.config['ID']['ID_JOB_LOCATION_KW'])
         location.clear()  # clear if something is already written
-        location.send_keys(command_args.args.job_location)
+        location.send_keys(self.keyword_job_location)
         logging.info(self.config['General']['SEARCH_LOCATION'])
         time.sleep(int(self.config['Constant']['SLEEP_TIME']))
         self.close_popup()
@@ -232,7 +234,7 @@ class JobsListScraper(Scraper):
                     competitor_name = ' '.join(competitor_name.lower().split(' ')[:int(self.config['Constant']['LAST_ELEMENT'])])
                 if not database.get_company(competitor_name):  # we don't have the competitor in DB
                     competitor = Company(competitor_name, None)
-                    competitor_scraping = CompanyPageScraper(competitor_name)
+                    competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
                     competitor_scraping.set_search_keywords()
                     competitor = competitor_scraping.enter_company_page(competitor)
                     competitor.set_company_sector(company.get_company_sector())

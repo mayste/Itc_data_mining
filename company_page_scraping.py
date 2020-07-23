@@ -9,11 +9,11 @@ class CompanyPageScraper(Scraper):
     This class contains specific functions to scrape the company page on the website.
     Authors: May Steinfeld & Sheryl Sitruk
     """
-    def __init__(self, competitor_name):
+    def __init__(self, geckodriver_path, competitor_name):
         """
         Sets up the default URL.
         """
-        Scraper.__init__(self)
+        Scraper.__init__(self, geckodriver_path)
         self.competitor_name = competitor_name
         self.config = configparser.ConfigParser(interpolation=None)
         self.config.read('Constants')

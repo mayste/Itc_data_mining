@@ -10,11 +10,11 @@ class Scraper:
        This class contains functions to scrap the website.
     """
 
-    def __init__(self):
+    def __init__(self, driver_path):
         """
         Sets up the default URL.
         """
-        self.browser = webdriver.Firefox(executable_path=command_args.args.driver_path)
+        self.browser = webdriver.Firefox(executable_path=driver_path)
         self.browser.maximize_window()
         self.config = configparser.ConfigParser(interpolation=None)
         self.config.read('Constants')
