@@ -131,6 +131,7 @@ class JobsListScraper(Scraper):
         :param button_job:
         :return: tuple
         """
+        #Check if sleep time work
         time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
                                   int(self.config['Constant']['SLEEP_TIME_MAX'])))
         collect_mandatory = False

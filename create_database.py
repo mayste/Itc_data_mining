@@ -3,6 +3,7 @@ import logging
 import sys
 import configparser
 
+#TODO: check duplicates on job location table
 
 class Database:
     """

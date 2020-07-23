@@ -65,19 +65,24 @@ class ApiInfo:
 
 
 def create_api_connect(company_name, location, key_api):
+    # TODO: Check how to do for spaces
     config = configparser.ConfigParser(interpolation=None)
     config.read('Constants')
-    location = location.split(',')[0]
+    location = location.split(config['Constant']['COMA'])[int(config['Constant']['FIRST_ELEMENT'])]
     keyword = company_name + ' ' + location
-    keyword = re.sub(' +', ' ', keyword).replace(' ', '%20')
+    keyword = re.sub(' +', ' ', keyword).replace(' ', config['Constant']['SPACE_20'])
     url_api = config['Path']['API_URL_FIRST_PART'] + keyword + config['Path']['API_URL_SECOND_PART'] + key_api
     try:
         response = requests.get(url_api)
         content = response.json()
-        address = content['candidates'][0]['formatted_address']
-        latitude = content['candidates'][0]['geometry']['location']['lat']
-        longitude = content['candidates'][0]['geometry']['location']['lng']
-        name = content['candidates'][0]['name']
+        address = content[config['Constant']['CANDIDATES']][int(config['Constant']['FIRST_ELEMENT'])][
+            config['Constant']['FORMATTED']]
+        latitude = content[config['Constant']['CANDIDATES']][int(config['Constant']['FIRST_ELEMENT'])][
+            config['Constant']['GEOMETRY']][config['Constant']['LOCATION']][config['Constant']['LATITUDE']]
+        longitude = content[config['Constant']['CANDIDATES']][int(config['Constant']['FIRST_ELEMENT'])][
+            config['Constant']['GEOMETRY']][config['Constant']['LOCATION']][config['Constant']['LONGITUDE']]
+        name = content[config['Constant']['CANDIDATES']][int(config['Constant']['FIRST_ELEMENT'])][
+            config['Constant']['NAME']]
         google_api = ApiInfo(name, address, longitude, latitude)
     except IndexError:
         google_api = ApiInfo()

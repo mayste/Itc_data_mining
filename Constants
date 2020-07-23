@@ -6,7 +6,7 @@ LAST_ELEMENT = -1
 FIRST_ELEMENT = 0
 DEFAULT_NUM_PAGES = 1
 FIRST_PAGE = 1
-LINE = \n
+LINE = '\n'
 SPLIT_URL = IP
 END_URL = .htm
 HOUR = h
@@ -27,11 +27,19 @@ LOGGING_FILE = glassdoor_scrap_
 LOG = .log
 FILE_MODE = w
 SPACE =
-NEW_LINE = \n
+NEW_LINE = '\n'
 DASH = -
 COMA = ,
 EXIT = 1
 UNNAMED = Unnamed
+CANDIDATES = candidates
+FORMATTED = formatted_address
+GEOMETRY = geometry
+LOCATION = location
+LATITUDE = lat
+LONGITUDE = lng
+NAME = name
+SPACE_20 = %20
 
 [Path]
 API_URL_FIRST_PART = https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=
