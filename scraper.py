@@ -1,9 +1,7 @@
 from selenium import webdriver  # allows us to open a browser and do the navigation
 from selenium.common.exceptions import NoSuchElementException
-import constants as cst
-import command_args
 import logging
-import text_messages as tm
+import configparser
 
 
 class Scraper:
@@ -11,12 +9,14 @@ class Scraper:
        This class contains functions to scrap the website.
     """
 
-    def __init__(self):
+    def __init__(self, driver_path):
         """
         Sets up the default URL.
         """
-        self.browser = webdriver.Firefox(executable_path=command_args.args.driver_path)
+        self.browser = webdriver.Firefox(executable_path=driver_path)
         self.browser.maximize_window()
+        self.config = configparser.ConfigParser(interpolation=None)
+        self.config.read('Constants')
 
     def close_popup(self):
         """
@@ -25,11 +25,11 @@ class Scraper:
         """
         try:
             # Close pop up
-            pop_up = self.browser.find_element_by_xpath(cst.POP_UP_XPATH)
+            pop_up = self.browser.find_element_by_xpath(self.config['Path']['POP_UP_XPATH'])
             pop_up.click()
-            logging.info(tm.POP_UP_CLOSE)
+            logging.info(self.config['General']['POP_UP_CLOSE'])
         except NoSuchElementException:
-            logging.exception(tm.NO_POP_UP)
+            logging.exception(self.config['General']['NO_POP_UP'])
             pass
 
     def catch_optional_text_value_by_xpath(self, x_path):
@@ -41,11 +41,11 @@ class Scraper:
         try:
             text_value = self.browser.find_element_by_xpath(x_path).text
             # if the optional data unknown put None
-            if cst.UNKNOWN_INFO in text_value.lower():
+            if self.config['Constant']['UNKNOWN_INFO'] in text_value.lower():
                 return None
             return text_value
         except NoSuchElementException:
-            logging.exception(tm.FAIL_TEXT_XPATH)
+            logging.exception(self.config['General']['FAIL_TEXT_XPATH'])
             return None
 
     def convert_company_founded_year(self, company_founded):
@@ -58,7 +58,7 @@ class Scraper:
             try:
                 company_founded = int(company_founded)
             except ValueError:
-                logging.exception(tm.FAIL_CONVERT_YEAR)
+                logging.exception(self.config['General']['FAIL_CONVERT_YEAR'])
                 company_founded = None
             finally:
                 return company_founded

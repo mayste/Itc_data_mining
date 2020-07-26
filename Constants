@@ -1,0 +1,201 @@
+#TODO: Deal with new line
+[Constant]
+SLEEP_TIME_MAX = 10
+SLEEP_TIME_MIN = 5
+LAST_ELEMENT = -1
+FIRST_ELEMENT = 0
+DEFAULT_NUM_PAGES = 1
+FIRST_PAGE = 1
+LINE = '\n'
+SPLIT_URL = IP
+END_URL = .htm
+HOUR = h
+DAY = d
+MONTH = m
+ALL_DAY = 24
+ONE_DAY = 1
+DATE_FORMAT = %Y-%m-%d %H:%M:%S
+SECOND_ELEMENT = 1
+ZERO_VALUE = 0
+UNKNOWN_INFO = unknown
+HOST = localhost
+CHARSET = utf8mb4
+LOGGING_DIR_NAME = logging
+CORPORATION = ['corp','corporation','corp.']
+LOGGING_FORMAT = %(asctime)s - %(name)s - %(levelname)s - %(message)s
+LOGGING_FILE = glassdoor_scrap_
+LOG = .log
+FILE_MODE = w
+SPACE =
+NEW_LINE = '\n'
+DASH = -
+COMA = ,
+EXIT = 1
+UNNAMED = Unnamed
+CANDIDATES = candidates
+FORMATTED = formatted_address
+GEOMETRY = geometry
+LOCATION = location
+LATITUDE = lat
+LONGITUDE = lng
+NAME = name
+SPACE_20 = %20
+
+[Path]
+API_URL_FIRST_PART = https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=
+API_URL_SECOND_PART = &inputtype=textquery&language=en&fields=name,formatted_address,geometry&key=
+DEFAULT_URL = https://www.glassdoor.com/Job/index.htm
+POP_UP_XPATH = //div[contains(@class,'modal_main')]//span[@class='SVGInline modal_closeIcon']
+NUM_PAGES_XPATH = //div[@class='cell middle hideMob padVertSm']
+NEXT_XPATH = //li[@class="next"]//a[@data-test="pagination-next"]
+PUBLICATION_DATE_XPATH = //li[contains(@class,'selected')]//div[@class='jobContainer']//div[@data-test='job-age']
+COMPANY_NAME_XPATH = //div[@class="employerName"]
+JOB_TITLE_XPATH = //div[@class="title"]
+JOB_LOCATION_XPATH = //div[@class="location"]
+JOB_DESCRIPTION_XPATH = //div[@class="jobDescriptionContent desc"]
+OVERVIEW_XPATH = //div[@class="tab" and @data-tab-type="overview"]
+COMPANY_SIZE_XPATH = //div[@class="infoEntity"]//label[text()="Size"]//following-sibling::*
+COMPANY_FOUNDED_XPATH = //div[@class="infoEntity"]//label[text()="Founded"]//following-sibling::*
+COMPANY_INDUSTRY_XPATH = //div[@class="infoEntity"]//label[text()="Industry"]//following-sibling::*
+COMPANY_SECTOR_XPATH = //div[@class="infoEntity"]//label[text()="Sector"]//following-sibling::*
+COMPANY_TYPE_XPATH = //div[@class="infoEntity"]//label[text()="Type"]//following-sibling::*
+COMPANY_COMPETITORS_XPATH = //div[@class="infoEntity"]//label[text()="Competitors"]//following-sibling::*
+COMPANY_REVENUE_XPATH = //div[@class="infoEntity"]//label[text()="Revenue"]//following-sibling::*
+COMPANY_HEADQUARTER_XPATH = //div[@class="infoEntity"]//label[text()="Headquarters"]//following-sibling::*
+SELECTED_XPATH = //li[contains(@class, 'selected')]
+JOB_CLICK_BUTTON_XPATH = //li[contains(@class, 'job-listing')]
+COMPANY_XPATH =//div[@class='context-choice-tabs-box']//li[@class='col-3 reviews ']
+FIRST_COMPANY_XPATH = //div[@class="single-company-result module "][1]//div[@class="col-9 pr-0"]//h2//a
+COMPANY_RATING_XPATH = //div[@class="v2__EIReviewsRatingsStylesV2__ratingNum v2__EIReviewsRatingsStylesV2__large"]
+
+[ID]
+ID_JOB_TITLE_KW = KeywordSearch
+ID_JOB_LOCATION_KW = LocationSearch
+ID_SEARCH_BUTTON = HeroSearchButton
+
+[SQL]
+SQL_READY = Connection with MYSQL ready
+SQL_DB_CREATION = Database was created successfully
+SQL_TABLE_CREATION = Tables were created successfully
+SQL_FAIL = Fail to connect to MYSQL
+SQL_FAIL_TABLE = Fail to create table on MYSQL
+COMPANY_INSERT_FAIL = Insertion of one company on Company table failed
+COMPANY_SECTOR_INSERT_FAIL = Insertion of one company sector on Company sector table failed
+COMPANY_TYPE_INSERT_FAIL = Insertion of one company type on Company type table failed
+COMPANY_INDUSTRY_INSERT_FAIL = Insertion of one company industry on Company industry table failed
+COMPETITOR_INSERT_FAIL = Insertion of one competitor on Company_Competitors table failed
+JOB_INSERT_FAIL = Insertion of one job on Job table failed
+JOB_LOCATION_INSERT_FAIL = Insertion of one job location on Job location table failed
+INSERT_COMPANY = Insert company to DB successfully
+INSERT_COMPANY_SECTOR = Insert company sector to DB successfully
+INSERT_COMPANY_TYPE = Insert company type to DB successfully
+INSERT_COMPANY_INDUSTRY = Insert company industry to DB successfully
+INSERT_COMPETITOR = Insert competitors to DB successfully
+INSERT_JOB = Insert job to DB successfully
+INSERT_JOB_LOCATION = Insert job location to DB successfully
+
+[General]
+ERROR_NUM_PAGES = There is a problem with your jobs search keywords so can't get the number of pages
+ERROR_NEXT = Not succeed to click on next
+NEXT_SUCCESS = Succeed to click on next button for next page
+ERROR_OPTIONAL_DATA = There is no optional data for this company on this job
+BROWSER_CONNECTION = Browser connect to URL
+SEARCH_JOB = Search for job title
+SEARCH_LOCATION = Search for job location
+NO_POP_UP = No popup to close
+POP_UP_CLOSE = Succeed to close popup'
+CONNECT_NEW_URL = Browser connect to new URL
+AVAILABLE_PAGES = Succeed to catch number of available pages
+COMPETITOR_PAGE = Search for competitor's company page
+NEW_COMPANY_URL = Browser connect to new URL of a company
+GET_INFO_DB = Get information from DB
+CLOSE_CONNECTION = Close connection to DB successfully
+CLOSE_CONNECTION_FAIL = There was a problem with closing the DB connection
+X_PATH_FAIL = There is a problem with click on xpath
+BROWSER_CLOSE = Close browser successfully
+CONVERT_RATING_FAIL = There is a problem with convert the rating
+MANDATORY_DATA_FAIL = There is a problem with catch mandatory data
+COLLECT_DATA = Start to collect all data from page
+COLLECT_DATA_SUCCESS = Succeed to collect all data from page
+FAIL_TEXT_XPATH = There is a problem with catching text from xpath
+FAIL_CONVERT_YEAR = There is a problem with convert company founded year
+
+[SQL_QUERIES]
+CREATE_DB = CREATE DATABASE IF NOT EXISTS glassdoor;
+USE_DB = USE glassdoor;
+CREATE_JOB_TABLE = CREATE TABLE IF NOT EXISTS job (
+        job_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+        job_title varchar(255) NOT NULL,
+        job_description text NOT NULL,
+        job_publication_date date NOT NULL,
+        company_id int NOT NULL,
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (job_title,company_id)
+        );
+CREATE_COMPANY_TABLE = CREATE TABLE IF NOT EXISTS company (
+        company_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+        company_name varchar(255) UNIQUE NOT NULL,
+        company_size varchar(255),
+        company_rating float,
+        company_founded int,
+        company_revenue varchar(255),
+        company_headquarters varchar(255)
+        );
+CREATE_COMPETITOR_TABLE = CREATE TABLE IF NOT EXISTS company_competitors (
+        company_id int NOT NULL,
+        competitor_id int NOT NULL,
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        FOREIGN KEY (competitor_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id,competitor_id)
+        );
+CREATE_COMPANY_SECTOR_TABLE = CREATE TABLE IF NOT EXISTS company_sector (
+        company_id int NOT NULL,
+        company_sector varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
+CREATE_COMPANY_TYPE_TABLE = CREATE TABLE IF NOT EXISTS company_type (
+        company_id int NOT NULL,
+        company_type varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
+CREATE_COMPANY_INDUSTRY_TABLE = CREATE TABLE IF NOT EXISTS company_industry (
+        company_id int NOT NULL,
+        company_industry varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
+CREATE_JOB_LOCATION_TABLE = CREATE TABLE IF NOT EXISTS job_locations (
+        job_id int NOT NULL,
+        address varchar(255),
+        longitude varchar(255),
+        latitude varchar(255),
+        FOREIGN KEY (job_id) REFERENCES job (job_id),
+        UNIQUE KEY (job_id)
+        );
+
+INSERT_COMPANY_TABLE = INSERT INTO company (company_name, company_size, company_rating,
+            company_founded, company_revenue,
+            company_headquarters) VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_COMPETITOR_TABLE = INSERT INTO company_competitors (company_id, competitor_id)
+            VALUES ((SELECT company_id FROM company WHERE
+            company_name = % s), (SELECT company_id FROM company WHERE
+            company_name = % s)) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_COMPANY_SECTOR_TABLE = INSERT INTO company_sector (company_id, company_sector) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_COMPANY_TYPE_TABLE = INSERT INTO company_type (company_id, company_type) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_COMPANY_INDUSTRY_TABLE = INSERT INTO company_industry (company_id, company_industry) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
+INSERT_JOB_TABLE = INSERT INTO job (job_title, job_description,
+            job_publication_date, company_id) VALUES (%s, %s, %s, (SELECT company_id FROM company WHERE
+            company_name = %s)) ON DUPLICATE KEY UPDATE job_id=job_id
+INSERT_JOB_LOCATION_TABLE = INSERT INTO job_locations (job_id, address, longitude, latitude) VALUES (
+            (SELECT job_id
+            FROM job
+            ORDER BY job_id DESC
+            LIMIT 1), %s, %s, %s) ON DUPLICATE KEY UPDATE job_id=job_id
+GET_COMPANY = (SELECT company_id FROM company WHERE company_name = %s)
