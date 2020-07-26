@@ -1,0 +1,16 @@
+certifi==2020.6.20
+chardet==3.0.4
+configparser==5.0.0
+decorator==4.4.2
+idna==2.10
+numpy==1.18.5
+pandas==1.0.4
+public==2019.4.13
+PyMySQL==0.9.3
+python-dateutil==2.8.1
+pytz==2020.1
+requests==2.24.0
+selenium==3.141.0
+self==2019.4.13
+six==1.15.0
+urllib3==1.25.9
