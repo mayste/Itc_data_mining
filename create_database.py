@@ -3,8 +3,6 @@ import logging
 import sys
 import configparser
 
-#TODO: check duplicates on job location table
-
 class Database:
     """
     This class contains specific functions related to DB.
@@ -31,7 +29,6 @@ class Database:
         This function runs the queries to create the database and tables
         """
         try:
-            # TODO: think maybe drop DB if exist- > maybe ask the user
             cur = self.connection.cursor()
             sql_query = self.config['SQL_QUERIES']['CREATE_DB']
             cur.execute(sql_query)
@@ -57,19 +54,14 @@ class Database:
         Create the job table
         :param cur: connection cursor
         """
-        #TODO: DElete location
-        # TODO: think maybe drop table if exist
         sql_create_job_table = self.config['SQL_QUERIES']['CREATE_JOB_TABLE']
-        # TODO: deal description to take just keywords
         cur.execute(sql_create_job_table)
 
     def create_job_location_table(self, cur):
-        # TODO: add table for all locations of jobs and try to add address from maps API
         """
         Create the job location table
         :param cur: connection cursor
         """
-        # TODO: think maybe drop table if exist
         sql_create_job_location_table = self.config['SQL_QUERIES']['CREATE_JOB_LOCATION_TABLE']
         cur.execute(sql_create_job_location_table)
 
@@ -78,7 +70,6 @@ class Database:
         Create the company table
         :param cur: connection cursor
         """
-        # TODO: think maybe drop table if exist
         sql_create_company_table = self.config['SQL_QUERIES']['CREATE_COMPANY_TABLE']
         cur.execute(sql_create_company_table)
 
@@ -87,7 +78,6 @@ class Database:
         Create the competitor table
         :param cur: connection cursor
         """
-        # TODO: think maybe drop table if exist
         sql_create_company_competitors_table = self.config['SQL_QUERIES']['CREATE_COMPETITOR_TABLE']
         cur.execute(sql_create_company_competitors_table)
 
@@ -96,7 +86,6 @@ class Database:
         Create the company sector table
         :param cur: connection cursor
         """
-        # TODO: think maybe drop table if exist
         sql_create_company_sector_table = self.config['SQL_QUERIES']['CREATE_COMPANY_SECTOR_TABLE']
         cur.execute(sql_create_company_sector_table)
 
@@ -105,7 +94,6 @@ class Database:
         Create the company type table
         :param cur: connection cursor
         """
-        # TODO: think maybe drop table if exist
         sql_create_company_type_table = self.config['SQL_QUERIES']['CREATE_COMPANY_TYPE_TABLE']
         cur.execute(sql_create_company_type_table)
 
@@ -114,7 +102,6 @@ class Database:
         Create the company industry table
         :param cur: connection cursor
         """
-        # TODO: think maybe drop table if exist
         sql_create_company_industry_table = self.config['SQL_QUERIES']['CREATE_COMPANY_INDUSTRY_TABLE']
         cur.execute(sql_create_company_industry_table)
 

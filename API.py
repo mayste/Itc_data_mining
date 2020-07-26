@@ -2,8 +2,6 @@ import requests
 import re
 import configparser
 
-
-# TODO: maybe add set
 class ApiInfo:
     def __init__(self, name=None, address=None, longitude=None, latitude=None):
         """
@@ -65,7 +63,6 @@ class ApiInfo:
 
 
 def create_api_connect(company_name, location, key_api):
-    # TODO: Check how to do for spaces
     config = configparser.ConfigParser(interpolation=None)
     config.read('Constants')
     location = location.split(config['Constant']['COMA'])[int(config['Constant']['FIRST_ELEMENT'])]
