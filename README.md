@@ -28,7 +28,7 @@ We choose to focus on job posts in order to find intersting information about wh
 In addition, we used the Google places API to add more information to our database regarding the job location: Full address, Longitude and Latitude of job offers.
 
 ## DB design:
-![image](https://user-images.githubusercontent.com/34678172/87239999-029b0c00-c41e-11ea-9160-59c427c8e925.png)
+![image](https://user-images.githubusercontent.com/66407270/88477795-aa9af400-cf4b-11ea-9864-504b043fe1d1.png)
 
 ## Requirements:
 
