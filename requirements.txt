@@ -1,6 +1,6 @@
 certifi==2020.6.20
 chardet==3.0.4
-configparser==5.0.0
+configparser==3.7.5
 decorator==4.4.2
 idna==2.10
 numpy==1.18.5
