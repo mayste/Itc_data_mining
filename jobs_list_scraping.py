@@ -40,10 +40,8 @@ class JobsListScraper(Scraper):
         self.browser.get(self.config['Path']['DEFAULT_URL'])
         logging.info(self.config['General']['BROWSER_CONNECTION'])
 
-        time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
-                                  int(self.config['Constant']['SLEEP_TIME_MAX'])))
-
-        job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
+        #job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
+        job_title = self.browser.find_element_by_id('KeywordSearch')
         job_title.clear()  # clear if something is already written
         job_title.send_keys(self.keyword_job_title)
         logging.info(self.config['General']['SEARCH_JOB'])
