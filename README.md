@@ -35,6 +35,7 @@ In addition, we used the Google places API to add more information to our databa
 In order to run Selenium, we need to install first a WebDriver (we choose to run over Firefox browser).
 The WebDrive installation is inside our GitHub and also over this link:
 https://github.com/mozilla/geckodriver/releases/tag/v0.26.0
+Then, you'll need to insert the geckodriver to the path file of your computer.
 
 In order to run the Google Places API you must have an API key, you can sign in and get one through this link: 
 https://developers.google.com/maps/gmp-get-started
