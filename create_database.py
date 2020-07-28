@@ -42,6 +42,8 @@ class Database:
             self.create_company_sector_table(cur)
             self.create_company_type_table(cur)
             self.create_company_industry_table(cur)
+            self.create_company_size_table(cur)
+            self.create_company_revenue_table(cur)
             self.create_job_table(cur)
             self.create_job_location_table(cur)
             self.create_company_competitors_table(cur)
@@ -118,6 +120,24 @@ class Database:
         sql_create_company_industry_table = self.config['SQL_QUERIES']['CREATE_COMPANY_INDUSTRY_TABLE']
         cur.execute(sql_create_company_industry_table)
 
+    def create_company_size_table(self, cur):
+        """
+        Create the company industry table
+        :param cur: connection cursor
+        """
+        # TODO: think maybe drop table if exist
+        sql_create_company_size_table = self.config['SQL_QUERIES']['CREATE_COMPANY_SIZE_TABLE']
+        cur.execute(sql_create_company_size_table)
+
+    def create_company_revenue_table(self, cur):
+        """
+        Create the company industry table
+        :param cur: connection cursor
+        """
+        # TODO: think maybe drop table if exist
+        sql_create_company_revenue_table = self.config['SQL_QUERIES']['CREATE_COMPANY_REVENUE_TABLE']
+        cur.execute(sql_create_company_revenue_table)
+
     def insert_company(self, company):
         """
         Insert information into company table
@@ -126,9 +146,8 @@ class Database:
             with self.connection.cursor() as cur:
                 sql_insert_company_table = self.config['SQL_QUERIES']['INSERT_COMPANY_TABLE']
                 cur.execute(sql_insert_company_table, [company.get_name(),
-                                                       company.get_company_size(), company.get_company_rating(),
+                                                       company.get_company_rating(),
                                                        company.get_company_founded(),
-                                                       company.get_company_revenue(),
                                                        company.get_company_headquarters()])
                 self.connection.commit()
                 logging.info(self.config['SQL']['INSERT_COMPANY'])
@@ -161,6 +180,32 @@ class Database:
                 logging.info(self.config['SQL']['INSERT_COMPANY_SECTOR'])
         except pymysql.Error:
             logging.exception(self.config['SQL']['COMPANY_SECTOR_INSERT_FAIL'])
+
+    def insert_company_size(self, company):
+        """
+        Insert information into company sector table
+        """
+        try:
+            with self.connection.cursor() as cur:
+                sql_insert_company_sector_table = self.config['SQL_QUERIES']['INSERT_COMPANY_SIZE_TABLE']
+                cur.execute(sql_insert_company_sector_table, [company.get_name(), company.get_company_size()])
+                self.connection.commit()
+                logging.info(self.config['SQL']['INSERT_COMPANY_SIZE'])
+        except pymysql.Error:
+            logging.exception(self.config['SQL']['COMPANY_SIZE_INSERT_FAIL'])
+
+    def insert_company_revenue(self, company):
+        """
+        Insert information into company sector table
+        """
+        try:
+            with self.connection.cursor() as cur:
+                sql_insert_company_sector_table = self.config['SQL_QUERIES']['INSERT_COMPANY_REVENUE_TABLE']
+                cur.execute(sql_insert_company_sector_table, [company.get_name(), company.get_company_revenue()])
+                self.connection.commit()
+                logging.info(self.config['SQL']['INSERT_COMPANY_REVENUE'])
+        except pymysql.Error:
+            logging.exception(self.config['SQL']['COMPANY_REVENUE_INSERT_FAIL'])
 
     def insert_company_type(self, company):
         """
