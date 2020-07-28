@@ -255,19 +255,19 @@ class JobsListScraper(Scraper):
                         in self.config['Constant']['CORPORATION']:
                     competitor_name = ' '.join(competitor_name.lower().split(' ')[:int(self.config['Constant']
                                                                                        ['LAST_ELEMENT'])])
-                if not database.get_company(competitor_name):  # we don't have the competitor in DB
-                    competitor = Company(competitor_name, None)
-                    competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
-                    competitor_scraping.set_search_keywords()
-                    competitor = competitor_scraping.enter_company_page(competitor)
-                    competitor.set_company_sector(company.get_company_sector())
-                    database.insert_company(competitor)
-                    if competitor.get_company_sector():
-                        database.insert_company_sector(competitor)
-                    if competitor.get_company_type():
-                        database.insert_company_type(competitor)
-                    if competitor.get_company_industry():
-                        database.insert_company_industry(competitor)
+                # if not database.get_company(competitor_name):  # we don't have the competitor in DB
+                competitor = Company(competitor_name, None)
+                competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
+                competitor_scraping.set_search_keywords()
+                competitor = competitor_scraping.enter_company_page(competitor)
+                competitor.set_company_sector(company.get_company_sector())
+                database.insert_company(competitor)
+                if competitor.get_company_sector():
+                    database.insert_company_sector(competitor)
+                if competitor.get_company_type():
+                    database.insert_company_type(competitor)
+                if competitor.get_company_industry():
+                    database.insert_company_industry(competitor)
                 database.insert_competitor(competitor_name, company)
 
 
