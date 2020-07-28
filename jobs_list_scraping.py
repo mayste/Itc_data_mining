@@ -11,7 +11,9 @@ from company_page_scraping import CompanyPageScraper
 import configparser
 import API
 import random
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class JobsListScraper(Scraper):
@@ -40,7 +42,12 @@ class JobsListScraper(Scraper):
         self.browser.get(self.config['Path']['DEFAULT_URL'])
         logging.info(self.config['General']['BROWSER_CONNECTION'])
 
-        job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
+        try:
+            # job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
+            job_title = WebDriverWait(self.browser, 10).until(
+                EC.presence_of_element_located((By.ID, self.config['ID']['ID_JOB_TITLE_KW'])))
+        except NoSuchElementException:
+            print("problem")
         job_title.clear()  # clear if something is already written
         job_title.send_keys(self.keyword_job_title)
         logging.info(self.config['General']['SEARCH_JOB'])
@@ -131,7 +138,7 @@ class JobsListScraper(Scraper):
         :param button_job:
         :return: tuple
         """
-        #Check if sleep time work
+        # Check if sleep time work
         time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
                                   int(self.config['Constant']['SLEEP_TIME_MAX'])))
         collect_mandatory = False
@@ -274,7 +281,6 @@ class JobsListScraper(Scraper):
                     database.insert_company_revenue(competitor)
                 database.insert_competitor(competitor_name, company)
 
-
     def collecting_data_from_pages(self, database):
         """
         Collect all the data on a specific search
@@ -314,7 +320,7 @@ class JobsListScraper(Scraper):
                     database.insert_company_size(company)
                 if company.get_company_revenue():
                     database.insert_company_revenue(company)
-                self.create_competitors_insert(database,company)
+                self.create_competitors_insert(database, company)
                 database.insert_job(job)
                 google_api_info = API.create_api_connect(company.get_name(), job.get_location(), self.key_api)
                 if (not google_api_info.get_address_google()) or (self.config['Constant']['UNNAMED']
