@@ -174,28 +174,31 @@ CREATE_JOB_LOCATION_TABLE = CREATE TABLE IF NOT EXISTS job_locations (
         FOREIGN KEY (job_id) REFERENCES job (job_id),
         UNIQUE KEY (job_id)
         );
-
 INSERT_COMPANY_TABLE = INSERT INTO company (company_name, company_size, company_rating,
             company_founded, company_revenue,
             company_headquarters) VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
-            company_id=company_id
+            company_size=VALUES(company_size), company_rating=VALUES(company_rating),
+            company_revenue=VALUES(company_revenue), company_headquarters=VALUES(company_headquarters),
+            company_founded=VALUES(company_founded);
 INSERT_COMPETITOR_TABLE = INSERT INTO company_competitors (company_id, competitor_id)
             VALUES ((SELECT company_id FROM company WHERE
             company_name = % s), (SELECT company_id FROM company WHERE
             company_name = % s)) ON DUPLICATE KEY UPDATE
-            company_id=company_id
+            company_id=company_id;
 INSERT_COMPANY_SECTOR_TABLE = INSERT INTO company_sector (company_id, company_sector) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
-            company_id=company_id
+            company_sector=VALUES(company_sector);
 INSERT_COMPANY_TYPE_TABLE = INSERT INTO company_type (company_id, company_type) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
-            company_id=company_id
+            company_type=VALUES(company_type);
 INSERT_COMPANY_INDUSTRY_TABLE = INSERT INTO company_industry (company_id, company_industry) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
-            company_id=company_id
+            company_industry=VALUES(company_industry);
 INSERT_JOB_TABLE = INSERT INTO job (job_title, job_description,
             job_publication_date, company_id) VALUES (%s, %s, %s, (SELECT company_id FROM company WHERE
-            company_name = %s)) ON DUPLICATE KEY UPDATE job_id=job_id
+            company_name = %s)) ON DUPLICATE KEY UPDATE
+            job_description=VALUES(job_description), job_publication_date=VALUES(job_publication_date);
 INSERT_JOB_LOCATION_TABLE = INSERT INTO job_locations (job_id, address, longitude, latitude) VALUES (
             (SELECT job_id
             FROM job
             ORDER BY job_id DESC
-            LIMIT 1), %s, %s, %s) ON DUPLICATE KEY UPDATE job_id=job_id
+            LIMIT 1), %s, %s, %s) ON DUPLICATE KEY UPDATE
+            address=VALUES(address), longitude=VALUES(longitude), latitude=VALUES(latitude);
 GET_COMPANY = (SELECT company_id FROM company WHERE company_name = %s)
