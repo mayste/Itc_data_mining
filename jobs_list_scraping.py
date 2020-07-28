@@ -282,7 +282,6 @@ class JobsListScraper(Scraper):
         time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
                                   int(self.config['Constant']['SLEEP_TIME_MAX'])))
         self.close_popup()
-
         glassdoor_number_pages = self.get_num_pages()
 
         try:
