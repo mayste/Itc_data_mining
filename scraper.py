@@ -2,6 +2,7 @@ from selenium import webdriver  # allows us to open a browser and do the navigat
 from selenium.common.exceptions import NoSuchElementException
 import logging
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
 import configparser
 
 
@@ -14,7 +15,9 @@ class Scraper:
         """
         Sets up the default URL.
         """
-        self.browser = webdriver.Firefox(executable_path=driver_path)
+        options = Options()
+        options.add_argument("--headless")
+        self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options)
         # chrome_options = Options()
         # chrome_options.add_argument('--headless')
         # chrome_options.add_argument('--no-sandbox')
