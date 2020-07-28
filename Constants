@@ -81,6 +81,8 @@ SQL_FAIL = Fail to connect to MYSQL
 SQL_FAIL_TABLE = Fail to create table on MYSQL
 COMPANY_INSERT_FAIL = Insertion of one company on Company table failed
 COMPANY_SECTOR_INSERT_FAIL = Insertion of one company sector on Company sector table failed
+COMPANY_REVENUE_INSERT_FAIL = Insertion of one company sector on Company sector table failed
+COMPANY_SIZE_INSERT_FAIL = Insertion of one company size on Company size table failed
 COMPANY_TYPE_INSERT_FAIL = Insertion of one company type on Company type table failed
 COMPANY_INDUSTRY_INSERT_FAIL = Insertion of one company industry on Company industry table failed
 COMPETITOR_INSERT_FAIL = Insertion of one competitor on Company_Competitors table failed
@@ -88,6 +90,8 @@ JOB_INSERT_FAIL = Insertion of one job on Job table failed
 JOB_LOCATION_INSERT_FAIL = Insertion of one job location on Job location table failed
 INSERT_COMPANY = Insert company to DB successfully
 INSERT_COMPANY_SECTOR = Insert company sector to DB successfully
+INSERT_COMPANY_SIZE = Insert company size to DB successfully
+INSERT_COMPANY_REVENUE = Insert company revenue to DB successfully
 INSERT_COMPANY_TYPE = Insert company type to DB successfully
 INSERT_COMPANY_INDUSTRY = Insert company industry to DB successfully
 INSERT_COMPETITOR = Insert competitors to DB successfully
@@ -135,10 +139,8 @@ CREATE_JOB_TABLE = CREATE TABLE IF NOT EXISTS job (
 CREATE_COMPANY_TABLE = CREATE TABLE IF NOT EXISTS company (
         company_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
         company_name varchar(255) UNIQUE NOT NULL,
-        company_size varchar(255),
         company_rating float,
         company_founded int,
-        company_revenue varchar(255),
         company_headquarters varchar(255)
         );
 CREATE_COMPETITOR_TABLE = CREATE TABLE IF NOT EXISTS company_competitors (
@@ -166,6 +168,18 @@ CREATE_COMPANY_INDUSTRY_TABLE = CREATE TABLE IF NOT EXISTS company_industry (
         FOREIGN KEY (company_id) REFERENCES company (company_id),
         UNIQUE KEY (company_id)
         );
+CREATE_COMPANY_SIZE_TABLE = CREATE TABLE IF NOT EXISTS company_size (
+        company_id int NOT NULL,
+        company_size varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
+CREATE_COMPANY_REVENUE_TABLE = CREATE TABLE IF NOT EXISTS company_revenue (
+        company_id int NOT NULL,
+        company_revenue varchar(255),
+        FOREIGN KEY (company_id) REFERENCES company (company_id),
+        UNIQUE KEY (company_id)
+        );
 CREATE_JOB_LOCATION_TABLE = CREATE TABLE IF NOT EXISTS job_locations (
         job_id int NOT NULL,
         address varchar(255),
@@ -174,31 +188,32 @@ CREATE_JOB_LOCATION_TABLE = CREATE TABLE IF NOT EXISTS job_locations (
         FOREIGN KEY (job_id) REFERENCES job (job_id),
         UNIQUE KEY (job_id)
         );
-INSERT_COMPANY_TABLE = INSERT INTO company (company_name, company_size, company_rating,
-            company_founded, company_revenue,
-            company_headquarters) VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE
-            company_size=VALUES(company_size), company_rating=VALUES(company_rating),
-            company_revenue=VALUES(company_revenue), company_headquarters=VALUES(company_headquarters),
-            company_founded=VALUES(company_founded);
+
+INSERT_COMPANY_TABLE = INSERT INTO company (company_name, company_rating,
+            company_founded,
+            company_headquarters) VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
 INSERT_COMPETITOR_TABLE = INSERT INTO company_competitors (company_id, competitor_id)
             VALUES ((SELECT company_id FROM company WHERE
             company_name = % s), (SELECT company_id FROM company WHERE
             company_name = % s)) ON DUPLICATE KEY UPDATE
-            company_id=company_id;
+            company_id=company_id
 INSERT_COMPANY_SECTOR_TABLE = INSERT INTO company_sector (company_id, company_sector) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
-            company_sector=VALUES(company_sector);
+            company_id=company_id
+INSERT_COMPANY_REVENUE_TABLE = INSERT INTO company_revenue (company_id, company_revenue) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
 INSERT_COMPANY_TYPE_TABLE = INSERT INTO company_type (company_id, company_type) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
-            company_type=VALUES(company_type);
+            company_id=company_id
+INSERT_COMPANY_SIZE_TABLE = INSERT INTO company_size (company_id, company_size) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
+            company_id=company_id
 INSERT_COMPANY_INDUSTRY_TABLE = INSERT INTO company_industry (company_id, company_industry) VALUES ((SELECT company_id FROM company WHERE company_name = %s), %s) ON DUPLICATE KEY UPDATE
-            company_industry=VALUES(company_industry);
+            company_id=company_id
 INSERT_JOB_TABLE = INSERT INTO job (job_title, job_description,
             job_publication_date, company_id) VALUES (%s, %s, %s, (SELECT company_id FROM company WHERE
-            company_name = %s)) ON DUPLICATE KEY UPDATE
-            job_description=VALUES(job_description), job_publication_date=VALUES(job_publication_date);
+            company_name = %s)) ON DUPLICATE KEY UPDATE job_id=job_id
 INSERT_JOB_LOCATION_TABLE = INSERT INTO job_locations (job_id, address, longitude, latitude) VALUES (
             (SELECT job_id
             FROM job
             ORDER BY job_id DESC
-            LIMIT 1), %s, %s, %s) ON DUPLICATE KEY UPDATE
-            address=VALUES(address), longitude=VALUES(longitude), latitude=VALUES(latitude);
+            LIMIT 1), %s, %s, %s) ON DUPLICATE KEY UPDATE job_id=job_id
 GET_COMPANY = (SELECT company_id FROM company WHERE company_name = %s)

@@ -268,6 +268,10 @@ class JobsListScraper(Scraper):
                     database.insert_company_type(competitor)
                 if competitor.get_company_industry():
                     database.insert_company_industry(competitor)
+                if competitor.get_company_size():
+                    database.insert_company_size(competitor)
+                if competitor.get_company_revenue():
+                    database.insert_company_revenue(competitor)
                 database.insert_competitor(competitor_name, company)
 
 
@@ -307,6 +311,10 @@ class JobsListScraper(Scraper):
                     database.insert_company_type(company)
                 if company.get_company_industry():
                     database.insert_company_industry(company)
+                if company.get_company_size():
+                    database.insert_company_size(company)
+                if company.get_company_revenue():
+                    database.insert_company_revenue(company)
                 self.create_competitors_insert(database,company)
                 database.insert_job(job)
                 google_api_info = API.create_api_connect(company.get_name(), job.get_location(), self.key_api)
