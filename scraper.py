@@ -16,7 +16,7 @@ class Scraper:
         Sets up the default URL.
         """
         options = Options()
-        options.add_argument("--headless")
+        options.headless = True
         self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options)
         # chrome_options = Options()
         # chrome_options.add_argument('--headless')
