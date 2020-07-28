@@ -13,7 +13,8 @@ class Scraper:
         """
         Sets up the default URL.
         """
-        self.browser = webdriver.Firefox(executable_path=driver_path)
+        #self.browser = webdriver.Firefox(executable_path=driver_path)
+        self.browser = webdriver.Chrome(executable_path=driver_path)
         self.browser.maximize_window()
         self.config = configparser.ConfigParser(interpolation=None)
         self.config.read('Constants')
