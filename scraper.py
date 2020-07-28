@@ -16,7 +16,7 @@ class Scraper:
         """
         #self.browser = webdriver.Firefox(executable_path=driver_path)
         chrome_options = Options()
-        #chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--headless')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         self.browser = webdriver.Chrome(executable_path=driver_path, chrome_options=chrome_options)
