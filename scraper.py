@@ -4,6 +4,7 @@ import logging
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.firefox.options import Options
 import configparser
+from pyvirtualdisplay import Display
 
 
 class Scraper:
@@ -15,8 +16,11 @@ class Scraper:
         """
         Sets up the default URL.
         """
+
+        display = Display(visible=0, size=(800, 600))
+        display.start()
         options = Options()
-        options.headless = True
+        # options.headless = True
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--allow-running-insecure-content')
         user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
