@@ -15,14 +15,14 @@ class Scraper:
         """
         Sets up the default URL.
         """
-        # options = Options()
-        # options.headless = True
-        # self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options)
-        self.browser = webdriver.Firefox(executable_path=driver_path)
+        options = Options()
+        options.headless = True
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options)
+        # self.browser = webdriver.Firefox(executable_path=driver_path)
         # chrome_options = Options()
         # chrome_options.add_argument('--headless')
-        # chrome_options.add_argument('--no-sandbox')
-        # chrome_options.add_argument('--disable-dev-shm-usage')
         # self.browser = webdriver.Chrome(executable_path=driver_path, chrome_options=chrome_options)
         self.browser.maximize_window()
         self.config = configparser.ConfigParser(interpolation=None)

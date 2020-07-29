@@ -38,6 +38,9 @@ class JobsListScraper(Scraper):
         input of the user on the command line
         """
         self.browser.get(self.config['Path']['DEFAULT_URL'])
+        content = self.browser.page_source
+        with open('content.txt', 'w') as fp:
+            fp.write(content)
         logging.info(self.config['General']['BROWSER_CONNECTION'])
         job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
         job_title.clear()  # clear if something is already written
