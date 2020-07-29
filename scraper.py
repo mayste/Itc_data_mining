@@ -15,9 +15,10 @@ class Scraper:
         """
         Sets up the default URL.
         """
-        options = Options()
-        options.headless = True
-        self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options)
+        # options = Options()
+        # options.headless = True
+        # self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options)
+        self.browser = webdriver.Firefox(executable_path=driver_path)
         # chrome_options = Options()
         # chrome_options.add_argument('--headless')
         # chrome_options.add_argument('--no-sandbox')
