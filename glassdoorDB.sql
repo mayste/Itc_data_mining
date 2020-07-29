@@ -30,7 +30,7 @@ CREATE TABLE `company` (
   `company_headquarters` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`company_id`),
   UNIQUE KEY `company_name` (`company_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=527 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
