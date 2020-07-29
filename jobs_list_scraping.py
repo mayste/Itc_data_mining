@@ -75,7 +75,7 @@ class JobsListScraper(Scraper):
         except NoSuchElementException:
             logging.critical(self.config['General']['ERROR_NUM_PAGES'])
             self.browser.quit()
-            sys.exit(int(self.config['General']['EXIT']))
+            sys.exit(int(self.config['Constant']['EXIT']))
         return num_of_available_pages
 
     def convert_publication_date(self, publication_date):
