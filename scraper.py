@@ -14,7 +14,7 @@ class Scraper:
         """
         Sets up the default URL.
         """
-        proxy = "139.99.102.114:80"
+        proxy = "198.50.152.64:23500"
         firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
         firefox_capabilities['marionette'] = True
         firefox_capabilities['proxy'] = {"proxyType": "MANUAL", "httpProxy": proxy, "ftpProxy": proxy, "sslProxy": proxy}
