@@ -1,7 +1,6 @@
 from selenium import webdriver  # allows us to open a browser and do the navigation
 from selenium.common.exceptions import NoSuchElementException
 import logging
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.firefox.options import Options
 import configparser
 
@@ -15,16 +14,20 @@ class Scraper:
         """
         Sets up the default URL.
         """
+        proxy = "139.99.102.114:80"
+        firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
+        firefox_capabilities['marionette'] = True
+        firefox_capabilities['proxy'] = {"proxyType": "MANUAL", "httpProxy": proxy, "ftpProxy": proxy, "sslProxy": proxy}
         options = Options()
         options.headless = True
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-        self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options)
+        user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 ' \
+                     'Safari/537.36 '
+        options.add_argument(f'user-agent={user_agent}')
+        self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options, capabilities=firefox_capabilities)
         # self.browser = webdriver.Firefox(executable_path=driver_path)
-        # chrome_options = Options()
-        # chrome_options.add_argument('--headless')
-        # self.browser = webdriver.Chrome(executable_path=driver_path, chrome_options=chrome_options)
-        self.browser.maximize_window()
+        # self.browser.maximize_window()
         self.config = configparser.ConfigParser(interpolation=None)
         self.config.read('Constants')
 
