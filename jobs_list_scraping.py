@@ -39,8 +39,6 @@ class JobsListScraper(Scraper):
         """
         self.browser.get(self.config['Path']['DEFAULT_URL'])
         content = self.browser.page_source
-        with open('content.txt', 'w') as fp:
-            fp.write(content)
         logging.info(self.config['General']['BROWSER_CONNECTION'])
         job_title = self.browser.find_element_by_id(self.config['ID']['ID_JOB_TITLE_KW'])
         job_title.clear()  # clear if something is already written
@@ -256,24 +254,25 @@ class JobsListScraper(Scraper):
                 if competitor_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] \
                         in self.config['Constant']['CORPORATION']:
                     competitor_name = ' '.join(competitor_name.lower().split(' ')[:int(self.config['Constant']
-                                                                                       ['LAST_ELEMENT'])])
-                # if not database.get_company(competitor_name):  # we don't have the competitor in DB
-                competitor = Company(competitor_name, None)
-                competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
-                competitor_scraping.set_search_keywords()
-                competitor = competitor_scraping.enter_company_page(competitor)
-                competitor.set_company_sector(company.get_company_sector())
-                database.insert_company(competitor)
-                if competitor.get_company_sector():
-                    database.insert_company_sector(competitor)
-                if competitor.get_company_type():
-                    database.insert_company_type(competitor)
-                if competitor.get_company_industry():
-                    database.insert_company_industry(competitor)
-                if competitor.get_company_size():
-                    database.insert_company_size(competitor)
-                if competitor.get_company_revenue():
-                    database.insert_company_revenue(competitor)
+                                                                                      ['LAST_ELEMENT'])])
+                #TODO: Delete this line
+                if not database.get_company(competitor_name):  # we don't have the competitor in DB
+                    competitor = Company(competitor_name, None)
+                    competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
+                    competitor_scraping.set_search_keywords()
+                    competitor = competitor_scraping.enter_company_page(competitor)
+                    competitor.set_company_sector(company.get_company_sector())
+                    database.insert_company(competitor)
+                    if competitor.get_company_sector():
+                        database.insert_company_sector(competitor)
+                    if competitor.get_company_type():
+                        database.insert_company_type(competitor)
+                    if competitor.get_company_industry():
+                        database.insert_company_industry(competitor)
+                    if competitor.get_company_size():
+                        database.insert_company_size(competitor)
+                    if competitor.get_company_revenue():
+                        database.insert_company_revenue(competitor)
                 database.insert_competitor(competitor_name, company)
 
 
