@@ -2565,3 +2565,100 @@ webdriverClickElement@chrome://marionette/content/interaction.js:182:31
 [GFX1-]: Receive IPC close with reason=AbnormalShutdown
 Exiting due to channel error.
 Exiting due to channel error.
+1596033868780	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofileTOg1AC"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596033875011	Marionette	INFO	Listening on port 52186
+1596033875033	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596033891731	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:245:13
+TimedPromise@chrome://marionette/content/sync.js:230:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:416:10
+webdriverClickElement@chrome://marionette/content/interaction.js:182:31
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+1596034039820	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofile1I6o8j"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596034044736	Marionette	INFO	Listening on port 52416
+1596034044831	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596034083260	Marionette	INFO	Stopped listening on port 52416
+1596034133181	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofileo21sch"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596034138571	Marionette	INFO	Listening on port 52589
+1596034138647	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596034176521	Marionette	INFO	Stopped listening on port 52589
+1596034312106	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofileXht4OH"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596034318141	Marionette	INFO	Listening on port 52819
+1596034318224	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596034380548	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofilevcLOhO"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596034388453	Marionette	INFO	Listening on port 52994
+1596034388545	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596034389736	Marionette	INFO	Stopped listening on port 52819
+1596034407346	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:245:13
+TimedPromise@chrome://marionette/content/sync.js:230:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:416:10
+webdriverClickElement@chrome://marionette/content/interaction.js:182:31
+1596034430381	Marionette	INFO	Stopped listening on port 52994
+1596034442127	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofile2pyaaP"
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596034450422	Marionette	INFO	Listening on port 53180
+1596034450510	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596034482732	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:245:13
+TimedPromise@chrome://marionette/content/sync.js:230:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:416:10
+webdriverClickElement@chrome://marionette/content/interaction.js:182:31
+1596034495953	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:245:13
+TimedPromise@chrome://marionette/content/sync.js:230:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:416:10
+webdriverClickElement@chrome://marionette/content/interaction.js:182:31
+1596034519485	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:245:13
+TimedPromise@chrome://marionette/content/sync.js:230:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:416:10
+webdriverClickElement@chrome://marionette/content/interaction.js:182:31
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+Exiting due to channel error.
+1596048603564	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "--no-sandbox" "--disable-dev-shm-usage" "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36 " "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofile7iW0yx"
+*** You are running in headless mode.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596048608952	Marionette	INFO	Listening on port 61862
+1596048608980	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596048608993	Marionette	INFO	Proxy settings initialised: {"proxyType":"manual","ftpProxy":"198.50.152.64:23500","httpProxy":"198.50.152.64:23500","sslProxy":"198.50.152.64:23500"}
+JavaScript error: https://accounts.google.com/o/oauth2/iframe#origin=https%3A%2F%2Fwww.glassdoor.com&rpcToken=2077098541.1771975&clearCache=1, line 1: ReferenceError: lso is not defined
+1596048874172	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:245:13
+TimedPromise@chrome://marionette/content/sync.js:230:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:416:10
+webdriverClickElement@chrome://marionette/content/interaction.js:182:31
+1596048882281	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://marionette/content/sync.js:245:13
+TimedPromise@chrome://marionette/content/sync.js:230:10
+interaction.flushEventLoop@chrome://marionette/content/interaction.js:416:10
+webdriverClickElement@chrome://marionette/content/interaction.js:182:31
+1596048933925	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-headless" "--no-sandbox" "--disable-dev-shm-usage" "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36 " "-foreground" "-no-remote" "-profile" "/var/folders/c5/0q_ck2yx2k7f56ng5pql74zr0000gq/T/rust_mozprofile5SeteU"
+*** You are running in headless mode.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1596048938516	Marionette	INFO	Listening on port 62336
+1596048938596	Marionette	WARN	TLS certificate errors will be ignored for this session
+1596048938606	Marionette	INFO	Proxy settings initialised: {"proxyType":"manual","ftpProxy":"198.50.152.64:23500","httpProxy":"198.50.152.64:23500","sslProxy":"198.50.152.64:23500"}
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
