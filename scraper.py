@@ -28,7 +28,7 @@ class Scraper:
         options.add_argument(f'user-agent={user_agent}')
         self.browser = webdriver.Firefox(executable_path=driver_path, firefox_options=options,
                                          capabilities=firefox_capabilities)
-        # self.browser = webdriver.Firefox(executable_path=driver_path)
+        #self.browser = webdriver.Firefox(executable_path=driver_path)
         #self.browser.maximize_window()
         self.config = configparser.ConfigParser(interpolation=None)
         self.config.read('Constants')

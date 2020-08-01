@@ -13,7 +13,6 @@ import API
 import random
 
 
-
 class JobsListScraper(Scraper):
     """
        This class contains specific functions to scrape the job list part on the website.
@@ -131,7 +130,7 @@ class JobsListScraper(Scraper):
         :param button_job:
         :return: tuple
         """
-        #Check if sleep time work
+        # Check if sleep time work
         time.sleep(random.randint(int(self.config['Constant']['SLEEP_TIME_MIN']),
                                   int(self.config['Constant']['SLEEP_TIME_MAX'])))
         collect_mandatory = False
@@ -254,27 +253,26 @@ class JobsListScraper(Scraper):
                 if competitor_name.lower().split(' ')[int(self.config['Constant']['LAST_ELEMENT'])] \
                         in self.config['Constant']['CORPORATION']:
                     competitor_name = ' '.join(competitor_name.lower().split(' ')[:int(self.config['Constant']
-                                                                                      ['LAST_ELEMENT'])])
-                #TODO: Delete this line
-                if not database.get_company(competitor_name):  # we don't have the competitor in DB
-                    competitor = Company(competitor_name, None)
-                    competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
-                    competitor_scraping.set_search_keywords()
-                    competitor = competitor_scraping.enter_company_page(competitor)
-                    competitor.set_company_sector(company.get_company_sector())
-                    database.insert_company(competitor)
-                    if competitor.get_company_sector():
-                        database.insert_company_sector(competitor)
-                    if competitor.get_company_type():
-                        database.insert_company_type(competitor)
-                    if competitor.get_company_industry():
-                        database.insert_company_industry(competitor)
-                    if competitor.get_company_size():
-                        database.insert_company_size(competitor)
-                    if competitor.get_company_revenue():
-                        database.insert_company_revenue(competitor)
-                database.insert_competitor(competitor_name, company)
+                                                                                       ['LAST_ELEMENT'])])
 
+                # if not database.get_company(competitor_name):  # we don't have the competitor in DB
+                competitor = Company(competitor_name, None)
+                competitor_scraping = CompanyPageScraper(self.geckodriver_path, competitor_name)
+                competitor_scraping.set_search_keywords()
+                competitor = competitor_scraping.enter_company_page(competitor)
+                competitor.set_company_sector(company.get_company_sector())
+                database.insert_company(competitor)
+                if competitor.get_company_sector():
+                    database.insert_company_sector(competitor)
+                if competitor.get_company_type():
+                    database.insert_company_type(competitor)
+                if competitor.get_company_industry():
+                    database.insert_company_industry(competitor)
+                if competitor.get_company_size():
+                    database.insert_company_size(competitor)
+                if competitor.get_company_revenue():
+                    database.insert_company_revenue(competitor)
+                database.insert_competitor(competitor_name, company)
 
     def collecting_data_from_pages(self, database):
         """
@@ -315,7 +313,7 @@ class JobsListScraper(Scraper):
                     database.insert_company_size(company)
                 if company.get_company_revenue():
                     database.insert_company_revenue(company)
-                self.create_competitors_insert(database,company)
+                self.create_competitors_insert(database, company)
                 database.insert_job(job)
                 google_api_info = API.create_api_connect(company.get_name(), job.get_location(), self.key_api)
                 if (not google_api_info.get_address_google()) or (self.config['Constant']['UNNAMED']
