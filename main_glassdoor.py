@@ -11,7 +11,8 @@ from jobs_list_scraping import JobsListScraper
 import configparser
 import command_args
 
-if __name__ == "__main__":
+
+def main():
     key_api = command_args.args.Google_Key_API
     keyword_location = command_args.args.job_location
     keyword_job_title = command_args.args.job_title
@@ -33,3 +34,7 @@ if __name__ == "__main__":
     glassdoor_scraper.set_search_keywords()
     glassdoor_scraper.collecting_data_from_pages(database)
     database.close_connection_database()
+
+
+if __name__ == "__main__":
+    main()

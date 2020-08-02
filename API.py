@@ -3,7 +3,6 @@ import re
 import configparser
 
 
-# TODO: maybe add set
 class ApiInfo:
     def __init__(self, name=None, address=None, longitude=None, latitude=None):
         """
