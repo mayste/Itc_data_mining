@@ -13,4 +13,4 @@ requests==2.24.0
 selenium==3.141.0
 self==2019.4.13
 six==1.15.0
-urllib3==1.25.9
+urllib3==1.26.5
