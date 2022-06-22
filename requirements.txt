@@ -3,7 +3,7 @@ chardet==3.0.4
 configparser==3.7.5
 decorator==4.4.2
 idna==2.10
-numpy==1.18.5
+numpy==1.22.0
 pandas==1.0.4
 public==2019.4.13
 PyMySQL==0.9.3
